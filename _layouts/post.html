@@ -1,0 +1,83 @@
+---
+layout: default
+---
+
+<article class="post-page">
+  <div class="container">
+
+    <!-- 포스트 헤더 -->
+    <header class="post-header">
+      <div class="post-breadcrumb">
+        <a href="/blog/">Blog</a>
+        <span>/</span>
+        <span>{{ page.title }}</span>
+      </div>
+
+      <h1 class="post-title">{{ page.title }}</h1>
+
+      <div class="post-info">
+        <time datetime="{{ page.date | date: '%Y-%m-%d' }}">
+          {{ page.date | date: "%Y년 %m월 %d일" }}
+        </time>
+        {% if page.tags.size > 0 %}
+        <div class="post-tags">
+          {% for tag in page.tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      {% if page.description %}
+      <p class="post-lead">{{ page.description }}</p>
+      {% endif %}
+    </header>
+
+    <div class="post-layout">
+
+      <!-- 본문 -->
+      <div class="post-body prose">
+        {{ content }}
+      </div>
+
+      <!-- 사이드바: 목차 -->
+      <aside class="post-toc" id="toc">
+        <div class="toc-inner">
+          <p class="toc-title">목차</p>
+          <div class="toc-list" id="toc-list"></div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- 이전/다음 글 -->
+    <nav class="post-nav">
+      {% if page.previous.url %}
+      <a href="{{ page.previous.url | relative_url }}" class="post-nav-item prev">
+        <span class="nav-label">← 이전 글</span>
+        <span class="nav-title">{{ page.previous.title }}</span>
+      </a>
+      {% else %}
+      <div></div>
+      {% endif %}
+      {% if page.next.url %}
+      <a href="{{ page.next.url | relative_url }}" class="post-nav-item next">
+        <span class="nav-label">다음 글 →</span>
+        <span class="nav-title">{{ page.next.title }}</span>
+      </a>
+      {% endif %}
+    </nav>
+
+    <!-- 목록으로 -->
+    <div class="post-back">
+      <a href="/blog/" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        블로그 목록으로
+      </a>
+    </div>
+
+  </div>
+</article>

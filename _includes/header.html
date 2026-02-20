@@ -1,11 +1,28 @@
+{% assign is_home = false %}
+{% if page.url == '/' %}{% assign is_home = true %}{% endif %}
+{% if is_home %}
+  {% assign p_about    = '#about' %}
+  {% assign p_projects = '#projects' %}
+  {% assign p_skills   = '#skills' %}
+  {% assign p_contact  = '#contact' %}
+  {% assign p_logo     = '#hero' %}
+{% else %}
+  {% assign p_about    = '/#about' %}
+  {% assign p_projects = '/#projects' %}
+  {% assign p_skills   = '/#skills' %}
+  {% assign p_contact  = '/#contact' %}
+  {% assign p_logo     = '/' %}
+{% endif %}
+
 <header class="site-header">
   <div class="header-inner">
-    <a href="#hero" class="logo">cocodding<span>.</span></a>
+    <a href="{{ p_logo }}" class="logo">cocodding<span>.</span></a>
     <nav>
-      <a href="#about" data-section="about">About</a>
-      <a href="#projects" data-section="projects">Projects</a>
-      <a href="#skills" data-section="skills">Skills</a>
-      <a href="#contact" data-section="contact">Contact</a>
+      <a href="{{ p_about }}" {% if is_home %}data-section="about"{% endif %}>About</a>
+      <a href="{{ p_projects }}" {% if is_home %}data-section="projects"{% endif %}>Projects</a>
+      <a href="{{ p_skills }}" {% if is_home %}data-section="skills"{% endif %}>Skills</a>
+      <a href="/blog/" {% unless is_home %}{% if page.url contains '/blog' %}class="active"{% endif %}{% endunless %}>Blog</a>
+      <a href="{{ p_contact }}" {% if is_home %}data-section="contact"{% endif %}>Contact</a>
     </nav>
     <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
       <span></span>
@@ -14,9 +31,10 @@
     </button>
   </div>
   <nav class="mobile-nav">
-    <a href="#about" data-section="about">About</a>
-    <a href="#projects" data-section="projects">Projects</a>
-    <a href="#skills" data-section="skills">Skills</a>
-    <a href="#contact" data-section="contact">Contact</a>
+    <a href="{{ p_about }}">About</a>
+    <a href="{{ p_projects }}">Projects</a>
+    <a href="{{ p_skills }}">Skills</a>
+    <a href="/blog/" {% unless is_home %}{% if page.url contains '/blog' %}class="active"{% endif %}{% endunless %}>Blog</a>
+    <a href="{{ p_contact }}">Contact</a>
   </nav>
 </header>

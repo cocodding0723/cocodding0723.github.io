@@ -1,0 +1,150 @@
+// Blog listing page
+.blog-page {
+  min-height: 100vh;
+  padding-top: 64px; // header height
+
+  .container {
+    padding-top: 64px;
+    padding-bottom: 100px;
+    max-width: 760px;
+  }
+}
+
+.blog-header {
+  margin-bottom: 48px;
+
+  .blog-page-title {
+    font-family: $font-mono;
+    font-size: $fs-xl;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+
+    .title-comment {
+      color: var(--accent);
+    }
+  }
+
+  .blog-page-desc {
+    font-size: $fs-base;
+    color: var(--text-muted);
+  }
+}
+
+// Tag filter
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 48px;
+
+  .filter-btn {
+    padding: 6px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    &.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0d1117;
+    }
+  }
+}
+
+// Post list
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.post-item {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  .post-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .post-date {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .post-item-title {
+    font-size: $fs-md;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+
+    a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--accent);
+      }
+    }
+  }
+
+  .post-excerpt {
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--accent);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+
+    &:hover {
+      gap: 10px;
+      color: var(--accent);
+    }
+  }
+}
+
+.blog-empty {
+  padding: 80px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: $font-mono;
+}
