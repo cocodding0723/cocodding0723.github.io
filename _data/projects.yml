@@ -1,0 +1,37 @@
+- name: "툭"
+  period: "2023.06 ~ 2024.06"
+  role: "Flutter Android/iOS, AR 카메라 기능 개발"
+  description: "쇼트폼 영상 소셜 미디어 + 커뮤니티 플랫폼. Unity–Flutter 연동 AR 카메라 및 영상 촬영 기능 구현."
+  tags: ["Flutter", "Unity", "OpenCV", "Firebase", "CI/CD"]
+  type: "mobile"
+
+- name: "Reelaze"
+  period: "2023.02 ~ 2023.06"
+  role: "Flutter 앱 개발 및 배포·운영 관리"
+  description: "TikTok·YouTube Shorts 유사 쇼트폼 영상 소셜 미디어 서비스. Google Play / App Store 배포."
+  tags: ["Flutter", "Unity", "Firebase", "FFMPEG"]
+  links:
+    android: "https://play.google.com/store/apps/details?id=com.playhead.reelaze"
+    ios: "https://apps.apple.com/us/app/reelaze/id6450655858"
+  type: "mobile"
+
+- name: "Mix"
+  period: "2022.11 ~ 2023.05"
+  role: "영상 편집 및 업로드 기능 개발"
+  description: "Android 기반 쇼트폼 영상 편집 서비스. GPU 인코딩 활용 고성능 필터 및 FFMPEG 영상 합성 기능 구현."
+  tags: ["Android", "Kotlin", "FFMPEG", "OpenCV", "AWS S3"]
+  type: "mobile"
+
+- name: "OpenVerse"
+  period: "2021.12 ~ 2022.11"
+  role: "Android 앱 유지보수"
+  description: "쇼트폼 영상 기반 소셜 미디어 서비스. 코드베이스 유지보수 및 기능 개선."
+  tags: ["Android", "Java", "Kotlin"]
+  type: "mobile"
+
+- name: "Catan"
+  period: "2025"
+  role: "Unity 게임 개발"
+  description: "Unity 기반 보드게임 카탄 구현 프로젝트."
+  tags: ["Unity", "C#"]
+  type: "game"

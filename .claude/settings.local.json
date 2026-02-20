@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gem:*)",
+      "Bash(ruby:*)",
+      "Bash(bundle install:*)",
+      "Bash(bundle exec jekyll build:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

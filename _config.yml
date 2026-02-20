@@ -1,0 +1,26 @@
+title: "강찬형 | Portfolio"
+description: "Unity · Android · Flutter 클라이언트 개발자 강찬형의 포트폴리오"
+url: "https://cocodding0723.github.io"
+baseurl: ""
+
+author:
+  name: "강찬형"
+  github: "cocodding0723"
+  blog: "https://cocodding0723.github.io"
+  youtube: "https://www.youtube.com/channel/UC_MJsupsTzk_GeL-Kmmxq9A"
+  baekjoon: "https://www.acmicpc.net/user/cocodding0723"
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+sass:
+  sass_dir: _sass
+  style: compressed
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor

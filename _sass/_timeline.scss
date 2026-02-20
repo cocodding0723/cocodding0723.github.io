@@ -1,0 +1,157 @@
+.timeline-section {
+  background: var(--bg-primary);
+}
+
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: $tablet) {
+    &::before {
+      left: 16px;
+      transform: none;
+    }
+  }
+}
+
+.timeline-item {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: calc(50% + 32px);
+  margin-bottom: 48px;
+  position: relative;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &:nth-child(even) {
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: calc(50% + 32px);
+    transform: translateX(30px);
+
+    &.visible {
+      transform: translateX(0);
+    }
+
+    .timeline-node {
+      left: auto;
+      right: calc(50% - 8px);
+      right: auto;
+      left: calc(50% - 8px);
+    }
+  }
+
+  .timeline-node {
+    position: absolute;
+    left: calc(50% - 8px);
+    top: 16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-primary);
+    z-index: 1;
+
+    &.node-work {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    }
+
+    &.node-education {
+      background: var(--text-muted);
+      box-shadow: 0 0 0 3px rgba(139, 148, 158, 0.2);
+    }
+  }
+
+  .timeline-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: $card-radius;
+    padding: 20px 24px;
+    max-width: 360px;
+    width: 100%;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--bg-tertiary);
+    }
+  }
+
+  .timeline-type {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+
+    &.type-work {
+      color: var(--accent);
+    }
+
+    &.type-education {
+      color: var(--text-muted);
+    }
+  }
+
+  .timeline-title {
+    font-size: $fs-base;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .timeline-period {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .timeline-desc {
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: $tablet) {
+    padding-right: 0;
+    padding-left: 48px;
+    justify-content: flex-start;
+    transform: translateX(-20px);
+
+    &:nth-child(even) {
+      padding-left: 48px;
+      padding-right: 0;
+      justify-content: flex-start;
+      transform: translateX(-20px);
+    }
+
+    .timeline-node {
+      left: 8px !important;
+      right: auto !important;
+    }
+
+    .timeline-card {
+      max-width: 100%;
+    }
+  }
+}

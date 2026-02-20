@@ -1,0 +1,44 @@
+// Color Palette
+:root {
+  --bg-primary:    #0d1117;
+  --bg-secondary:  #161b22;
+  --bg-tertiary:   #21262d;
+  --accent:        #58a6ff;
+  --accent-subtle: #1f6feb;
+  --text-primary:  #e6edf3;
+  --text-muted:    #8b949e;
+  --border:        #30363d;
+}
+
+// SCSS Variables
+$bg-primary:    #0d1117;
+$bg-secondary:  #161b22;
+$bg-tertiary:   #21262d;
+$accent:        #58a6ff;
+$accent-subtle: #1f6feb;
+$text-primary:  #e6edf3;
+$text-muted:    #8b949e;
+$border:        #30363d;
+
+// Breakpoints
+$mobile:  480px;
+$tablet:  768px;
+$desktop: 1100px;
+
+// Typography
+$font-mono: 'JetBrains Mono', 'Courier New', monospace;
+$font-sans: 'Noto Sans KR', sans-serif;
+
+// Font sizes
+$fs-xs:  12px;
+$fs-sm:  14px;
+$fs-base: 16px;
+$fs-md:  20px;
+$fs-lg:  24px;
+$fs-xl:  32px;
+$fs-2xl: 48px;
+
+// Spacing
+$section-gap: 120px;
+$card-radius: 8px;
+$max-width: 1100px;

@@ -1,0 +1,14 @@
+- category: "Languages"
+  items: ["C#", "Dart", "Kotlin", "Java", "Python", "C/C++", "Ruby"]
+
+- category: "Frameworks & Platforms"
+  items: ["Unity", "Flutter", "Android"]
+
+- category: "DevOps & Infra"
+  items: ["Jenkins", "GitHub Actions", "Fastlane", "Firebase", "AWS S3", "Git"]
+
+- category: "Media & Graphics"
+  items: ["FFMPEG", "OpenCV", "Media Encoder", "AR/VR"]
+
+- category: "Database"
+  items: ["MySQL", "MongoDB"]
