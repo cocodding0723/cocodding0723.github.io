@@ -1,0 +1,121 @@
+.projects-section {
+  background: var(--bg-primary);
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    @media (max-width: $desktop) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.project-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: $card-radius;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-family: $font-mono;
+    font-size: $fs-md;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .card-period {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .card-role {
+    font-size: $fs-sm;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .card-description {
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    line-height: 1.7;
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .card-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: $font-mono;
+      font-size: $fs-xs;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      &:hover {
+        color: var(--accent);
+      }
+    }
+  }
+}

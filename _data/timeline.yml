@@ -1,0 +1,19 @@
+- type: "work"
+  title: "Playhead(주) — 연구원 / 프론트엔드 개발"
+  period: "2021.12 ~ 2024.06"
+  description: "Unity / Android / Flutter 기반 클라이언트 개발, 배포 및 운영. AR 카메라, 쇼트폼 영상 서비스 개발. Jenkins/GitHub Actions/Fastlane CI/CD 구축."
+
+- type: "work"
+  title: "군 복무 (현역)"
+  period: "2024.08 ~ 2026.02"
+  description: "현역 복무 중."
+
+- type: "education"
+  title: "서울호서전문학교 멀티미디어학"
+  period: "2019.03 ~ 2021.12"
+  description: "멀티미디어 전공. 게임 개발, 앱 개발 학습."
+
+- type: "education"
+  title: "초지고등학교 졸업"
+  period: "2019"
+  description: ""
