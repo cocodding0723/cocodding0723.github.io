@@ -132,6 +132,86 @@
 })();
 
 // ============================================================
+// Blog: tag filter
+// ============================================================
+(function () {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const postItems = document.querySelectorAll('.post-item');
+  if (!filterBtns.length) return;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tag = btn.getAttribute('data-tag');
+      postItems.forEach(item => {
+        if (tag === 'all') {
+          item.classList.remove('hidden');
+        } else {
+          const tags = (item.getAttribute('data-tags') || '').split(',').map(t => t.trim());
+          item.classList.toggle('hidden', !tags.includes(tag));
+        }
+      });
+    });
+  });
+})();
+
+// ============================================================
+// Blog post: auto generate TOC + active heading highlight
+// ============================================================
+(function () {
+  const tocList = document.getElementById('toc-list');
+  const prose = document.querySelector('.prose');
+  if (!tocList || !prose) return;
+
+  const headings = prose.querySelectorAll('h2, h3, h4');
+  if (!headings.length) {
+    document.getElementById('toc').style.display = 'none';
+    return;
+  }
+
+  const tocLinks = [];
+  headings.forEach((h, i) => {
+    // ID 부여
+    if (!h.id) {
+      h.id = 'heading-' + i;
+    }
+
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    a.classList.add('toc-' + h.tagName.toLowerCase());
+    tocList.appendChild(a);
+    tocLinks.push({ el: h, link: a });
+
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const top = h.getBoundingClientRect().top + window.scrollY - 88;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  // Active heading on scroll
+  if ('IntersectionObserver' in window) {
+    let activeIdx = 0;
+
+    const headingObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const idx = tocLinks.findIndex(t => t.el === entry.target);
+        if (entry.isIntersecting && idx !== -1) {
+          tocLinks.forEach(t => t.link.classList.remove('active'));
+          tocLinks[idx].link.classList.add('active');
+          activeIdx = idx;
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+
+    tocLinks.forEach(t => headingObserver.observe(t.el));
+  }
+})();
+
+// ============================================================
 // Smooth scroll for anchor links
 // ============================================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

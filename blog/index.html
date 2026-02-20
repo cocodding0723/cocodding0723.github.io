@@ -1,0 +1,71 @@
+---
+layout: default
+title: "Blog | 강찬형"
+description: "Unity, Android, Flutter, AR/VR 개발 경험을 기록합니다."
+permalink: /blog/
+---
+
+<div class="blog-page">
+  <div class="container">
+    <div class="blog-header animate-fade-up">
+      <h1 class="blog-page-title">
+        <span class="title-comment">// </span>Blog
+      </h1>
+      <p class="blog-page-desc">개발하며 겪은 것들을 기록합니다.</p>
+    </div>
+
+    {% if site.posts.size > 0 %}
+
+    <!-- 태그 필터 -->
+    {% assign all_tags = site.posts | map: 'tags' | join: ',' | split: ',' | uniq | sort %}
+    {% if all_tags.size > 0 %}
+    <div class="tag-filter animate-fade-up">
+      <button class="filter-btn active" data-tag="all">전체</button>
+      {% for tag in all_tags %}
+      <button class="filter-btn" data-tag="{{ tag | strip }}">{{ tag | strip }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 포스트 목록 -->
+    <div class="post-list">
+      {% for post in site.posts %}
+      <article class="post-item animate-fade-up" data-tags="{{ post.tags | join: ',' }}">
+        <div class="post-meta-line">
+          <time class="post-date" datetime="{{ post.date | date: '%Y-%m-%d' }}">
+            {{ post.date | date: "%Y년 %m월 %d일" }}
+          </time>
+          {% if post.tags.size > 0 %}
+          <div class="post-tags">
+            {% for tag in post.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <h2 class="post-item-title">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </h2>
+        {% if post.description %}
+        <p class="post-excerpt">{{ post.description }}</p>
+        {% elsif post.excerpt %}
+        <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+        {% endif %}
+        <a href="{{ post.url | relative_url }}" class="read-more">
+          읽기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="blog-empty">
+      <p>아직 작성된 글이 없습니다.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
