@@ -1,0 +1,13 @@
+<section class="certifications-section" id="certifications">
+  <div class="container">
+    <h2 class="section-title animate-in">Certifications</h2>
+    <div class="certifications-list">
+      {% for item in site.data.certifications %}
+      <div class="certification-item">
+        <h3 class="certification-name">{{ item.name }}</h3>
+        <p class="certification-date">{{ item.date }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

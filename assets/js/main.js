@@ -123,10 +123,29 @@
 
     timelineItems.forEach(item => timelineObserver.observe(item));
 
+    // Certification items
+    const certificationItems = document.querySelectorAll('.certification-item');
+    const certObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = parseInt(entry.target.getAttribute('data-index')) || 0;
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, idx * 80);
+          certObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    certificationItems.forEach((item, i) => {
+      item.setAttribute('data-index', i);
+      certObserver.observe(item);
+    });
+
   } else {
     // Fallback for browsers without IntersectionObserver
     fadeTargets.forEach(el => el.classList.add('visible'));
-    document.querySelectorAll('.skill-tag, .project-card, .timeline-item')
+    document.querySelectorAll('.skill-tag, .project-card, .timeline-item, .certification-item')
       .forEach(el => el.classList.add('visible'));
   }
 })();

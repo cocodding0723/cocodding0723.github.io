@@ -1,17 +1,19 @@
 {% assign is_home = false %}
 {% if page.url == '/' %}{% assign is_home = true %}{% endif %}
 {% if is_home %}
-  {% assign p_about    = '#about' %}
-  {% assign p_projects = '#projects' %}
-  {% assign p_skills   = '#skills' %}
-  {% assign p_contact  = '#contact' %}
-  {% assign p_logo     = '#hero' %}
+  {% assign p_about           = '#about' %}
+  {% assign p_certifications  = '#certifications' %}
+  {% assign p_projects       = '#projects' %}
+  {% assign p_skills         = '#skills' %}
+  {% assign p_contact        = '#contact' %}
+  {% assign p_logo           = '#hero' %}
 {% else %}
-  {% assign p_about    = '/#about' %}
-  {% assign p_projects = '/#projects' %}
-  {% assign p_skills   = '/#skills' %}
-  {% assign p_contact  = '/#contact' %}
-  {% assign p_logo     = '/' %}
+  {% assign p_about           = '/#about' %}
+  {% assign p_certifications  = '/#certifications' %}
+  {% assign p_projects       = '/#projects' %}
+  {% assign p_skills         = '/#skills' %}
+  {% assign p_contact        = '/#contact' %}
+  {% assign p_logo           = '/' %}
 {% endif %}
 
 <header class="site-header">
@@ -19,6 +21,7 @@
     <a href="{{ p_logo }}" class="logo">cocodding<span>.</span></a>
     <nav>
       <a href="{{ p_about }}" {% if is_home %}data-section="about"{% endif %}>About</a>
+      <a href="{{ p_certifications }}" {% if is_home %}data-section="certifications"{% endif %}>Certifications</a>
       <a href="{{ p_projects }}" {% if is_home %}data-section="projects"{% endif %}>Projects</a>
       <a href="{{ p_skills }}" {% if is_home %}data-section="skills"{% endif %}>Skills</a>
       <a href="/blog/" {% unless is_home %}{% if page.url contains '/blog' %}class="active"{% endif %}{% endunless %}>Blog</a>
@@ -32,6 +35,7 @@
   </div>
   <nav class="mobile-nav">
     <a href="{{ p_about }}">About</a>
+    <a href="{{ p_certifications }}">Certifications</a>
     <a href="{{ p_projects }}">Projects</a>
     <a href="{{ p_skills }}">Skills</a>
     <a href="/blog/" {% unless is_home %}{% if page.url contains '/blog' %}class="active"{% endif %}{% endunless %}>Blog</a>
