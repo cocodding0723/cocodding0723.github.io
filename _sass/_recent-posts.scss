@@ -53,24 +53,25 @@
 
   // Staggered animation for recent post cards
   .recent-card-wrap {
-    .post-card {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease var(--card-delay, 0ms),
-                  transform 0.5s ease var(--card-delay, 0ms),
-                  border-color 0.25s ease,
-                  box-shadow 0.25s ease,
-                  translateY 0.25s ease;
-    }
-
+    // Cards are visible by default (no opacity:0) — animation plays only when JS adds .visible
     &.visible .post-card {
-      opacity: 1;
-      transform: translateY(0);
+      animation: recentCardFadeIn 0.5s ease var(--card-delay, 0ms) both;
     }
   }
 }
 
-// Override card hover — keep translateY animation working after appear
+@keyframes recentCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Hover lift — overrides animation fill-mode end state
 .recent-posts-grid .post-card:hover {
   transform: translateY(-4px) !important;
 }
