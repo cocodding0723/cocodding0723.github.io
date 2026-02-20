@@ -2,6 +2,7 @@
 title: "Flutter와 Unity를 연동하는 법 — flutter_unity_widget 실전 가이드"
 description: "AR 카메라 기능을 Flutter 앱에 붙이기 위해 Unity를 임베딩한 경험을 정리했습니다. 실제 프로젝트에서 마주친 문제들과 해결법을 공유합니다."
 date: 2024-05-10
+categories: [Dev]
 tags: [Flutter, Unity, Android, iOS]
 ---
 

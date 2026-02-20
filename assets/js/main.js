@@ -132,83 +132,254 @@
 })();
 
 // ============================================================
-// Blog: tag filter
+// Blog listing: category + tag filter + search + URL params
 // ============================================================
 (function () {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const postItems = document.querySelectorAll('.post-item');
-  if (!filterBtns.length) return;
+  const blogGrid = document.querySelector('.blog-post-grid');
+  if (!blogGrid) return;
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  // All cards start visible (no scroll animation on blog list)
+  blogGrid.querySelectorAll('.post-card').forEach(c => c.classList.add('visible'));
 
-      const tag = btn.getAttribute('data-tag');
-      postItems.forEach(item => {
-        if (tag === 'all') {
-          item.classList.remove('hidden');
-        } else {
-          const tags = (item.getAttribute('data-tags') || '').split(',').map(t => t.trim());
-          item.classList.toggle('hidden', !tags.includes(tag));
-        }
-      });
+  const params = new URLSearchParams(window.location.search);
+  let activeCategory = params.get('category') || 'all';
+  let activeTag = params.get('tag') || '';
+
+  function getCards() { return blogGrid.querySelectorAll('.post-card'); }
+
+  function filterPosts() {
+    const searchQuery = (document.querySelector('.blog-search-input')?.value || '').toLowerCase().trim();
+    let visible = 0;
+
+    getCards().forEach(card => {
+      const cardCat = card.getAttribute('data-category') || '';
+      const cardTags = (card.getAttribute('data-tags') || '').split(',').map(t => t.trim()).filter(Boolean);
+      const title = (card.querySelector('.card-title')?.textContent || '').toLowerCase();
+      const excerpt = (card.querySelector('.card-excerpt')?.textContent || '').toLowerCase();
+
+      const catOk = activeCategory === 'all' || cardCat === activeCategory;
+      const tagOk = !activeTag || cardTags.includes(activeTag);
+      const searchOk = !searchQuery || title.includes(searchQuery) || excerpt.includes(searchQuery);
+      const show = catOk && tagOk && searchOk;
+
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    // Update active UI states
+    document.querySelectorAll('.cat-filter-item').forEach(item => {
+      item.classList.toggle('active', item.getAttribute('data-category') === activeCategory);
+    });
+    document.querySelectorAll('.cloud-tag').forEach(tagEl => {
+      tagEl.classList.toggle('active', tagEl.getAttribute('data-tag') === activeTag);
+    });
+
+    // Results count
+    const countEl = document.getElementById('results-count');
+    if (countEl) countEl.textContent = visible + '개의 글';
+
+    // No results
+    const noResults = document.getElementById('blog-no-results');
+    if (noResults) noResults.style.display = visible === 0 ? '' : 'none';
+
+    // Clear filter button
+    const clearBtn = document.getElementById('clear-filter');
+    if (clearBtn) {
+      const hasFilter = activeCategory !== 'all' || activeTag || searchQuery;
+      clearBtn.style.display = hasFilter ? '' : 'none';
+    }
+  }
+
+  function updateURL() {
+    const url = new URL(window.location);
+    activeCategory !== 'all' ? url.searchParams.set('category', activeCategory) : url.searchParams.delete('category');
+    activeTag ? url.searchParams.set('tag', activeTag) : url.searchParams.delete('tag');
+    window.history.replaceState({}, '', url);
+  }
+
+  // Category filter
+  document.querySelectorAll('.cat-filter-item').forEach(item => {
+    item.addEventListener('click', () => {
+      activeCategory = item.getAttribute('data-category');
+      activeTag = '';
+      const searchInput = document.querySelector('.blog-search-input');
+      if (searchInput) searchInput.value = '';
+      filterPosts();
+      updateURL();
     });
   });
+
+  // Tag cloud
+  document.querySelectorAll('.cloud-tag').forEach(tagEl => {
+    tagEl.addEventListener('click', () => {
+      const tag = tagEl.getAttribute('data-tag');
+      activeTag = (activeTag === tag) ? '' : tag;
+      filterPosts();
+      updateURL();
+    });
+  });
+
+  // Search input (debounced)
+  const searchInput = document.querySelector('.blog-search-input');
+  if (searchInput) {
+    let searchTimer;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(filterPosts, 200);
+    });
+  }
+
+  // Clear filter button
+  const clearBtn = document.getElementById('clear-filter');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      activeCategory = 'all';
+      activeTag = '';
+      const searchInput = document.querySelector('.blog-search-input');
+      if (searchInput) searchInput.value = '';
+      filterPosts();
+      updateURL();
+    });
+  }
+
+  // Tag cloud font sizing based on data-count
+  const cloudTags = document.querySelectorAll('.cloud-tag');
+  if (cloudTags.length > 1) {
+    const counts = Array.from(cloudTags).map(t => parseInt(t.getAttribute('data-count')) || 1);
+    const maxCount = Math.max(...counts);
+    const minCount = Math.min(...counts);
+    const range = maxCount - minCount || 1;
+    cloudTags.forEach(tag => {
+      const count = parseInt(tag.getAttribute('data-count')) || 1;
+      const ratio = (count - minCount) / range;
+      tag.style.fontSize = (11 + ratio * 6) + 'px';
+    });
+  }
+
+  // Apply initial URL params
+  if (activeCategory !== 'all' || activeTag) {
+    filterPosts();
+  }
 })();
 
 // ============================================================
-// Blog post: auto generate TOC + active heading highlight
+// Recent posts: staggered card animation
 // ============================================================
 (function () {
-  const tocList = document.getElementById('toc-list');
+  const wraps = document.querySelectorAll('.recent-card-wrap');
+  if (!wraps.length) return;
+
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    wraps.forEach(w => obs.observe(w));
+  } else {
+    wraps.forEach(w => w.classList.add('visible'));
+  }
+})();
+
+// ============================================================
+// Blog post: TOC (desktop + mobile) + heading anchors
+// ============================================================
+(function () {
+  const desktopTocList = document.getElementById('toc-list');
+  const mobileTocList = document.getElementById('mobile-toc-list');
   const prose = document.querySelector('.prose');
-  if (!tocList || !prose) return;
+  if (!prose) return;
 
   const headings = prose.querySelectorAll('h2, h3, h4');
+
+  // Hide TOC if no headings
   if (!headings.length) {
-    document.getElementById('toc').style.display = 'none';
+    const tocEl = document.getElementById('toc');
+    const mobileToc = document.querySelector('.mobile-toc');
+    if (tocEl) tocEl.style.display = 'none';
+    if (mobileToc) mobileToc.style.display = 'none';
     return;
   }
 
   const tocLinks = [];
+
   headings.forEach((h, i) => {
-    // ID 부여
+    // Assign ID, stripping out the anchor text if already added
     if (!h.id) {
       h.id = 'heading-' + i;
     }
 
-    const a = document.createElement('a');
-    a.href = '#' + h.id;
-    a.textContent = h.textContent;
-    a.classList.add('toc-' + h.tagName.toLowerCase());
-    tocList.appendChild(a);
-    tocLinks.push({ el: h, link: a });
+    // Heading anchor link
+    const anchor = document.createElement('a');
+    anchor.href = '#' + h.id;
+    anchor.className = 'heading-anchor';
+    anchor.setAttribute('aria-hidden', 'true');
+    anchor.textContent = '#';
+    h.appendChild(anchor);
 
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const top = h.getBoundingClientRect().top + window.scrollY - 88;
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
+    // Build TOC entry
+    const tocClass = 'toc-' + h.tagName.toLowerCase();
+    const headingText = Array.from(h.childNodes)
+      .filter(n => n.nodeType === Node.TEXT_NODE || (n.nodeType === Node.ELEMENT_NODE && !n.classList.contains('heading-anchor')))
+      .map(n => n.textContent)
+      .join('').trim();
+
+    function makeTocLink(container) {
+      if (!container) return null;
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = headingText;
+      a.classList.add(tocClass);
+      container.appendChild(a);
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const top = h.getBoundingClientRect().top + window.scrollY - 88;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+      return a;
+    }
+
+    const desktopLink = makeTocLink(desktopTocList);
+    const mobileLink = makeTocLink(mobileTocList);
+
+    tocLinks.push({ el: h, desktop: desktopLink, mobile: mobileLink });
   });
 
   // Active heading on scroll
   if ('IntersectionObserver' in window) {
-    let activeIdx = 0;
-
     const headingObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const idx = tocLinks.findIndex(t => t.el === entry.target);
         if (entry.isIntersecting && idx !== -1) {
-          tocLinks.forEach(t => t.link.classList.remove('active'));
-          tocLinks[idx].link.classList.add('active');
-          activeIdx = idx;
+          tocLinks.forEach(t => {
+            if (t.desktop) t.desktop.classList.remove('active');
+            if (t.mobile) t.mobile.classList.remove('active');
+          });
+          if (tocLinks[idx].desktop) tocLinks[idx].desktop.classList.add('active');
+          if (tocLinks[idx].mobile) tocLinks[idx].mobile.classList.add('active');
         }
       });
     }, { rootMargin: '-80px 0px -70% 0px' });
 
     tocLinks.forEach(t => headingObserver.observe(t.el));
   }
+})();
+
+// ============================================================
+// Blog post: mobile TOC toggle
+// ============================================================
+(function () {
+  const toggleBtn = document.querySelector('.mobile-toc-toggle');
+  const mobileContent = document.querySelector('.mobile-toc-content');
+  if (!toggleBtn || !mobileContent) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isOpen = mobileContent.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', isOpen);
+  });
 })();
 
 // ============================================================

@@ -1,5 +1,5 @@
-title: "강찬형 | Portfolio"
-description: "Unity · Android · Flutter 클라이언트 개발자 강찬형의 포트폴리오"
+title: "강찬형 | Portfolio & Blog"
+description: "Unity · Android · Flutter 클라이언트 개발자 강찬형의 포트폴리오 & 기술 블로그"
 url: "https://cocodding0723.github.io"
 baseurl: ""
 
@@ -10,9 +10,15 @@ author:
   youtube: "https://www.youtube.com/channel/UC_MJsupsTzk_GeL-Kmmxq9A"
   baekjoon: "https://www.acmicpc.net/user/cocodding0723"
 
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+# Blog
+permalink: /blog/:year/:month/:day/:title/
+
+# Category definitions (for reference)
+blog_categories:
+  Dev:       "개발 기술 정리 · TIL · 튜토리얼"
+  Project:   "프로젝트 개발 과정 · 회고"
+  Algorithm: "알고리즘 풀이"
+  Daily:     "일상 · 잡담"
 
 # Markdown
 markdown: kramdown
@@ -21,11 +27,14 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
   syntax_highlighter_opts:
+    css_class: 'highlight'
     block:
       line_numbers: false
 
-# Blog
-permalink: /blog/:year/:month/:day/:title/
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 defaults:
   - scope:

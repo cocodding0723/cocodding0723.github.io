@@ -12,7 +12,7 @@
 // Post header
 .post-header {
   max-width: 720px;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 
   .post-breadcrumb {
     display: flex;
@@ -21,13 +21,18 @@
     font-family: $font-mono;
     font-size: $fs-xs;
     color: var(--text-muted);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 
     a {
       color: var(--accent);
       text-decoration: none;
       &:hover { color: var(--text-primary); }
     }
+  }
+
+  .post-cat-badge {
+    margin-bottom: 16px;
   }
 
   .post-title {
@@ -56,19 +61,102 @@
       color: var(--text-muted);
     }
 
+    .post-read-time {
+      font-family: $font-mono;
+      font-size: $fs-xs;
+      color: var(--text-muted);
+
+      &::before { content: '· '; }
+    }
+
     .post-tags {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+
+      .tag {
+        text-decoration: none;
+        transition: all 0.2s ease;
+        &:hover { border-color: var(--accent); color: var(--accent); }
+      }
     }
   }
 
   .post-lead {
-    font-size: $fs-md;
+    font-size: $fs-base;
     color: var(--text-muted);
-    line-height: 1.6;
-    padding: 20px 0 0;
+    line-height: 1.7;
+    padding: 16px 0 0;
     border-top: 1px solid var(--border);
+  }
+}
+
+// Mobile TOC
+.mobile-toc {
+  max-width: 720px;
+  margin-bottom: 24px;
+  display: none;
+
+  @media (max-width: $desktop) {
+    display: block;
+  }
+
+  .mobile-toc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: $card-radius;
+    font-family: $font-mono;
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+
+    .toggle-icon {
+      margin-left: auto;
+      font-size: $fs-xs;
+      transition: transform 0.2s ease;
+    }
+
+    &[aria-expanded="true"] .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+  }
+
+  .mobile-toc-content {
+    display: none;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 $card-radius $card-radius;
+    padding: 12px 16px;
+
+    &.open { display: block; }
+
+    a {
+      display: block;
+      font-size: $fs-sm;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 5px 0;
+      padding-left: var(--indent, 0px);
+      transition: color 0.15s ease;
+
+      &.toc-h3 { --indent: 16px; }
+      &.toc-h4 { --indent: 32px; }
+
+      &:hover { color: var(--text-primary); }
+      &.active { color: var(--accent); }
+    }
   }
 }
 
@@ -153,7 +241,25 @@
     margin-top: 2em;
     margin-bottom: 0.75em;
     scroll-margin-top: 88px;
+    position: relative;
   }
+
+  // Heading anchor link (added by JS)
+  .heading-anchor {
+    opacity: 0;
+    margin-left: 8px;
+    font-size: 0.75em;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity 0.15s ease;
+    user-select: none;
+
+    &:hover { opacity: 1; text-decoration: none; }
+  }
+
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor { opacity: 0.6; }
 
   h1 { font-size: $fs-xl; }
   h2 {
@@ -364,6 +470,50 @@
     .nav-label {
       color: var(--accent);
     }
+  }
+}
+
+// Related posts
+.related-posts {
+  margin-top: 64px;
+  max-width: 720px;
+
+  .related-title {
+    font-family: $font-mono;
+    font-size: $fs-base;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+
+    &::before { content: '// '; color: var(--accent); }
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+
+    @media (max-width: $tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Comments
+.comments-section {
+  margin-top: 64px;
+  max-width: 720px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+
+  .comments-title {
+    font-family: $font-mono;
+    font-size: $fs-base;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+
+    &::before { content: '// '; color: var(--accent); }
   }
 }
 

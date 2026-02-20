@@ -1,0 +1,22 @@
+{% assign current_cat = page.categories | first %}
+{% assign related_posts = "" | split: "" %}
+{% for rp in site.posts %}
+  {% unless rp.url == page.url %}
+    {% if rp.categories contains current_cat %}
+      {% if related_posts.size < 3 %}
+        {% assign related_posts = related_posts | push: rp %}
+      {% endif %}
+    {% endif %}
+  {% endunless %}
+{% endfor %}
+
+{% if related_posts.size > 0 %}
+<div class="related-posts">
+  <h2 class="related-title">관련 글</h2>
+  <div class="related-grid">
+    {% for rpost in related_posts %}
+    {% include post-card.html post=rpost %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
