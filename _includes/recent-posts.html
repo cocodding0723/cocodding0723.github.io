@@ -1,0 +1,17 @@
+{% if site.posts.size > 0 %}
+<section class="recent-posts-section">
+  <div class="container">
+    <div class="recent-posts-header">
+      <h2 class="section-title animate-in">Latest Posts</h2>
+      <a href="/blog/" class="view-all-btn">모든 글 보기 →</a>
+    </div>
+    <div class="recent-posts-grid">
+      {% for post in site.posts limit: 3 %}
+      <div class="recent-card-wrap" style="--card-delay: {{ forloop.index0 | times: 100 }}ms">
+        {% include post-card.html post=post %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

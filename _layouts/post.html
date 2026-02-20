@@ -2,6 +2,12 @@
 layout: default
 ---
 
+{% assign words = page.content | number_of_words %}
+{% assign read_time = words | divided_by: 200 %}
+{% if read_time < 1 %}{% assign read_time = 1 %}{% endif %}
+{% assign category = page.categories[0] | default: 'Dev' %}
+{% assign cat_class = category | downcase %}
+
 <article class="post-page">
   <div class="container">
 
@@ -10,8 +16,16 @@ layout: default
       <div class="post-breadcrumb">
         <a href="/blog/">Blog</a>
         <span>/</span>
-        <span>{{ page.title }}</span>
+        {% if category %}
+        <a href="/blog/?category={{ category }}">{{ category }}</a>
+        <span>/</span>
+        {% endif %}
+        <span>{{ page.title | truncate: 40 }}</span>
       </div>
+
+      {% if category %}
+      <span class="cat-badge cat-{{ cat_class }} post-cat-badge">{{ category }}</span>
+      {% endif %}
 
       <h1 class="post-title">{{ page.title }}</h1>
 
@@ -19,10 +33,11 @@ layout: default
         <time datetime="{{ page.date | date: '%Y-%m-%d' }}">
           {{ page.date | date: "%Y년 %m월 %d일" }}
         </time>
+        <span class="post-read-time">{{ read_time }}분 읽기</span>
         {% if page.tags.size > 0 %}
         <div class="post-tags">
           {% for tag in page.tags %}
-          <span class="tag">{{ tag }}</span>
+          <a href="/blog/?tag={{ tag }}" class="tag">{{ tag }}</a>
           {% endfor %}
         </div>
         {% endif %}
@@ -32,6 +47,16 @@ layout: default
       <p class="post-lead">{{ page.description }}</p>
       {% endif %}
     </header>
+
+    <!-- 모바일 TOC 토글 -->
+    <div class="mobile-toc">
+      <button class="mobile-toc-toggle" aria-expanded="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        목차
+        <span class="toggle-icon">▼</span>
+      </button>
+      <nav class="mobile-toc-content" id="mobile-toc-list"></nav>
+    </div>
 
     <div class="post-layout">
 
@@ -67,6 +92,12 @@ layout: default
       </a>
       {% endif %}
     </nav>
+
+    <!-- 관련 글 -->
+    {% include related-posts.html %}
+
+    <!-- 댓글 -->
+    {% include comments.html %}
 
     <!-- 목록으로 -->
     <div class="post-back">
