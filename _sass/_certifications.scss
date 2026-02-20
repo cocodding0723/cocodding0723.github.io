@@ -1,0 +1,57 @@
+.certifications-section {
+  background: var(--bg-secondary);
+}
+
+.certifications-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.certification-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: $card-radius;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.2s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    border-color: var(--bg-tertiary);
+  }
+}
+
+.certification-name {
+  font-size: $fs-base;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.certification-date {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+@media (max-width: $tablet) {
+  .certification-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
