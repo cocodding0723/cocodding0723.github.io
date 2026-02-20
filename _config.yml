@@ -12,6 +12,7 @@ author:
 
 # Blog
 permalink: /blog/:year/:month/:day/:title/
+future: true   # 미래 날짜 포스트도 목록·페이지에 표시 (예: 2026년 글)
 
 # Category definitions (for reference)
 blog_categories:
