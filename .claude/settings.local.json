@@ -7,7 +7,8 @@
       "Bash(bundle exec jekyll build:*)",
       "Bash(wc:*)",
       "Bash(# post-card 관련 CSS 규칙만 추출 grep -o ''\\\\.[^{]*post-card[^{]*{[^}]*}'' /c/Users/user/Documents/Projects/cocodding0723.github.io/_site/assets/css/main.css)",
-      "Bash(bundle exec jekyll serve:*)"
+      "Bash(bundle exec jekyll serve:*)",
+      "Bash(*)"
     ]
   }
 }
