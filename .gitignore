@@ -5,3 +5,7 @@ _site/
 vendor/
 .bundle/
 Gemfile.lock
+
+# Claude Code
+.claude/settings.local.json
+.claude/edit-log.txt
