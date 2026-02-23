@@ -31,6 +31,12 @@
   var WIPE_OUT_MS = 500;
   var DEAD_PAUSE = 800;
 
+  // Diagonal split (0.0–1.0 x-ratio at top/bottom edge)
+  var DIAG_TOP = 0.78;
+  var DIAG_BOT = 0.22;
+  var DIAG_SHIFT = 0.07;
+  var diag = { topX: 0, botX: 0, tgtTopX: 0, tgtBotX: 0 };
+
   var isMobile = window.innerWidth < 480;
   if (isMobile) { PIPE_GAP = 160; PIPE_SPEED = 1.2; PIPE_INTERVAL = 2600; }
 
@@ -59,8 +65,12 @@
     canvas.style.width = W + 'px';
     canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    snake.gridW = Math.floor(W / SNAKE_CELL);
-    snake.gridH = Math.floor(H / SNAKE_CELL);
+    if (snake && snake.reset) {
+      snake.gridW = Math.floor(W / SNAKE_CELL);
+      snake.gridH = Math.floor(H / SNAKE_CELL);
+    }
+    diag.topX = diag.tgtTopX = W * DIAG_TOP;
+    diag.botX = diag.tgtBotX = W * DIAG_BOT;
   }
   resize();
   window.addEventListener('resize', function () {
@@ -424,20 +434,28 @@
 
   // ── Section 7: Diagonal geometry ──
   function getSide(px, py) {
-    return (px * H + py * W < W * H) ? 'flappy' : 'snake';
+    // Cross product: positive = left of line (flappy), negative = right (snake)
+    var cross = (diag.botX - diag.topX) * py - H * (px - diag.topX);
+    return cross > 0 ? 'flappy' : 'snake';
   }
   function clipFlappy() {
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W, 0); ctx.lineTo(0, H); ctx.closePath(); ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(diag.topX, 0);
+    ctx.lineTo(diag.botX, H); ctx.lineTo(0, H);
+    ctx.closePath(); ctx.clip();
   }
   function clipSnake() {
-    ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath(); ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(diag.topX, 0); ctx.lineTo(W, 0);
+    ctx.lineTo(W, H); ctx.lineTo(diag.botX, H);
+    ctx.closePath(); ctx.clip();
   }
   function drawDiagonalLine() {
     ctx.save();
     ctx.strokeStyle = C.diagGlow; ctx.lineWidth = 6;
-    ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(0, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(diag.topX, 0); ctx.lineTo(diag.botX, H); ctx.stroke();
     ctx.strokeStyle = C.diagonal; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(0, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(diag.topX, 0); ctx.lineTo(diag.botX, H); ctx.stroke();
     ctx.restore();
   }
 
@@ -457,19 +475,31 @@
   var hover = { side: null, flappyOp: 0.35, snakeOp: 0.35, tgtF: 0.35, tgtS: 0.35 };
   function updateHover(dt) {
     if (gameState !== 'SPLIT_IDLE') return;
-    var k = 1 - Math.exp(-dt * 0.01);
+    var k = 1 - Math.exp(-dt * 0.008);
     hover.flappyOp += (hover.tgtF - hover.flappyOp) * k;
     hover.snakeOp  += (hover.tgtS - hover.snakeOp) * k;
+    // Animate diagonal shift
+    diag.topX += (diag.tgtTopX - diag.topX) * k;
+    diag.botX += (diag.tgtBotX - diag.botX) * k;
   }
   hero.addEventListener('mousemove', function (e) {
     if (gameState !== 'SPLIT_IDLE') return;
     var rect = canvas.getBoundingClientRect();
     hover.side = getSide(e.clientX - rect.left, e.clientY - rect.top);
-    if (hover.side === 'flappy') { hover.tgtF = 0.65; hover.tgtS = 0.2; }
-    else { hover.tgtF = 0.2; hover.tgtS = 0.65; }
+    if (hover.side === 'flappy') {
+      hover.tgtF = 0.65; hover.tgtS = 0.2;
+      diag.tgtTopX = W * (DIAG_TOP + DIAG_SHIFT);
+      diag.tgtBotX = W * (DIAG_BOT + DIAG_SHIFT);
+    } else {
+      hover.tgtF = 0.2; hover.tgtS = 0.65;
+      diag.tgtTopX = W * (DIAG_TOP - DIAG_SHIFT);
+      diag.tgtBotX = W * (DIAG_BOT - DIAG_SHIFT);
+    }
   });
   hero.addEventListener('mouseleave', function () {
     hover.side = null; hover.tgtF = 0.35; hover.tgtS = 0.35;
+    diag.tgtTopX = W * DIAG_TOP;
+    diag.tgtBotX = W * DIAG_BOT;
   });
 
   // ── Section 10: State machine ──
@@ -481,8 +511,32 @@
   var lastTime = 0;
 
   var heroContent = hero.querySelector('.hero-content');
-  function minimizeHeroContent() { if (heroContent) heroContent.classList.add('minimized'); }
-  function restoreHeroContent()  { if (heroContent) heroContent.classList.remove('minimized'); }
+  function minimizeHeroContent() {
+    if (!heroContent) return;
+    var rect = heroContent.getBoundingClientRect();
+    var heroRect = hero.getBoundingClientRect();
+    var S = 0.45;
+    // Current top-right corner in hero-relative coords
+    var curX = rect.right - heroRect.left;
+    var curY = rect.top - heroRect.top;
+    // Target: upper-right within hero section bounds
+    var targetX = W - 32;
+    var targetY = heroRect.height * 0.05 + 24;
+    var tx = (targetX - curX) / S;
+    var ty = (targetY - curY) / S;
+    heroContent.style.transform = 'scale(' + S + ') translate(' + tx + 'px, ' + ty + 'px)';
+    heroContent.classList.add('minimized');
+  }
+  function restoreHeroContent() {
+    if (!heroContent) return;
+    heroContent.style.transform = '';
+    heroContent.classList.remove('minimized');
+  }
+
+  // After intro animations finish, switch to transition-based control
+  setTimeout(function () {
+    if (heroContent) heroContent.classList.add('anim-done');
+  }, 1500);
 
   flappy.reset();
   snake.reset();
@@ -586,15 +640,18 @@
   function drawLabels() {
     var fAlpha = hover.side === 'flappy' ? 0.8 : 0.4;
     var sAlpha = hover.side === 'snake'  ? 0.8 : 0.4;
+    // Centroids of the two trapezoids
+    var fCx = (diag.topX + diag.botX) * 0.25;
+    var sCx = W - (2 * W - diag.topX - diag.botX) * 0.25;
     ctx.save();
     ctx.font = 'bold 18px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.globalAlpha = fAlpha;
     ctx.fillStyle = hover.side === 'flappy' ? C.labelHover : C.label;
-    ctx.fillText('FLAPPY', W * 0.3, H * 0.35);
+    ctx.fillText('FLAPPY', fCx, H * 0.38);
     ctx.globalAlpha = sAlpha;
     ctx.fillStyle = hover.side === 'snake' ? C.labelHover : C.label;
-    ctx.fillText('SNAKE', W * 0.7, H * 0.65);
+    ctx.fillText('SNAKE', sCx, H * 0.62);
     ctx.restore();
   }
 
@@ -654,6 +711,13 @@
       case 'ArrowRight': case 'KeyD': snake.setDirection(1,  0); break;
     }
   }
+
+  hero.addEventListener('selectstart', function (e) {
+    if (gameState !== 'SPLIT_IDLE') e.preventDefault();
+  });
+  hero.addEventListener('dragstart', function (e) {
+    if (gameState !== 'SPLIT_IDLE') e.preventDefault();
+  });
 
   hero.addEventListener('click', function (e) {
     if (e.target.closest('a, button, .btn')) return;
