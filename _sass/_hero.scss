@@ -37,7 +37,25 @@
     position: relative;
     z-index: 1;
     max-width: 700px;
-    transition: opacity 0.4s ease;
+    transform-origin: top right;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.minimized {
+      transform: scale(0.32) translate(108%, -60%);
+      opacity: 0.6;
+      pointer-events: none;
+
+      .hero-description,
+      .hero-actions {
+        opacity: 0;
+      }
+    }
+
+    .hero-description,
+    .hero-actions {
+      transition: opacity 0.3s ease;
+    }
   }
 
   .hero-greeting {
