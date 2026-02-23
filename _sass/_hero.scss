@@ -37,6 +37,7 @@
     position: relative;
     z-index: 1;
     max-width: 700px;
+    transition: opacity 0.4s ease;
   }
 
   .hero-greeting {
