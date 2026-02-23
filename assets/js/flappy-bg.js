@@ -5,8 +5,8 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   // --- Constants ---
-  var GRAVITY = 0.35;
-  var JUMP_FORCE = -5.5;
+  var GRAVITY = 0.2;
+  var JUMP_FORCE = -4.5;
   var PIPE_SPEED = 1.5;
   var PIPE_GAP = 140;
   var PIPE_WIDTH = 40;
@@ -382,6 +382,7 @@
         state = 'idle';
         resetGame();
         idleTime = 0;
+        showHeroContent();
       }
     }
   }
@@ -443,12 +444,24 @@
   }, { threshold: 0.1 });
   observer.observe(hero);
 
+  // --- Hero content show/hide ---
+  var heroContent = hero.querySelector('.hero-content');
+
+  function hideHeroContent() {
+    if (heroContent) heroContent.style.opacity = '0';
+  }
+
+  function showHeroContent() {
+    if (heroContent) heroContent.style.opacity = '';
+  }
+
   // --- Input ---
   function jump() {
     if (state === 'idle') {
       state = 'playing';
       resetGame();
       bird.vy = JUMP_FORCE;
+      hideHeroContent();
     } else if (state === 'playing') {
       bird.vy = JUMP_FORCE;
     }
