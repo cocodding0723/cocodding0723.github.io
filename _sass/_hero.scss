@@ -41,20 +41,65 @@
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &.minimized {
-      transform: scale(0.32) translate(108%, -60%);
-      opacity: 0.6;
-      pointer-events: none;
-
+    // After intro animations complete, lock final state and enable transitions
+    &.anim-done {
+      .hero-greeting,
+      .hero-title,
+      .hero-subtitle,
       .hero-description,
       .hero-actions {
-        opacity: 0;
+        animation: none;
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
+    &.minimized {
+      transform: scale(0.45) translate(140%, -90%);
+      opacity: 1;
+      pointer-events: none;
+      width: fit-content !important;
+      max-width: none !important;
+      margin-left: auto !important;
+      text-align: right !important;
+
+      .hero-greeting,
+      .hero-description,
+      .hero-actions {
+        opacity: 0 !important;
+        transform: translateY(-6px) !important;
+        height: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+      }
+
+      .hero-subtitle {
+        font-size: $fs-lg !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 6px !important;
+        margin-bottom: 0 !important;
+
+        .hero-skill-sep,
+        .hero-skill-role {
+          display: none !important;
+        }
+
+        .hero-skill {
+          &::before {
+            content: '▸ ';
+            color: var(--accent);
+          }
+        }
+      }
+    }
+
+    .hero-greeting,
+    .hero-subtitle,
     .hero-description,
     .hero-actions {
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
   }
 
