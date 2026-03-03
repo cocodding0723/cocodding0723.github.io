@@ -47,7 +47,7 @@ tags: [태그1, 태그2, ...]
 - 이전 글 내용 참조 시 링크 포함
 
 ### 기존 태그 목록 (일관성 유지)
-Unity, AI, Flutter, Android, Algorithm, BFS, DFS, Blog
+Unity, AI, Flutter, Android, Algorithm, BFS, DFS, Blog, Trading
 
 ## 빌드 & 배포
 - 로컬 테스트: `bundle exec jekyll serve`
