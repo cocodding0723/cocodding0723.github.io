@@ -1,162 +1,246 @@
 ---
 title: "AI로 게임 개발하기 - 8일차"
-description: "도감 시스템 구현 전 Unity 프로젝트 건강 체크. 컴파일 에러 0건 확인, Library/StateCache 캐시 손상 발견과 대응. AI를 활용한 프로젝트 진단의 가치."
+description: "VFX 버그 수정, 매직넘버 30파일 정리에 이어 도감 시스템과 튜토리얼까지 구현. 달성률 89%에서 94%로 점프한 폭풍 코딩의 날."
 date: 2026-03-05
 categories: [Project]
 tags: [Unity, AI]
 ---
 
-## 도감 시스템 전에 할 일이 있었다
+## 드디어 코드를 쓰는 날
 
-[7일차](/blog/2026/03/04/ai-game-dev-day-7/)에서 1주일 공백 후 복귀하여 문서를 점검하고, 도감 시스템(M4-27)을 다음 세션에서 착수하기로 계획했다. 8일차인 오늘, 바로 도감 구현에 들어가려 했는데 한 가지가 걸렸다.
+[7일차](/blog/2026/03/04/ai-game-dev-day-7/)는 문서만 봤다. 코드 0줄. 복귀 후 상태 점검에 집중한 날이었다. 8일차인 오늘은 Unity 에디터를 열고 프로젝트를 빌드했다. 컴파일 에러 0건. `Library/StateCache` 캐시 손상 로그가 하나 있었지만, Unity 내부 캐시 이슈로 코드와 무관하다.
 
-7일차는 문서만 봤다. Unity 에디터를 열지 않았다. 1주일 넘게 프로젝트를 빌드하지 않은 상태에서 바로 새 피처를 구현하면, 기존 코드에 이미 문제가 있는 것인지 새 코드가 문제를 만든 것인지 구분할 수 없다.
+깨끗한 빌드를 확인했으니 코드를 작성할 차례다. 그런데 도감 시스템(M4-27)에 들어가기 전에 먼저 해결해야 할 것들이 있었다. 플레이 테스트를 돌려보니 VFX가 이상했고, 앱을 내렸다 올리면 게임이 깨졌고, 메뉴에서 게임에 들어가면 조작이 안 됐다.
 
-그래서 도감 구현에 앞서 프로젝트 건강 체크를 먼저 수행했다.
-
----
-
-## AI에게 프로젝트 진단 맡기기
-
-Unity 프로젝트를 열고, AI에게 콘솔 에러를 확인해달라고 요청했다. 확인 항목은 세 가지다.
-
-1. **컴파일 에러** — C# 스크립트에 문법 오류나 참조 누락이 있는가
-2. **에디터 에러** — Unity 에디터 자체에서 발생하는 경고나 에러가 있는가
-3. **런타임 에러** — 플레이 모드에서 예외가 발생하는가 (이건 실제로 플레이해봐야 확인 가능)
-
-결과는 깔끔했다. **컴파일 에러 0건, 코드 에러 0건.** 1주일 넘게 방치했는데 깨진 것이 없다.
-
-이것이 당연한 결과처럼 보일 수 있지만, AI와 빠르게 개발한 프로젝트에서는 당연하지 않다. [5일차](/blog/2026/02/24/ai-game-dev-day-5/)에 하루 만에 31개 피처를 구현했고, 그 과정에서 생성된 C# 파일, ScriptableObject, 프리팹이 수십 개다. Unity 버전 업데이트, 패키지 의존성 변경, 캐시 손상 등 어떤 이유로든 컴파일이 깨질 가능성은 항상 존재한다.
-
-에러가 없다는 사실을 **확인한 것** 자체가 가치 있다. "아마 괜찮겠지"와 "확인했고 괜찮다"는 이후 작업의 자신감이 다르다.
+도감보다 급한 것이 3건의 버그 수정이었다.
 
 ---
 
-## Library/StateCache 손상 — Unity의 내부 사정
+## 버그 1: VFX가 중복되고 잔상이 남는다
 
-컴파일 에러는 없었지만, Unity 콘솔에 로그 하나가 찍혀 있었다.
+가장 규모가 큰 수정이었다. 문제는 세 곳에서 동시에 발생하고 있었다.
 
-```text
-Refreshing native plugins compatible for Editor and target platform.
-A cache file at Library/StateCache/... was damaged and has been automatically deleted.
-```
+### ObjectPool — ParticleSystem 중앙 관리
 
-`Library/StateCache`는 Unity 에디터가 내부적으로 사용하는 캐시 디렉토리다. 에디터 상태(인스펙터 접힘/펼침, 선택된 오브젝트 등)를 저장해두고 다음에 프로젝트를 열 때 복원하는 데 쓴다. 이 캐시 파일이 손상되면 Unity가 자동으로 삭제하고 재생성한다.
-
-### 왜 손상되는가
-
-대표적인 원인은 세 가지다.
-
-| 원인 | 설명 |
-|------|------|
-| 비정상 종료 | Unity 에디터가 크래시하거나 강제 종료되면 캐시 파일이 불완전한 상태로 남는다 |
-| 버전 불일치 | Unity 패치 업데이트 후 이전 캐시 포맷과 호환되지 않는 경우 |
-| 디스크 I/O 이슈 | 파일 시스템 수준에서 쓰기가 중단된 경우 |
-
-### 영향 범위
-
-**코드와 무관하다.** `Library/` 폴더 전체가 Unity의 로컬 캐시이며, 프로젝트의 소스 코드나 에셋에 영향을 주지 않는다. `.gitignore`에도 `Library/`는 기본적으로 포함되어 있다. 캐시가 손상되면 Unity가 알아서 삭제하고, 다음에 필요할 때 재생성한다.
-
-실제로 이 로그 이후 어떤 기능적 문제도 발생하지 않았다.
-
-### 알아둬야 하는 이유
-
-Unity 초보자나 AI에게 에러 로그를 붙여넣을 때, `Library/StateCache` 관련 메시지를 보고 "프로젝트가 손상됐다"고 오판할 수 있다. 이것은 무시해도 되는 로그다. 하지만 그 판단을 내리려면 `Library/` 폴더의 역할을 이해하고 있어야 한다.
-
-만약 이 로그가 반복적으로 발생한다면, 그때는 `Library/` 폴더 전체를 삭제하고 프로젝트를 다시 임포트하는 것을 고려해야 한다. Unity가 `Library/`를 처음부터 재생성하면 대부분의 캐시 문제가 해결된다. 다만 프로젝트 규모에 따라 재임포트에 수 분에서 수십 분이 걸릴 수 있다.
-
----
-
-## "에러 없음"의 가치
-
-오늘 변경한 코드는 0줄이다. 7일차에 이어 연속 2일째 코드 변경 없음. 생산적이지 않아 보일 수 있지만, 이 과정에는 나름의 논리가 있다.
-
-### 공백 후 복귀의 3단계
-
-```text
-7일차: 문서 점검 → 어디까지 했는지, 뭘 해야 하는지 파악
-8일차: 프로젝트 건강 체크 → 기존 코드가 멀쩡한지 확인
-9일차: 구현 착수 → 깨끗한 기반 위에서 새 피처 시작
-```
-
-7일차에서 "복귀 시 문서를 먼저 보라"는 원칙을 세웠다면, 8일차의 교훈은 "구현 전에 빌드가 되는지 확인하라"다. 특히 AI와 함께 개발할 때 이 단계가 중요한 이유가 있다.
-
-AI는 세션 간 맥락을 유지하지 못한다. 새 세션에서 "도감 시스템 구현해줘"라고 하면, AI는 현재 프로젝트의 빌드 상태를 모른 채 코드를 생성한다. 만약 기존 코드에 컴파일 에러가 있는 상태에서 새 코드가 추가되면, 에러의 원인이 기존 코드인지 새 코드인지 구분하기 어렵다. AI에게 "이 에러 고쳐줘"라고 하면 AI는 새 코드와 기존 코드를 모두 건드리기 시작하고, 문제가 확산된다.
-
-반면, "기존 빌드는 깨끗하다"는 사실이 확인된 상태에서 새 코드를 추가하면, 에러가 발생했을 때 원인은 100% 새 코드에 있다. 디버깅 범위가 명확해진다.
-
----
-
-## 도감 시스템 설계 착수
-
-프로젝트가 건강한 상태임을 확인했으니, 도감 시스템(M4-27)의 설계에 들어갔다. 7일차에서 정리한 구현 순서를 다시 보면 다음과 같다.
-
-1. `CollectionData` ScriptableObject 설계
-2. `CollectionManager` 구현 — 이벤트 리스너로 수집 데이터 기록
-3. 도감 UI 구현 — 카드 그리드, 잠금/해제 상태 표시, 상세 정보 팝업
-4. `SaveSystem`에 도감 데이터 저장/로드 추가
-
-### CollectionData SO 설계
-
-기존 `WeaponData`, `EnemyData` SO에 이미 도감에 필요한 정보가 대부분 들어 있다. 무기 이름, 아이콘, 설명, 스탯 — 이것들은 6일차에서 분석한 그 ScriptableObject들이다.
-
-도감 전용 SO를 새로 만드는 대신, 기존 SO에 도감용 필드를 추가하는 방식을 택했다.
+오브젝트 풀에서 가져온 VFX가 이전 파티클을 그대로 들고 있는 문제가 있었다. 풀에서 꺼낼 때(`Get`) 파티클이 클리어되지 않고, 반납할 때(`Return`) 파티클이 멈추지 않았다.
 
 ```csharp
-// WeaponData.cs에 추가
-[Header("Collection")]
-public string collectionDescription;  // 도감용 상세 설명
-public Sprite collectionSprite;       // 도감용 큰 이미지 (아이콘과 별도)
-public bool isHidden;                 // 히든 무기 여부 (도감에서 ???로 표시)
-```
-
-별도 SO를 만들면 데이터가 이중 관리된다. 무기 이름을 바꾸면 `WeaponData`와 `CollectionData`를 둘 다 수정해야 한다. 기존 SO를 확장하면 단일 소스가 유지된다.
-
-### CollectionManager 구조
-
-`CollectionManager`는 기존 `GameEvents` 이벤트 허브를 구독해서 수집 이벤트를 감지한다.
-
-```csharp
-public class CollectionManager : MonoBehaviour
+// ObjectPool — Get 시
+var allPS = obj.GetComponentsInChildren<ParticleSystem>(true);
+foreach (var ps in allPS)
 {
-    private HashSet<string> _unlockedWeapons = new();
-    private HashSet<string> _unlockedEnemies = new();
-    private Dictionary<string, int> _enemyKillCounts = new();
+    ps.Clear(true);
+    ps.Play(true);
+}
 
-    private void Start()
+// ObjectPool — Return 시
+foreach (var ps in allPS)
+{
+    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+    ps.Clear(true);
+}
+```
+
+IPoolable 인터페이스도 개선했다. 풀에서 꺼낼 때 해당 오브젝트의 **모든** 컴포넌트에 통지하도록 변경했다. 이전에는 루트 컴포넌트 하나만 통지받았는데, 자식에 달린 VFX 컴포넌트는 초기화 시점을 알지 못했다.
+
+### WeaponBase — ShowAttackVFX 중복 방지
+
+무기가 공격할 때마다 VFX를 스폰하는데, 이전 VFX가 아직 재생 중인 상태에서 새 VFX가 겹쳐 나왔다. 특히 쿨다운이 짧은 무기에서 VFX가 2~3개 겹쳐 보이는 현상이 심했다.
+
+```csharp
+// WeaponBase — 이전 VFX 회수 후 새 VFX 스폰
+if (_activeVFXInstance != null)
+    _poolManager.Return(_activeVFXInstance);
+
+_activeVFXInstance = _poolManager.Get(vfxPrefab);
+
+// duration 미지정 시 쿨다운 기반 자동 산출
+float autoDuration = Mathf.Min(_adjustedCooldown * 0.9f, 1.0f);
+```
+
+`_activeVFXInstance`로 현재 활성 VFX를 추적하고, 새 VFX를 스폰하기 전에 이전 것을 반납한다. duration은 쿨다운의 90%와 1초 중 작은 값으로 자동 산출한다. 루핑 파티클이 쿨다운보다 오래 재생되는 일이 없어진다.
+
+### MeteorWeapon — 지연 데미지 리워크
+
+Meteor는 완전히 리워크했다. 기존에는 VFX 스폰 즉시 데미지가 들어갔는데, 운석이 떨어지는 VFX의 착탄 시점과 데미지 타이밍이 맞지 않았다. 하늘에 운석이 나타나자마자 데미지가 들어가니 플레이어 입장에서 "왜 맞은 거지?" 싶은 상황이었다.
+
+```csharp
+private const float IMPACT_DELAY = 0.6f;
+
+private struct PendingImpact
+{
+    public Vector3 Position;
+    public float RemainingTime;
+}
+
+private readonly List<PendingImpact> _pendingImpacts = new();
+```
+
+`PendingImpact` 구조체로 "대기 중인 착탄"을 관리한다. Attack() 시점에 VFX를 스폰하고 PendingImpact를 등록한 뒤, `LateUpdate`에서 0.6초가 지나면 해당 위치에 데미지를 판정한다. 다중 운석이 동시에 날아가는 것도 자연스럽게 지원된다.
+
+---
+
+## 버그 2: 앱을 내리면 게임이 깨진다
+
+모바일에서 앱을 백그라운드로 내렸다가 복귀하면 게임이 비정상 동작했다. `Time.deltaTime`이 폭발하면서 적이 순간이동하고, 타이머가 수십 초씩 점프했다.
+
+```csharp
+// GameManager — 앱 포커스/포즈 자동 처리
+private bool _autoPaused;
+
+private void OnApplicationFocus(bool hasFocus)
+{
+    if (!hasFocus && CurrentState.CurrentValue == GameState.InGame)
     {
-        // 기존 이벤트 허브 구독
-        GameEvents.OnEnemyKilled.Subscribe(OnEnemyKilled).AddTo(this);
-        GameEvents.OnWeaponAcquired.Subscribe(OnWeaponAcquired).AddTo(this);
+        _autoPaused = true;
+        PauseGame();
     }
-
-    private void OnEnemyKilled(EnemyKilledEvent e)
+    else if (hasFocus && _autoPaused)
     {
-        _unlockedEnemies.Add(e.EnemyId);
-        _enemyKillCounts[e.EnemyId] = _enemyKillCounts.GetValueOrDefault(e.EnemyId) + 1;
-    }
-
-    private void OnWeaponAcquired(WeaponAcquiredEvent e)
-    {
-        _unlockedWeapons.Add(e.WeaponId);
+        _autoPaused = false;
+        ResumeGame();
     }
 }
 ```
 
-5일차에서 구축한 R3 기반 이벤트 시스템이 여기서 빛을 발한다. 적 처치, 무기 획득 이벤트가 이미 존재하므로, 도감은 그 이벤트를 구독하기만 하면 된다. 기존 코드를 수정할 필요가 없다.
+`_autoPaused` 플래그로 사용자가 수동으로 일시정지한 것과 앱 백그라운드로 인한 자동 일시정지를 구분한다. 사용자가 수동 일시정지 중에 앱을 내렸다 올려도 자동 해제되지 않는다.
 
 ---
 
-## 진행 상황
+## 버그 3: 메뉴에서 게임에 들어가면 조작이 안 된다
 
-| 항목 | ID | 마일스톤 | 상태 |
-|------|----|----------|------|
-| 도감 시스템 | M4-27 | M4 | **진행 중** (설계 완료, 구현 착수) |
-| 온보딩 튜토리얼 | M5-31 | M5 | 미완료 |
-| 수익화 (보상형 광고) | M5-32 | M5 | 미완료 |
-| 모바일 최적화 | M5-35 | M5 | 미완료 |
+이전 세션에서 일시정지(`Time.timeScale = 0`) 상태로 게임을 끝내고 메뉴로 돌아가면, 다음 게임에서 `Time.timeScale`이 0인 채로 시작된다. `SceneManager.LoadScene`은 timeScale을 리셋하지 않는다.
 
-달성률은 여전히 32/36 (89%). 하지만 도감 시스템의 설계가 완료되었고, 다음 세션에서 구현만 남았다.
+```csharp
+// GameManager.StartGame()
+Time.timeScale = 1f;  // 이전 세션 Pause 상태 잔류 방지
+```
+
+한 줄 수정이다. 하지만 재현 조건이 "일시정지 상태에서 메뉴로 돌아간 뒤 다시 게임을 시작한다"여서, 정상 플로우에서는 발생하지 않는다. 이런 종류의 버그가 가장 발견하기 어렵다.
+
+---
+
+## 하드코딩 값 정리 — 30파일 리팩토링
+
+버그 3건을 수정한 뒤, 코드 전반에 흩어진 매직넘버를 정리했다. 공유 상수 클래스 3종을 새로 만들고, ~30개 파일에서 하드코딩된 값을 중앙 상수로 교체했다.
+
+```csharp
+// 신규 상수 클래스 3종
+public static class PlayerPrefsKeys    // 10종 키 중앙화
+public static class SceneNames         // GameScene, MenuScene
+public static class PickupConstants    // 마그넷 물리 4상수
+```
+
+수정 대상은 광범위했다.
+
+| 영역 | 수정 파일 | 내용 |
+|------|-----------|------|
+| PlayerPrefs 키 | AchievementManager, ShopManager 등 8개 | 문자열 리터럴 → `PlayerPrefsKeys` |
+| 무기 매직넘버 | ArrowRain, Meteor, FlamePillar 등 7개 | Attack() 내 매직넘버 → `const` |
+| 무기 진화 보너스 | 무기 11종 | 진화 배율 → `named const` |
+| 기타 | AudioManager, DamageTextSpawner, XPManager 등 | 임계값/오프셋 → `const` |
+
+~30파일 수정, **동작 변경 0건**. 순수한 리팩토링이다.
+
+---
+
+## 도감 시스템 (M4-27) — 구현 완료
+
+버그 수정과 리팩토링이 끝나고, 7일차에서 계획한 도감 시스템에 착수했다. 계획만 세워두면 AI에게 한 번에 구현을 맡길 수 있다고 했는데, 실제로 그랬다.
+
+### EncyclopediaManager
+
+도감의 핵심 로직이다. GameEvents를 구독해서 적/보스/무기/패시브 아이템의 발견을 추적하고, 킬 카운트까지 기록한다.
+
+```csharp
+public class EncyclopediaManager : MonoBehaviour
+{
+    // GameEvents 구독 6종
+    // - OnEnemyKilled → 적 발견 + 킬카운트 증가
+    // - OnBossKilled → 보스 발견
+    // - OnWeaponSelected → 무기 발견
+    // - OnWeaponEvolved → 진화 무기 발견
+    // - OnPassiveItemAcquired → 패시브 발견
+    // - OnGameOver → 세션 델타 플러시
+
+    private void FlushSessionDelta()
+    {
+        // 세션 중 변경된 데이터만 PlayerPrefs에 저장
+    }
+}
+```
+
+영속화는 PlayerPrefs를 사용했다. [4일차](/blog/2026/02/23/ai-game-dev-day-4/)에서 세이브/로드를 PlayerPrefs MVP로 구현한 것과 같은 패턴이다. 세션이 끝날 때 `FlushSessionDelta()`로 변경분만 저장하므로, 매 이벤트마다 PlayerPrefs를 쓰는 것보다 I/O가 효율적이다.
+
+### 기존 SO 확장
+
+7일차에서 "별도 SO를 만들면 데이터가 이중 관리된다"고 분석했던 대로, 기존 `EnemyData`와 `BossData`에 도감용 필드를 추가했다.
+
+```csharp
+// EnemyData, BossData에 추가
+[Header("Encyclopedia")]
+public string DisplayName;    // 도감 표시 이름
+public string Description;    // 도감 설명 텍스트
+```
+
+`WeaponData`와 `PassiveItemData`는 이미 DisplayName이 있었으므로 추가 필드가 필요 없었다.
+
+### 메인 메뉴 UI 통합
+
+도감은 메인 메뉴에 탭 형태로 들어간다. 3개 탭(적, 무기, 패시브)으로 나뉘고, 각 탭에 카드 그리드가 표시된다.
+
+```xml
+<!-- MainMenu.uxml 확장 -->
+<ui:Button name="btn-encyclopedia" text="도감" />
+<ui:VisualElement name="encyclopedia-panel">
+    <!-- 탭 3종: 적 / 무기 / 패시브 -->
+    <!-- ScrollView + 카드 그리드 -->
+</ui:VisualElement>
+```
+
+미발견 항목은 `???`로 표시되고 opacity가 낮아진다. Vampire Survivors의 도감과 동일한 패턴이다. `MainMenuController`에 카드 빌더 3종(적/무기/패시브)을 추가해서 SO 데이터를 기반으로 카드를 동적 생성한다.
+
+### 테스트
+
+EditMode 테스트 10개를 작성했다. 적 발견, 킬카운트 증가, 무기 해금, 패시브 해금, 세션 플러시 등 핵심 로직을 커버한다. 이전 세션에서 구축한 테스트 프레임워크(146 + 24 = 170개 테스트)에 10개가 추가되어 총 180개 테스트가 되었다.
+
+한 마디로 정리하면, 발견은 이벤트 구독, 저장은 PlayerPrefs, 표시는 UI Toolkit. 기존 시스템을 그대로 조합했을 뿐 새로운 아키텍처 패턴은 없다. 그래서 빠르게 끝났다.
+
+---
+
+## 온보딩 튜토리얼 (M5-31) — 구현 완료
+
+도감까지 끝내고, 7일차에서 2순위로 잡았던 온보딩 튜토리얼에도 착수했다. "도감이 완성된 후에 튜토리얼에서 도감도 안내할 수 있다"고 했던 순서 의존이 해소된 것이다.
+
+### 3단계 인게임 튜토리얼
+
+```text
+Step 1: 이동 안내
+  → 풀스크린 오버레이 + 일시정지 + 탭하여 해제
+
+Step 2: 자동 공격 안내
+  → 3초 후 상단 힌트 표시 (일시정지 없음)
+
+Step 3: 레벨업 안내
+  → OnLevelUp 이벤트 구독, 첫 레벨업 시 안내
+```
+
+```csharp
+public class TutorialController : MonoBehaviour
+{
+    // Reflex DI + R3 구독
+    // PlayerPrefs "Tutorial_Completed" → 1회만 표시
+    // Step1: 풀스크린 오버레이, timeScale=0, 탭으로 해제
+    // Step2: 3초 대기 후 상단 플로팅 힌트
+    // Step3: OnLevelUp 구독, 첫 레벨업 시 무기 선택 안내
+}
+```
+
+뱀서라이크는 조작이 단순하므로 튜토리얼도 가볍게 만들었다. Step 1만 일시정지를 걸고, Step 2~3은 게임 플레이를 방해하지 않는 힌트로 처리한다.
+
+UI는 별도 UIDocument에 `sortOrder=20`으로 배치해서 게임 HUD 위에 오버레이된다. CSS transition으로 opacity 300ms 페이드인/아웃을 넣었다.
+
+`PlayerPrefs`에 `Tutorial_Completed` 키를 저장해서 한 번만 표시한다. 두 번째 플레이부터는 튜토리얼이 뜨지 않는다.
 
 ---
 
@@ -164,27 +248,42 @@ public class CollectionManager : MonoBehaviour
 
 | 지표 | 수치 |
 |------|------|
-| 코드 변경 | 0줄 |
-| 컴파일 에러 | 0건 |
-| 발견된 이슈 | Library/StateCache 캐시 손상 1건 (자동 복구, 코드 무관) |
-| 설계 완료 | CollectionData SO, CollectionManager 구조 |
-| 게임 피처 달성률 | 32/36 (89%) |
+| 버그 수정 | 3건 (VFX 중복/잔상, 앱 포커스, timeScale 잔류) |
+| 신규 피처 | 2개 (도감 시스템, 온보딩 튜토리얼) |
+| 신규 파일 | 상수 클래스 3개 + EncyclopediaManager + TutorialController + UXML/USS |
+| 수정 파일 | ~30개 (하드코딩 정리) |
+| 테스트 추가 | 10개 (도감 EditMode 테스트) |
+| 게임 피처 달성률 | **34/36 (94%)** ← 32/36 (89%)에서 점프 |
 
 ---
 
-## 다음 단계
+## 남은 것은 2개
 
-다음 세션에서는 도감 시스템의 실제 구현에 들어간다.
+| 항목 | ID | 마일스톤 | 상태 |
+|------|----|----------|------|
+| ~~도감 시스템~~ | ~~M4-27~~ | ~~M4~~ | ✅ **완료** |
+| ~~온보딩 튜토리얼~~ | ~~M5-31~~ | ~~M5~~ | ✅ **완료** |
+| 수익화 (보상형 광고 3곳) | M5-32 | M5 | 미완료 |
+| 모바일 최적화 | M5-35 | M5 | 미완료 |
 
-1. `CollectionData` 필드를 기존 SO에 추가하고 에디터에서 데이터 입력
-2. `CollectionManager` 구현 및 `GameEvents` 구독 연결
-3. 도감 UI — 카드 그리드 레이아웃, 잠금/해제 토글, 상세 정보 팝업
-4. `SaveSystem` 연동 — 도감 해금 상태 영속화
+7일차에서 4개 남았던 피처가 2개로 줄었다. 남은 것은 수익화(AdMob)와 모바일 최적화(SpriteAtlas, 배칭, Safe Area). 둘 다 게임 로직이 아니라 인프라 작업이다.
 
-설계가 끝났으니, [5일차](/blog/2026/02/24/ai-game-dev-day-5/)의 패턴대로 AI에게 스펙을 넘기면 구현은 빠르게 진행될 것이다. 기존 이벤트 시스템과 SO 구조를 그대로 활용하므로 새로 설계할 부분이 적다.
-
-7일차는 문서를 읽는 날, 8일차는 프로젝트를 진단하고 설계하는 날이었다. 9일차에는 코드를 쓴다.
+7일차의 우선순위 "콘텐츠 → UX → 수익화 → 최적화"에서 콘텐츠(도감)와 UX(튜토리얼)를 하루 만에 끝냈다. 다음은 수익화, 그리고 마지막으로 최적화.
 
 ---
 
-*공백 후 복귀 3일째 — 문서 점검, 빌드 확인, 설계 완료까지 마쳤으니 이제 남은 건 구현뿐이다.*
+## 복귀 3일의 흐름
+
+```text
+7일차: 문서 점검 → 상태 파악, 우선순위 결정
+8일차: 버그 수정 → 리팩토링 → 도감 구현 → 튜토리얼 구현
+9일차: 수익화(AdMob) 또는 모바일 최적화
+```
+
+7일차에 코드를 한 줄도 쓰지 않고 계획만 세운 것이 8일차의 생산성으로 이어졌다. 우선순위가 명확했기 때문에 "다음에 뭘 하지?"라는 고민 없이 순서대로 처리했다. 버그 수정 → 리팩토링 → 도감 → 튜토리얼. 방향이 정해져 있으면 AI에게도 정확한 지시를 내릴 수 있고, AI가 빠르게 코드를 생성하면 사람은 검증에 집중할 수 있다.
+
+[5일차](/blog/2026/02/24/ai-game-dev-day-5/)에 하루 만에 무기 20종을 찍어냈을 때처럼, 기획이 단단하면 구현 속도는 AI가 만들어준다.
+
+---
+
+*버그 3건 수정, 매직넘버 30파일 정리, 도감과 튜토리얼까지 — 달성률 89%에서 94%로, 남은 피처는 이제 2개다.*
