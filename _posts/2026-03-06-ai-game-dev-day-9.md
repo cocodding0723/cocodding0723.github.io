@@ -114,6 +114,94 @@ Infrastructure
 
 ---
 
+## Firebase Analytics — 19종 이벤트 추적
+
+게임이 동작하는 것과 게임이 어떻게 플레이되는지 아는 것은 다른 문제다. 출시 후 밸런싱 조정, 이탈 구간 분석, 수익화 전환율 측정을 위해 Firebase Analytics를 연동했다.
+
+### 아키텍처
+
+```text
+GameEvents (R3 Subject Hub, 21종)
+    ↓ Subscribe
+AnalyticsManager (19종 이벤트 구독)
+    ↓ Delegate
+IAnalyticsProvider (인터페이스)
+    ├── FirebaseAnalyticsProvider (프로덕션)
+    └── DebugAnalyticsProvider (에디터 테스트용)
+```
+
+핵심은 `IAnalyticsProvider` 인터페이스로 구현체를 분리한 것이다. `FirebaseAnalyticsProvider`는 `#if FIREBASE_ANALYTICS` 조건부 컴파일로 Firebase SDK가 설치된 환경에서만 활성화되고, 에디터에서는 `DebugAnalyticsProvider`가 `Debug.Log`로 이벤트를 출력한다. 개발 중에 실제 Firebase 콘솔을 열지 않아도 이벤트 발화를 확인할 수 있다.
+
+```csharp
+public interface IAnalyticsProvider
+{
+    void LogEvent(string eventName);
+    void LogEvent(string eventName, string paramKey, string paramValue);
+    void LogEvent(string eventName, string paramKey, int paramValue);
+    void LogEventWithParams(string eventName, Dictionary<string, object> parameters);
+    void SetUserProperty(string propertyName, string value);
+}
+```
+
+### 추적 이벤트 전체 목록
+
+| # | 이벤트 | 파라미터 | 용도 |
+|---|--------|----------|------|
+| 1 | `game_start` | — | 세션 시작 |
+| 2 | `game_over` | — | 세션 종료 (사망) |
+| 3 | `player_revive` | — | 광고 부활 사용률 |
+| 4 | `player_damaged` | damage, remaining_hp | 피격 패턴 분석 |
+| 5 | `player_death` | — | 사망 빈도 |
+| 6 | `enemy_killed` | enemy_id | 적 처치 분포 |
+| 7 | `level_up` | level, total_xp | 성장 곡선 추적 |
+| 8 | `boss_spawn` | boss_id | 보스 도달률 |
+| 9 | `boss_death` | boss_id | 보스 클리어률 |
+| 10 | `boss_phase_change` | boss_id, boss_phase, hp_ratio | 보스 난이도 분석 |
+| 11 | `item_collected` | item_type_id | 아이템 수집 패턴 |
+| 12 | `xp_collected` | xp_amount | 경험치 획득 속도 |
+| 13 | `coin_collected` | coin_amount | 코인 이코노미 |
+| 14 | `weapon_selected` | weapon_id, weapon_level | 무기 선호도 |
+| 15 | `weapon_evolved` | weapon_id, evolved_name | 진화 달성률 |
+| 16 | `passive_item_acquired` | item_type_id | 패시브 선호도 |
+| 17 | `passive_item_level_up` | item_type_id, item_level | 패시브 성장 패턴 |
+| 18 | `treasure_chest_opened` | — | 보물상자 도달률 |
+| 19 | `stage_selected` | stage_id | 스테이지 선택 분포 |
+| 20 | `stage_cleared` | stage_id, clear_time | 클리어 시간 분석 |
+| 21 | `session_end` | is_victory, session_time, total_kills, total_coins, player_level | 세션 종합 리포트 |
+
+### 스팸 방지 — ThrottleFirst
+
+경험치 젬과 코인은 한 프레임에 수십 개가 동시에 수집될 수 있다. 매번 이벤트를 발화하면 Firebase 할당량을 빠르게 소진한다. R3의 `ThrottleFirst`로 200ms 간격으로 제한했다.
+
+```csharp
+// XP 수집 — 200ms 내 첫 이벤트만 전송
+GameEvents.OnXPGemCollected
+    .ThrottleFirst(TimeSpan.FromMilliseconds(200))
+    .Subscribe(xp => LogEvent("xp_collected", "xp_amount", xp))
+    .AddTo(_disposables);
+
+// 코인 수집 — 동일한 200ms 스로틀
+GameEvents.OnCoinCollected
+    .ThrottleFirst(TimeSpan.FromMilliseconds(200))
+    .Subscribe(coin => LogEvent("coin_collected", "coin_amount", coin))
+    .AddTo(_disposables);
+```
+
+나머지 17종 이벤트는 발생 빈도가 낮으므로(레벨업, 보스 등장, 무기 선택 등) 스로틀링 없이 즉시 전송한다.
+
+### 이 데이터로 뭘 할 수 있나
+
+출시 후 Firebase 콘솔에서 확인할 수 있는 지표 예시:
+
+- **이탈 구간**: `session_end`의 `session_time` 분포. 3분대에 몰려있으면 초반 난이도가 너무 높은 것이다.
+- **무기 밸런스**: `weapon_selected`의 `weapon_id` 분포. 특정 무기만 선택된다면 나머지 무기의 매력도를 올려야 한다.
+- **수익화 전환율**: `player_death` 대비 `player_revive` 비율. 부활 광고의 효용을 측정할 수 있다.
+- **보스 난이도**: `boss_spawn` 대비 `boss_death` 비율. 보스 도달률은 높은데 클리어률이 낮으면 보스 HP를 하향 조정해야 한다.
+
+밸런싱은 AI가 못한다고 앞서 적었다. 하지만 Firebase Analytics로 데이터를 수집하면, **감이 아닌 수치 기반의 밸런싱**이 가능해진다. "이 무기가 너무 강한 것 같다"는 AI의 판단 대신 "weapon_selected 분포에서 Magic Bolt가 78%를 차지한다"는 팩트가 의사결정을 뒷받침한다.
+
+---
+
 ## AI 활용의 장점
 
 ### 1. 구현 속도가 압도적이다
