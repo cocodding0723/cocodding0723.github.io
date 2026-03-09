@@ -86,14 +86,7 @@ if [ -n "$ERRORS" ]; then
   ESCAPED=$(echo "$REASON" | sed 's/\\/\\\\/g; s/"/\\"/g' | tr '\n' ' ')
   echo "{\"decision\":\"block\",\"reason\":\"$ESCAPED\"}"
 else
-  cat << 'EOF'
-{
-  "hookSpecificOutput": {
-    "hookEventName": "Stop",
-    "additionalContext": "[셀프 체크 리마인더] 포스트 기본 검증 통과. 추가로 확인하세요:\n- description이 50-160자로 충분히 구체적인가?\n- 태그가 기존 포스트와 일관되는가?\n- 코드 블록에 언어가 지정되었는가?\n- 글 마지막에 이탤릭 한 줄 요약이 있는가?"
-  }
-}
-EOF
+  echo '{"decision":"approve","reason":"[셀프 체크 리마인더] 포스트 기본 검증 통과. 추가로 확인하세요: description 50-160자, 태그 일관성, 코드 블록 언어 지정, 이탤릭 한 줄 요약."}'
 fi
 
 # edit-log 초기화 (다음 세션을 위해)

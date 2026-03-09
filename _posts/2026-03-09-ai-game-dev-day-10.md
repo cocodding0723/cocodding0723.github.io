@@ -12,7 +12,9 @@ tags: [Unity, AI]
 
 그 전에, 뱀서라이크의 최종 결과물을 남겨둔다.
 
-{% include embed/youtube.html id='mVbxNQSLJoM' %}
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+  <iframe src="https://www.youtube.com/embed/mVbxNQSLJoM" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>
+</div>
 
 9일간 AI와 함께 만든 뱀서라이크 장르는 이 영상으로 마무리한다. 무기 20종, 패시브 13종, 보스, 5개 스테이지, 6명의 캐릭터, 180개 테스트 — 완성된 게임이 돌아가는 모습이다. 출시 과정은 별도로 다룰 예정이었지만, 먼저 새 프로젝트에 착수했다.
 
