@@ -8,9 +8,19 @@ permalink: /blog/
 <div class="blog-page-inner">
   <div class="container">
 
+    {% assign latest_post = site.posts.first %}
     <div class="blog-header animate-fade-up">
       <h1 class="blog-page-title"><span class="title-comment">// </span>Blog</h1>
       <p class="blog-page-desc">개발하며 겪은 것들을 기록합니다.</p>
+      <div class="blog-header-stats">
+        <span class="blog-stat"><span class="stat-num">{{ site.posts.size }}</span> posts</span>
+        <span class="blog-stat-sep">·</span>
+        <span class="blog-stat"><span class="stat-num">{{ site.blog_categories.size }}</span> categories</span>
+        {% if latest_post %}
+        <span class="blog-stat-sep">·</span>
+        <span class="blog-stat">last <span class="stat-num">{{ latest_post.date | date: "%Y.%m.%d" }}</span></span>
+        {% endif %}
+      </div>
     </div>
 
     {% if site.posts.size > 0 %}
@@ -44,6 +54,7 @@ permalink: /blog/
             {% assign project_count = site.posts | where_exp: "p", "p.categories contains 'Project'" | size %}
             {% assign algo_count = site.posts | where_exp: "p", "p.categories contains 'Algorithm'" | size %}
             {% assign daily_count = site.posts | where_exp: "p", "p.categories contains 'Daily'" | size %}
+            {% assign essay_count = site.posts | where_exp: "p", "p.categories contains 'Essay'" | size %}
             <li>
               <button class="cat-filter-item" data-category="Dev">
                 <span class="cat-dot cat-dev-dot"></span>
@@ -70,6 +81,13 @@ permalink: /blog/
                 <span class="cat-dot cat-daily-dot"></span>
                 <span class="cat-name">Daily</span>
                 <span class="cat-count">{{ daily_count }}</span>
+              </button>
+            </li>
+            <li>
+              <button class="cat-filter-item" data-category="Essay">
+                <span class="cat-dot cat-essay-dot"></span>
+                <span class="cat-name">Essay</span>
+                <span class="cat-count">{{ essay_count }}</span>
               </button>
             </li>
           </ul>

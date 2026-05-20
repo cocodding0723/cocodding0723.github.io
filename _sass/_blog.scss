@@ -3,6 +3,7 @@ $cat-dev:       #58a6ff;
 $cat-project:   #3fb950;
 $cat-algorithm: #d2a8ff;
 $cat-daily:     #ffa657;
+$cat-essay:     #f78166;
 
 // ============================================================
 // Category badge (shared across blog + post)
@@ -20,6 +21,7 @@ $cat-daily:     #ffa657;
   &.cat-project   { color: $cat-project;   background: rgba($cat-project, 0.12);   border: 1px solid rgba($cat-project, 0.25); }
   &.cat-algorithm { color: $cat-algorithm; background: rgba($cat-algorithm, 0.12); border: 1px solid rgba($cat-algorithm, 0.25); }
   &.cat-daily     { color: $cat-daily;     background: rgba($cat-daily, 0.12);     border: 1px solid rgba($cat-daily, 0.25); }
+  &.cat-essay     { color: $cat-essay;     background: rgba($cat-essay, 0.12);     border: 1px solid rgba($cat-essay, 0.25); }
 }
 
 // ============================================================
@@ -51,6 +53,25 @@ $cat-daily:     #ffa657;
   .blog-page-desc {
     font-size: $fs-base;
     color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .blog-header-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+
+    .stat-num {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .blog-stat-sep {
+      color: var(--border);
+    }
   }
 }
 
@@ -190,6 +211,7 @@ $cat-daily:     #ffa657;
     &.cat-project-dot   { background: $cat-project; }
     &.cat-algorithm-dot { background: $cat-algorithm; }
     &.cat-daily-dot     { background: $cat-daily; }
+    &.cat-essay-dot     { background: $cat-essay; }
   }
 
   &:hover {
@@ -303,6 +325,7 @@ $cat-daily:     #ffa657;
   &.cat-border-project   { border-top: 2px solid $cat-project; }
   &.cat-border-algorithm { border-top: 2px solid $cat-algorithm; }
   &.cat-border-daily     { border-top: 2px solid $cat-daily; }
+  &.cat-border-essay     { border-top: 2px solid $cat-essay; }
 
   &:hover {
     transform: translateY(-4px);
@@ -315,6 +338,7 @@ $cat-daily:     #ffa657;
   &.cat-border-project:hover   { border-color: $cat-project; }
   &.cat-border-algorithm:hover { border-color: $cat-algorithm; }
   &.cat-border-daily:hover     { border-color: $cat-daily; }
+  &.cat-border-essay:hover     { border-color: $cat-essay; }
 
   .card-inner {
     display: flex;
@@ -356,7 +380,7 @@ $cat-daily:     #ffa657;
     line-height: 1.6;
     flex: 1;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
