@@ -94,6 +94,16 @@ section {
     border-color: var(--accent);
     color: var(--accent);
   }
+
+  &.tag-more {
+    background: none;
+    border-color: transparent;
+    color: var(--text-muted);
+    padding-left: 0;
+    font-size: 11px;
+
+    &:hover { color: var(--text-primary); border-color: transparent; }
+  }
 }
 
 .badge {

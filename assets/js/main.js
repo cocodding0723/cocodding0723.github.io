@@ -417,3 +417,106 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+
+// ============================================================
+// Reading progress bar (post pages only)
+// ============================================================
+(function () {
+  const bar = document.getElementById('reading-progress');
+  if (!bar) return;
+
+  const prose = document.querySelector('.post-body');
+  if (!prose) return;
+
+  function updateProgress() {
+    const proseRect = prose.getBoundingClientRect();
+    const proseTop = prose.offsetTop;
+    const proseHeight = prose.offsetHeight;
+    const scrolled = window.scrollY - proseTop;
+    const total = proseHeight - window.innerHeight;
+    const pct = total <= 0 ? 100 : Math.min(100, Math.max(0, (scrolled / total) * 100));
+    bar.style.width = pct + '%';
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+
+// ============================================================
+// Code block header: language badge + copy button (post pages only)
+// ============================================================
+(function () {
+  const prose = document.querySelector('.prose');
+  if (!prose) return;
+
+  prose.querySelectorAll('.highlight, figure.highlight').forEach(block => {
+    // Detect language from parent wrapper (language-xxx highlighter-rouge)
+    const parent = block.parentElement;
+    let lang = '';
+    if (parent) {
+      const m = parent.className.match(/language-(\w+)/);
+      if (m) lang = m[1];
+    }
+    if (!lang) {
+      const codeEl = block.querySelector('code[class]');
+      if (codeEl) {
+        const m = codeEl.className.match(/language-(\w+)/);
+        if (m) lang = m[1];
+      }
+    }
+
+    // Build code header bar
+    const header = document.createElement('div');
+    header.className = 'code-header';
+
+    const langSpan = document.createElement('span');
+    langSpan.className = 'lang-badge';
+    langSpan.textContent = (lang && lang !== 'text' && lang !== 'plaintext') ? lang : '';
+    header.appendChild(langSpan);
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = '복사';
+    btn.setAttribute('aria-label', '코드 복사');
+    header.appendChild(btn);
+
+    // Insert header before the block's pre content
+    block.insertBefore(header, block.firstChild);
+
+    btn.addEventListener('click', () => {
+      const code = block.querySelector('code');
+      if (!code) return;
+      const text = code.innerText;
+      const write = () => {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 1800);
+      };
+      navigator.clipboard.writeText(text).then(write).catch(() => {
+        const ta = Object.assign(document.createElement('textarea'), { value: text });
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        write();
+      });
+    });
+  });
+})();
+
+// ============================================================
+// Back-to-top button
+// ============================================================
+(function () {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();

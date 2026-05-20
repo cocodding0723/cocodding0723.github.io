@@ -28,6 +28,9 @@
         {% for tag in post.tags limit: 3 %}
         <span class="tag">{{ tag }}</span>
         {% endfor %}
+        {% if post.tags.size > 3 %}
+        <span class="tag tag-more">+{{ post.tags.size | minus: 3 }}</span>
+        {% endif %}
       </div>
       {% endif %}
     </div>

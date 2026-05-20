@@ -20,6 +20,7 @@ blog_categories:
   Project:   "프로젝트 개발 과정 · 회고"
   Algorithm: "알고리즘 풀이"
   Daily:     "일상 · 잡담"
+  Essay:     "장문 분석 · 회고 · 생각 정리"
 
 # Markdown
 markdown: kramdown
