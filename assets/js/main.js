@@ -449,7 +449,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   const prose = document.querySelector('.prose');
   if (!prose) return;
 
-  prose.querySelectorAll('.highlight, figure.highlight').forEach(block => {
+  prose.querySelectorAll('div.highlight, figure.highlight').forEach(block => {
     // Detect language from parent wrapper (language-xxx highlighter-rouge)
     const parent = block.parentElement;
     let lang = '';
