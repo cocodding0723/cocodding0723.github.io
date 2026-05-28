@@ -52,7 +52,9 @@
     color: var(--text-primary);
     opacity: 0;
     transform: translateY(10px);
-    transition: all 0.3s ease;
+    transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
     &.visible {
       opacity: 1;

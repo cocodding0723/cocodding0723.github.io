@@ -51,27 +51,16 @@
     grid-template-columns: 1fr;
   }
 
-  // Staggered animation for recent post cards
+  // Staggered entrance — transition on the wrapper, hover on inner .post-card
   .recent-card-wrap {
-    // Cards are visible by default (no opacity:0) — animation plays only when JS adds .visible
-    &.visible .post-card {
-      animation: recentCardFadeIn 0.5s ease var(--card-delay, 0ms) both;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--card-delay, 0ms),
+                transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--card-delay, 0ms);
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
-}
-
-@keyframes recentCardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Hover lift — overrides animation fill-mode end state
-.recent-posts-grid .post-card:hover {
-  transform: translateY(-4px) !important;
 }

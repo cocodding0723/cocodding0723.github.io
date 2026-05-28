@@ -80,7 +80,8 @@ section {
   &.animate-in {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 
     &.visible {
       opacity: 1;
@@ -143,7 +144,8 @@ section {
 .animate-fade-up {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 
   &.visible {
     opacity: 1;
@@ -156,6 +158,13 @@ section {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .recent-card-wrap,
+  .blog-post-grid .post-card {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   html {
