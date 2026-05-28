@@ -157,10 +157,10 @@
   const blogGrid = document.querySelector('.blog-post-grid');
   if (!blogGrid) return;
 
-  // Staggered page-load entrance for blog listing cards
+  // Staggered page-load entrance for blog listing cards (short stagger)
   const postCards = Array.from(blogGrid.querySelectorAll('.post-card'));
   postCards.forEach((c, i) => {
-    c.style.setProperty('--enter-delay', (Math.min(i, 7) * 55) + 'ms');
+    c.style.setProperty('--enter-delay', (Math.min(i, 4) * 28) + 'ms');
   });
   requestAnimationFrame(() => requestAnimationFrame(() => {
     postCards.forEach(c => c.classList.add('visible'));
