@@ -1,7 +1,23 @@
 .site-footer {
   background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
+  position: relative;
   padding: 40px 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(88, 166, 255, 0.4) 30%,
+      rgba(48, 54, 61, 0.6) 70%,
+      transparent 100%
+    );
+  }
 
   .footer-inner {
     max-width: $max-width;
