@@ -347,16 +347,31 @@ $cat-essay:     #f78166;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
     border-color: var(--bg-tertiary);
   }
 
-  // Category-specific hover border
-  &.cat-border-dev:hover       { border-color: $cat-dev; }
-  &.cat-border-project:hover   { border-color: $cat-project; }
-  &.cat-border-algorithm:hover { border-color: $cat-algorithm; }
-  &.cat-border-daily:hover     { border-color: $cat-daily; }
-  &.cat-border-essay:hover     { border-color: $cat-essay; }
+  // Category-specific hover border + glow
+  &.cat-border-dev:hover {
+    border-color: $cat-dev;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(88,166,255,0.1);
+  }
+  &.cat-border-project:hover {
+    border-color: $cat-project;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(63,185,80,0.1);
+  }
+  &.cat-border-algorithm:hover {
+    border-color: $cat-algorithm;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(210,168,255,0.1);
+  }
+  &.cat-border-daily:hover {
+    border-color: $cat-daily;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(255,166,87,0.1);
+  }
+  &.cat-border-essay:hover {
+    border-color: $cat-essay;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(247,129,102,0.1);
+  }
 
   .card-inner {
     display: flex;

@@ -32,21 +32,22 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: 50%;
     height: 2px;
-    background: var(--accent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: linear-gradient(90deg, var(--accent), #3fb950);
+    transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   &:hover {
     border-color: var(--accent);
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 24px rgba(88, 166, 255, 0.08);
 
     &::before {
-      opacity: 1;
+      left: 0;
+      right: 0;
     }
   }
 

@@ -26,6 +26,11 @@
   }
 }
 
+@keyframes nodePulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2); }
+  50%       { box-shadow: 0 0 0 7px rgba(88, 166, 255, 0.04); }
+}
+
 .timeline-item {
   display: flex;
   justify-content: flex-end;
@@ -73,6 +78,7 @@
     &.node-work {
       background: var(--accent);
       box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+      animation: nodePulse 2.8s ease-in-out infinite;
     }
 
     &.node-education {

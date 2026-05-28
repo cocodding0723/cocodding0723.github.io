@@ -194,12 +194,29 @@
       background: var(--accent);
       color: #0d1117;
       border: 1px solid var(--accent);
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -70%;
+        width: 45%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.18);
+        transform: skewX(-20deg);
+        transition: left 0.5s ease;
+      }
 
       &:hover {
         background: var(--text-primary);
         border-color: var(--text-primary);
         color: #0d1117;
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
+
+        &::after { left: 130%; }
       }
     }
 
@@ -212,6 +229,7 @@
         border-color: var(--accent);
         color: var(--accent);
         transform: translateY(-2px);
+        background: rgba(88, 166, 255, 0.06);
       }
     }
   }

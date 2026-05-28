@@ -6,6 +6,26 @@
   padding: 0;
 }
 
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+  &:hover { background: #484f58; }
+}
+
+// Text selection
+::selection {
+  background: rgba(88, 166, 255, 0.2);
+  color: var(--text-primary);
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
