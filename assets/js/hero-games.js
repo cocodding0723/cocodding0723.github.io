@@ -536,7 +536,7 @@
   // After intro animations finish, switch to transition-based control
   setTimeout(function () {
     if (heroContent) heroContent.classList.add('anim-done');
-  }, 1500);
+  }, 900);
 
   flappy.reset();
   snake.reset();

@@ -109,9 +109,9 @@
     color: var(--accent);
     margin-bottom: 16px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.1s;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: 0.05s;
   }
 
   .hero-title {
@@ -122,9 +122,9 @@
     line-height: 1.1;
     margin-bottom: 16px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.25s;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: 0.12s;
 
     .underline-accent {
       position: relative;
@@ -138,8 +138,8 @@
         width: 0;
         height: 3px;
         background: var(--accent);
-        animation: expandWidth 0.8s ease forwards;
-        animation-delay: 1s;
+        animation: expandWidth 0.7s ease forwards;
+        animation-delay: 0.65s;
       }
     }
   }
@@ -150,9 +150,9 @@
     color: var(--accent);
     margin-bottom: 24px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.4s;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: 0.19s;
   }
 
   .hero-description {
@@ -162,9 +162,9 @@
     margin-bottom: 40px;
     max-width: 560px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.55s;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: 0.26s;
   }
 
   .hero-actions {
@@ -172,9 +172,9 @@
     gap: 16px;
     flex-wrap: wrap;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.7s;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: 0.33s;
   }
 
   .btn {
