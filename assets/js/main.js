@@ -157,8 +157,14 @@
   const blogGrid = document.querySelector('.blog-post-grid');
   if (!blogGrid) return;
 
-  // All cards start visible (no scroll animation on blog list)
-  blogGrid.querySelectorAll('.post-card').forEach(c => c.classList.add('visible'));
+  // Staggered page-load entrance for blog listing cards
+  const postCards = Array.from(blogGrid.querySelectorAll('.post-card'));
+  postCards.forEach((c, i) => {
+    c.style.setProperty('--enter-delay', (Math.min(i, 7) * 55) + 'ms');
+  });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    postCards.forEach(c => c.classList.add('visible'));
+  }));
 
   const params = new URLSearchParams(window.location.search);
   let activeCategory = params.get('category') || 'all';
@@ -287,6 +293,11 @@
 (function () {
   const wraps = document.querySelectorAll('.recent-card-wrap');
   if (!wraps.length) return;
+
+  // Set stagger delays upfront so CSS variable is ready before .visible is added
+  wraps.forEach((w, i) => {
+    w.style.setProperty('--card-delay', (i * 80) + 'ms');
+  });
 
   if ('IntersectionObserver' in window) {
     const obs = new IntersectionObserver((entries) => {
