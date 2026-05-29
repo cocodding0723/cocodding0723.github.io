@@ -317,39 +317,36 @@
   z-index: 1;
   overflow: hidden;
 
-  // The div that YT API replaces with an iframe
-  #hero-yt-player,
+  // !important: override YouTube IFrame API's inline width/height/position styles
   iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    // Cover the viewport at 16:9
-    width: max(100vw, calc(100vh * 1.7778));
-    height: max(100vh, calc(100vw * 0.5625));
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    border: 0;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 100vw !important;
+    height: 56.25vw !important;
+    min-height: 100vh !important;
+    min-width: 177.78vh !important;
+    transform: translate(-50%, -50%) !important;
+    pointer-events: none !important;
+    border: 0 !important;
     opacity: 0;
     transition: opacity 2.5s ease;
   }
 
-  // Fade in the video when playing
   &.playing iframe {
-    opacity: 0.4;
+    opacity: 0.45 !important;
   }
 
-  // Dark gradient overlay above the video
   .hero-video-overlay {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background:
-      linear-gradient(to bottom,
-        rgba(9, 11, 16, 0.65) 0%,
-        rgba(9, 11, 16, 0.3) 45%,
-        rgba(9, 11, 16, 0.8) 100%
-      ),
-      radial-gradient(ellipse at 50% 50%, rgba(9, 11, 16, 0.1), rgba(9, 11, 16, 0.5));
+    background: linear-gradient(
+      to bottom,
+      rgba(9, 11, 16, 0.62) 0%,
+      rgba(9, 11, 16, 0.28) 45%,
+      rgba(9, 11, 16, 0.78) 100%
+    );
   }
 }
 
