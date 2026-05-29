@@ -710,25 +710,129 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
-// Konami Code easter egg
+// Raging Demon — 瞬獄殺 (Konami Code: ↑↑↓↓←→←→ b a)
 // ============================================================
 (function () {
-  const CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
-                'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  let seq = [];
+  var CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+              'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  var seq = [];
 
-  document.addEventListener('keydown', e => {
+  function demonAudio(type) {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (type === 'intro') {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(110, ctx.currentTime);
+        o.frequency.exponentialRampToValueAtTime(22, ctx.currentTime + 1.1);
+        g.gain.setValueAtTime(0.3, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.1);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + 1.1);
+      } else if (type === 'hit') {
+        var o2 = ctx.createOscillator(), g2 = ctx.createGain();
+        o2.type = 'square';
+        o2.frequency.setValueAtTime(900, ctx.currentTime);
+        o2.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.07);
+        g2.gain.setValueAtTime(0.18, ctx.currentTime);
+        g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+        o2.connect(g2); g2.connect(ctx.destination);
+        o2.start(); o2.stop(ctx.currentTime + 0.08);
+      } else if (type === 'finish') {
+        [392, 311, 247, 196].forEach(function(freq, i) {
+          var o3 = ctx.createOscillator(), g3 = ctx.createGain();
+          o3.type = 'square';
+          o3.frequency.value = freq;
+          g3.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.18);
+          g3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.5);
+          o3.connect(g3); g3.connect(ctx.destination);
+          o3.start(ctx.currentTime + i * 0.18);
+          o3.stop(ctx.currentTime + i * 0.18 + 0.55);
+        });
+      }
+    } catch(e) {}
+  }
+
+  function triggerRagingDemon() {
+    var overlay  = document.getElementById('konami-overlay');
+    var kanji    = document.getElementById('rd-kanji');
+    var hitsWrap = document.getElementById('rd-hits-wrap');
+    var hitsEl   = document.getElementById('rd-hits-count');
+    var finish   = document.getElementById('rd-finish');
+    if (!overlay) return;
+
+    [kanji, hitsWrap, finish].forEach(function(el) { if (el) el.classList.remove('visible'); });
+    if (hitsEl)  hitsEl.textContent = '0';
+    if (finish)  finish.innerHTML = '';
+    overlay.classList.remove('flash');
+
+    overlay.style.pointerEvents = 'all';
+    overlay.classList.add('active');
+    unlockAchievement('KONAMI');
+    addScore(30000);
+    demonAudio('intro');
+
+    // Phase 1 — 天 (700ms)
+    setTimeout(function() {
+      if (kanji) kanji.classList.add('visible');
+    }, 700);
+
+    // Phase 2 — 15 rapid hits (start 1300ms)
+    var hits = 0, TOTAL = 15;
+    setTimeout(function() {
+      if (hitsWrap) hitsWrap.classList.add('visible');
+
+      var iv = setInterval(function() {
+        hits++;
+        if (hitsEl) hitsEl.textContent = hits;
+
+        overlay.classList.add('flash');
+        setTimeout(function() { overlay.classList.remove('flash'); }, 35);
+
+        var x = ((Math.random() - 0.5) * 18).toFixed(1);
+        var y = ((Math.random() - 0.5) * 14).toFixed(1);
+        document.body.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        setTimeout(function() { document.body.style.transform = ''; }, 50);
+
+        demonAudio('hit');
+
+        if (hits >= TOTAL) {
+          clearInterval(iv);
+
+          setTimeout(function() {
+            overlay.classList.add('flash');
+            if (kanji)    kanji.classList.remove('visible');
+            if (hitsWrap) hitsWrap.classList.remove('visible');
+
+            setTimeout(function() {
+              overlay.classList.remove('flash');
+              if (finish) {
+                finish.innerHTML = '瞬獄殺<span class="rd-sub">SHUN GOKU SATSU</span>';
+                finish.classList.add('visible');
+              }
+              demonAudio('finish');
+
+              setTimeout(function() {
+                if (finish) finish.classList.remove('visible');
+                setTimeout(function() {
+                  overlay.classList.remove('active');
+                  overlay.style.pointerEvents = 'none';
+                  document.body.style.transform = '';
+                }, 300);
+              }, 3000);
+            }, 400);
+          }, 400);
+        }
+      }, 88);
+    }, 1300);
+  }
+
+  document.addEventListener('keydown', function(e) {
     seq.push(e.key);
     if (seq.length > CODE.length) seq.shift();
     if (JSON.stringify(seq) === JSON.stringify(CODE)) {
       seq = [];
-      const overlay = document.getElementById('konami-overlay');
-      if (!overlay) return;
-      overlay.classList.add('active');
-      playSound('konami');
-      unlockAchievement('KONAMI');
-      addScore(30000);
-      setTimeout(() => overlay.classList.remove('active'), 2800);
+      triggerRagingDemon();
     }
   });
 })();
