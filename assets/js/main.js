@@ -531,3 +531,139 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
+
+// ============================================================
+// Cursor glow follower (desktop only)
+// ============================================================
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const glow = document.createElement('div');
+  glow.id = 'cursor-glow';
+  document.body.appendChild(glow);
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let glowX = mouseX, glowY = mouseY;
+  let ticking = false;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(tick);
+    }
+  }, { passive: true });
+
+  function tick() {
+    glowX += (mouseX - glowX) * 0.07;
+    glowY += (mouseY - glowY) * 0.07;
+    glow.style.transform = `translate(${glowX - 200}px, ${glowY - 200}px)`;
+    ticking = false;
+    if (Math.abs(mouseX - glowX) > 0.5 || Math.abs(mouseY - glowY) > 0.5) {
+      ticking = true;
+      requestAnimationFrame(tick);
+    }
+  }
+})();
+
+// ============================================================
+// 3D card tilt effect on hover (desktop only)
+// ============================================================
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  function applyTilt(card) {
+    const maxTilt = 7;
+
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'transform 0.15s ease, box-shadow 0.3s ease, border-color 0.3s ease';
+    });
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const dx = (x / rect.width - 0.5) * 2;
+      const dy = (y / rect.height - 0.5) * 2;
+      card.style.transform =
+        `perspective(900px) rotateX(${-dy * maxTilt}deg) rotateY(${dx * maxTilt}deg) translateY(-5px) scale(1.01)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease';
+      card.style.transform = '';
+    });
+  }
+
+  document.querySelectorAll('.project-card, .post-card').forEach(applyTilt);
+})();
+
+// ============================================================
+// Sparkle / particle burst on primary button click
+// ============================================================
+(function () {
+  const COLORS = ['#5b9cf6', '#a78bfa', '#ec4899', '#38bdf8', '#f97316'];
+
+  function burst(cx, cy) {
+    const count = 12;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      const color = COLORS[i % COLORS.length];
+      const size = 5 + Math.random() * 5;
+      p.style.cssText = [
+        'position:fixed', 'pointer-events:none', 'z-index:9999',
+        `width:${size}px`, `height:${size}px`, 'border-radius:50%',
+        `background:${color}`, `left:${cx}px`, `top:${cy}px`,
+        'transform:translate(-50%,-50%)',
+        `box-shadow:0 0 ${size * 2}px ${color}`
+      ].join(';');
+      document.body.appendChild(p);
+
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+      const dist = 50 + Math.random() * 60;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+
+      const anim = p.animate([
+        { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
+      ], { duration: 650, easing: 'cubic-bezier(0, 0.9, 0.57, 1)', delay: Math.random() * 80 });
+      anim.onfinish = () => p.remove();
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-primary, .btn.btn-primary');
+    if (btn) burst(e.clientX, e.clientY);
+  });
+})();
+
+// ============================================================
+// Magnetic button effect (subtle pull toward cursor)
+// ============================================================
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.18;
+      const dy = (e.clientY - cy) * 0.18;
+      btn.style.transform = `translate(${dx}px, ${dy}px) translateY(-3px)`;
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transition = 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+      btn.style.transform = '';
+      setTimeout(() => { btn.style.transition = ''; }, 400);
+    });
+
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transition = 'transform 0.1s ease';
+    });
+  });
+})();

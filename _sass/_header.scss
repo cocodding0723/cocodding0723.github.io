@@ -4,14 +4,15 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(13, 17, 23, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(9, 11, 16, 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid transparent;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease;
 
   &.scrolled {
     border-bottom-color: var(--border);
+    background: rgba(9, 11, 16, 0.92);
   }
 
   .header-inner {
@@ -31,14 +32,16 @@
     color: var(--text-primary);
     text-decoration: none;
     letter-spacing: -0.02em;
+    transition: opacity 0.2s ease;
 
     span {
-      color: var(--accent);
+      background: linear-gradient(135deg, #5b9cf6, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    &:hover {
-      color: var(--text-primary);
-    }
+    &:hover { opacity: 0.85; }
   }
 
   nav {

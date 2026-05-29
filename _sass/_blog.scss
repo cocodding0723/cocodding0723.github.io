@@ -331,56 +331,73 @@ $cat-essay:     #f78166;
 // Post card
 // ============================================================
 .post-card {
-  background: var(--bg-secondary);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: $card-radius;
   overflow: hidden;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
 
-  // Category top border
+  // Category accent bar
   &.cat-border-dev       { border-top: 2px solid $cat-dev; }
   &.cat-border-project   { border-top: 2px solid $cat-project; }
   &.cat-border-algorithm { border-top: 2px solid $cat-algorithm; }
   &.cat-border-daily     { border-top: 2px solid $cat-daily; }
   &.cat-border-essay     { border-top: 2px solid $cat-essay; }
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-    border-color: var(--bg-tertiary);
+  // Hover glow overlay
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    border-radius: inherit;
   }
 
-  // Category-specific hover border + glow
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  // Category-specific hover glow
   &.cat-border-dev:hover {
-    border-color: $cat-dev;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(88,166,255,0.1);
+    border-color: rgba($cat-dev, 0.5);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(88,166,255,0.12);
+    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(88,166,255,0.06), transparent 60%); opacity: 1; }
   }
   &.cat-border-project:hover {
-    border-color: $cat-project;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(63,185,80,0.1);
+    border-color: rgba($cat-project, 0.5);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(63,185,80,0.12);
+    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(63,185,80,0.06), transparent 60%); opacity: 1; }
   }
   &.cat-border-algorithm:hover {
-    border-color: $cat-algorithm;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(210,168,255,0.1);
+    border-color: rgba($cat-algorithm, 0.5);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(210,168,255,0.12);
+    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(210,168,255,0.06), transparent 60%); opacity: 1; }
   }
   &.cat-border-daily:hover {
-    border-color: $cat-daily;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(255,166,87,0.1);
+    border-color: rgba($cat-daily, 0.5);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(255,166,87,0.12);
+    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(255,166,87,0.06), transparent 60%); opacity: 1; }
   }
   &.cat-border-essay:hover {
-    border-color: $cat-essay;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 24px rgba(247,129,102,0.1);
+    border-color: rgba($cat-essay, 0.5);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(247,129,102,0.12);
+    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(247,129,102,0.06), transparent 60%); opacity: 1; }
   }
 
   .card-inner {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 20px;
+    padding: 22px;
     text-decoration: none;
     color: inherit;
     height: 100%;
+    position: relative;
+    z-index: 1;
   }
 
   .card-top {
@@ -393,16 +410,17 @@ $cat-essay:     #f78166;
   .read-time {
     font-family: $font-mono;
     font-size: $fs-xs;
-    color: var(--text-muted);
+    color: var(--text-faint);
     white-space: nowrap;
   }
 
   .card-title {
     font-size: $fs-base;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
-    line-height: 1.4;
+    line-height: 1.45;
     transition: color 0.2s ease;
+    letter-spacing: -0.01em;
   }
 
   &:hover .card-title { color: var(--accent); }
@@ -410,7 +428,7 @@ $cat-essay:     #f78166;
   .card-excerpt {
     font-size: $fs-sm;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.65;
     flex: 1;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -421,7 +439,7 @@ $cat-essay:     #f78166;
   .card-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
     margin-top: auto;
     padding-top: 12px;
@@ -430,12 +448,12 @@ $cat-essay:     #f78166;
     time {
       font-family: $font-mono;
       font-size: $fs-xs;
-      color: var(--text-muted);
+      color: var(--text-faint);
     }
 
     .card-tags {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
     }
   }

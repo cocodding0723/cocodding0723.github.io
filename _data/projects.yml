@@ -29,6 +29,15 @@
   tags: ["Android", "Java", "Kotlin"]
   type: "mobile"
 
+- name: "Katana Zero Style Action"
+  period: "2026.05"
+  role: "Unity 게임 개발 (1인)"
+  description: "카타나 제로 타격감 구현을 목표로 5일간 제작한 2D 액션 게임. R3 반응형 이벤트 파이프라인, VContainer DI, FEEL 히트스톱, VFX Graph 블러드 이펙트 적용."
+  tags: ["Unity", "C#", "R3", "VContainer", "FEEL", "VFX Graph", "DOTween"]
+  links:
+    video: "https://youtu.be/hp6LrmIztKU?si=3nydBbRO-r8ebuez"
+  type: "game"
+
 - name: "Catan"
   period: "2025"
   role: "Unity 게임 개발"
