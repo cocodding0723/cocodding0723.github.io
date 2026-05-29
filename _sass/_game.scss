@@ -98,7 +98,8 @@
 }
 @keyframes bloomFlash {
   0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 1;   transform: translate(-50%, -50%) scale(6); filter: blur(2px); }
+  45%  { opacity: 0.85; }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(7); filter: blur(4px); }
 }
 @keyframes warpZoom {
   0%   { transform: scale(1);    opacity: 1; filter: blur(0); }
