@@ -641,6 +641,61 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
+// Hero: YouTube video background
+// ============================================================
+(function () {
+  const bg = document.getElementById('hero-video-bg');
+  if (!bg) return;
+
+  // Game video IDs — add more here as you create games
+  const VIDEO_IDS = [
+    'hp6LrmIztKU', // Katana Zero style action game
+  ];
+
+  let player;
+  let currentIdx = 0;
+
+  // Load YouTube IFrame API
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('hero-yt-player', {
+      videoId: VIDEO_IDS[0],
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        loop: 1,
+        controls: 0,
+        disablekb: 1,
+        modestbranding: 1,
+        playsinline: 1,
+        iv_load_policy: 3,
+        rel: 0,
+        showinfo: 0,
+        playlist: VIDEO_IDS.join(','),
+      },
+      events: {
+        onReady: (e) => {
+          e.target.playVideo();
+        },
+        onStateChange: (e) => {
+          if (e.data === YT.PlayerState.PLAYING) {
+            bg.classList.add('playing');
+          }
+          // Cycle to next video when done (if multiple)
+          if (e.data === YT.PlayerState.ENDED && VIDEO_IDS.length > 1) {
+            currentIdx = (currentIdx + 1) % VIDEO_IDS.length;
+            player.loadVideoById(VIDEO_IDS[currentIdx]);
+          }
+        },
+      },
+    });
+  };
+})();
+
+// ============================================================
 // Magnetic button effect (subtle pull toward cursor)
 // ============================================================
 (function () {
