@@ -734,7 +734,72 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
-// Combo system — rapid link/button clicks
+// Click explosion burst (every click, pixel squares)
+// ============================================================
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const PIXEL_COLORS = [
+    '#ffeb3b', '#00e676', '#5b9cf6', '#a78bfa',
+    '#ec4899', '#00e5ff', '#ff1744', '#ffffff',
+  ];
+
+  function explode(cx, cy, intensity) {
+    intensity = intensity || 0.5;
+    const count = Math.round(8 + intensity * 8);
+
+    for (let i = 0; i < count; i++) {
+      const size = 3 + Math.floor(Math.random() * 5);
+      const color = PIXEL_COLORS[Math.floor(Math.random() * PIXEL_COLORS.length)];
+      const p = document.createElement('div');
+      p.style.cssText = [
+        'position:fixed', 'pointer-events:none', 'z-index:9998',
+        `width:${size}px`, `height:${size}px`, 'border-radius:0',
+        `background:${color}`, `box-shadow:0 0 ${size}px ${color}`,
+        `left:${cx}px`, `top:${cy}px`,
+        'transform:translate(-50%,-50%)',
+        'image-rendering:pixelated',
+      ].join(';');
+      document.body.appendChild(p);
+
+      const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
+      const dist = (40 + Math.random() * 70) * (0.6 + intensity * 0.6);
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+
+      const anim = p.animate([
+        { transform: 'translate(-50%,-50%) scale(1.2)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 },
+      ], { duration: 500 + Math.random() * 250, easing: 'cubic-bezier(0,0.9,0.57,1)', delay: Math.random() * 50 });
+      anim.onfinish = () => p.remove();
+    }
+
+    // Pixel flash ring at click center
+    const ring = document.createElement('div');
+    ring.style.cssText = [
+      'position:fixed', 'pointer-events:none', 'z-index:9997',
+      'width:16px', 'height:16px', 'border-radius:0',
+      'border:3px solid #ffeb3b',
+      `left:${cx}px`, `top:${cy}px`,
+      'transform:translate(-50%,-50%)',
+    ].join(';');
+    document.body.appendChild(ring);
+    ring.animate([
+      { transform: 'translate(-50%,-50%) scale(0.5)', opacity: 1 },
+      { transform: 'translate(-50%,-50%) scale(3.5)', opacity: 0 },
+    ], { duration: 320, easing: 'steps(5)' }).onfinish = () => ring.remove();
+  }
+
+  window.clickExplode = explode;
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('#achievement-toast, #konami-overlay, #score-hud')) return;
+    explode(e.clientX, e.clientY, 0.4);
+  });
+})();
+
+// ============================================================
+// Combo counter — Combo 1 → 2 → N on consecutive clicks
 // ============================================================
 (function () {
   const popup = document.getElementById('combo-popup');
@@ -742,26 +807,40 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
   let count = 0, timer = null;
 
-  function trigger() {
+  const LABELS = ['','','','COMBO','COMBO','NICE!','GREAT!','AWESOME!','SUPER!','ULTRA!'];
+
+  function getLabel(n) {
+    if (n >= 20) return 'GODLIKE!!';
+    if (n >= 15) return 'UNSTOPPABLE!';
+    if (n >= 10) return 'ULTRA!';
+    return LABELS[Math.min(n, LABELS.length - 1)] || 'COMBO';
+  }
+
+  function trigger(cx, cy) {
     count++;
     clearTimeout(timer);
 
-    if (count >= 3) {
-      const label = count >= 10 ? 'ULTRA COMBO!!' : count >= 6 ? 'GREAT COMBO!' : 'COMBO!';
-      popup.textContent = `${label} x${count}`;
+    if (count >= 2) {
+      popup.textContent = `${getLabel(count)} x${count}`;
       popup.classList.add('show');
       playSound('combo');
-      addScore(count * 2);
+      addScore(count * 3);
+
+      // Bigger explosion on higher combos
+      if (window.clickExplode && count >= 5) {
+        clickExplode(cx, cy, Math.min(count / 10, 1.5));
+      }
     }
 
     timer = setTimeout(() => {
       count = 0;
       popup.classList.remove('show');
-    }, 900);
+    }, 800);
   }
 
   document.addEventListener('click', e => {
-    if (e.target.closest('a, button, .cat-filter-item, .cloud-tag')) trigger();
+    if (e.target.closest('#achievement-toast, #konami-overlay, #score-hud')) return;
+    trigger(e.clientX, e.clientY);
   });
 })();
 
@@ -833,45 +912,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   document.querySelectorAll('.project-card, .post-card').forEach(applyTilt);
 })();
 
-// ============================================================
-// Sparkle / particle burst on primary button click
-// ============================================================
-(function () {
-  const COLORS = ['#5b9cf6', '#a78bfa', '#ec4899', '#38bdf8', '#f97316'];
-
-  function burst(cx, cy) {
-    const count = 12;
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      const color = COLORS[i % COLORS.length];
-      const size = 5 + Math.random() * 5;
-      p.style.cssText = [
-        'position:fixed', 'pointer-events:none', 'z-index:9999',
-        `width:${size}px`, `height:${size}px`, 'border-radius:50%',
-        `background:${color}`, `left:${cx}px`, `top:${cy}px`,
-        'transform:translate(-50%,-50%)',
-        `box-shadow:0 0 ${size * 2}px ${color}`
-      ].join(';');
-      document.body.appendChild(p);
-
-      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
-      const dist = 50 + Math.random() * 60;
-      const tx = Math.cos(angle) * dist;
-      const ty = Math.sin(angle) * dist;
-
-      const anim = p.animate([
-        { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
-        { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
-      ], { duration: 650, easing: 'cubic-bezier(0, 0.9, 0.57, 1)', delay: Math.random() * 80 });
-      anim.onfinish = () => p.remove();
-    }
-  }
-
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-primary, .btn.btn-primary');
-    if (btn) burst(e.clientX, e.clientY);
-  });
-})();
 
 // ============================================================
 // Hero: YouTube video background
