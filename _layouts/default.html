@@ -83,6 +83,29 @@
     </svg>
   </button>
 
+  <!-- Game UI overlays -->
+  <div class="achievement-toast" id="achievement-toast" aria-live="polite">
+    <div class="ach-header"><span>ACHIEVEMENT UNLOCKED</span></div>
+    <div class="ach-body">
+      <div class="ach-icon" id="ach-icon">&#9733;</div>
+      <div class="ach-text">
+        <div class="ach-title" id="ach-title">LOADING...</div>
+        <div class="ach-desc" id="ach-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-hud" id="score-hud">
+    <span class="score-label">SCORE</span>
+    <span class="score-value" id="score-hud-value">000000</span>
+  </div>
+
+  <div class="konami-overlay" id="konami-overlay">
+    <div class="konami-text">CHEAT CODE<br>ACTIVATED<br><span style="font-size:0.55em;color:#ffeb3b">+30000 PTS</span></div>
+  </div>
+
+  <div class="combo-popup" id="combo-popup"></div>
+
   <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
   {% if page.url == '/' %}
   <script src="{{ '/assets/js/hero-games.js' | relative_url }}" defer></script>
