@@ -9,3 +9,6 @@ Gemfile.lock
 # Claude Code
 .claude/settings.local.json
 .claude/edit-log.txt
+
+# Playwright MCP debug artifacts
+.playwright-mcp/
