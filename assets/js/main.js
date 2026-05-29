@@ -533,6 +533,239 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
+// 8-bit Sound Effects (Web Audio API)
+// ============================================================
+(function () {
+  let audioCtx = null;
+  let userInteracted = false;
+
+  function getCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  // Mark interaction on first user gesture
+  document.addEventListener('click', () => { userInteracted = true; }, { once: true });
+  document.addEventListener('keydown', () => { userInteracted = true; }, { once: true });
+
+  window.playSound = function (type) {
+    if (!userInteracted) return;
+    try {
+      const ctx = getCtx();
+      const sequences = {
+        click:       [[880, 0,    0.06], [440, 0.06, 0.05]],
+        hover:       [[600, 0,    0.04]],
+        achievement: [[523, 0,    0.1],  [659, 0.1,  0.1],  [784, 0.2,  0.18]],
+        konami:      [[784, 0,    0.08], [988, 0.1,  0.08], [1175, 0.2, 0.08], [1568, 0.3, 0.22]],
+        combo:       [[1200, 0,   0.06], [1600, 0.06, 0.08]],
+        error:       [[200, 0,    0.15]],
+      };
+      const seq = sequences[type] || sequences.click;
+      const vol = type === 'hover' ? 0.05 : 0.1;
+
+      seq.forEach(([freq, delay, dur]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+        gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + dur + 0.01);
+      });
+    } catch (e) {}
+  };
+
+  // Hook nav hover sounds
+  document.querySelectorAll('nav a, .mobile-nav a').forEach(el => {
+    el.addEventListener('mouseenter', () => playSound('hover'));
+  });
+
+  // Hook button click sounds
+  document.addEventListener('click', e => {
+    if (e.target.closest('.btn-primary, .btn-secondary')) playSound('click');
+    if (e.target.closest('.cat-filter-item, .cloud-tag')) playSound('hover');
+  });
+})();
+
+// ============================================================
+// Achievement System (PSN / Xbox style toasts)
+// ============================================================
+(function () {
+  const ACHIEVEMENTS = {
+    GAME_LOADED:         { icon: '▶', title: 'GAME LOADED',         desc: 'cocodding.dev connected' },
+    PORTFOLIO_UNLOCKED:  { icon: '🎮', title: 'PORTFOLIO UNLOCKED', desc: 'Projects section discovered' },
+    SKILL_TREE:          { icon: '⚡', title: 'SKILL TREE ACCESSED', desc: 'Tech stack loaded' },
+    BLOG_ACCESSED:       { icon: '📜', title: 'CODEX ACCESSED',     desc: 'Blog archive opened' },
+    POST_READ:           { icon: '📖', title: 'READING MODE',        desc: 'Article selected' },
+    EXPLORER:            { icon: '🗺', title: 'EXPLORER',            desc: 'Scrolled to the bottom' },
+    KONAMI:              { icon: '★', title: 'CHEAT CODE ACTIVE',   desc: '↑↑↓↓←→←→BA — nice' },
+  };
+
+  const earned = new Set(JSON.parse(localStorage.getItem('ach_v1') || '[]'));
+  let queue = [], busy = false;
+
+  const toast = document.getElementById('achievement-toast');
+  const iconEl = document.getElementById('ach-icon');
+  const titleEl = document.getElementById('ach-title');
+  const descEl = document.getElementById('ach-desc');
+
+  function unlock(key) {
+    if (earned.has(key) || !ACHIEVEMENTS[key]) return;
+    earned.add(key);
+    localStorage.setItem('ach_v1', JSON.stringify([...earned]));
+    queue.push(key);
+    if (!busy) process();
+  }
+
+  function process() {
+    if (!queue.length) { busy = false; return; }
+    busy = true;
+    const key = queue.shift();
+    const ach = ACHIEVEMENTS[key];
+    if (!toast || !ach) { process(); return; }
+
+    iconEl.textContent  = ach.icon;
+    titleEl.textContent = ach.title;
+    descEl.textContent  = ach.desc;
+
+    toast.classList.add('visible');
+    playSound('achievement');
+
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(process, 350);
+    }, 3800);
+  }
+
+  window.unlockAchievement = unlock;
+
+  // Page load
+  setTimeout(() => unlock('GAME_LOADED'), 1200);
+
+  // Blog / post pages
+  if (window.location.pathname.includes('/blog')) {
+    if (document.querySelector('.post-page')) {
+      setTimeout(() => unlock('POST_READ'), 800);
+    } else {
+      setTimeout(() => unlock('BLOG_ACCESSED'), 800);
+    }
+  }
+
+  // Section observers
+  if ('IntersectionObserver' in window) {
+    const map = { projects: 'PORTFOLIO_UNLOCKED', skills: 'SKILL_TREE' };
+    Object.entries(map).forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { unlock(key); obs.disconnect(); }
+      }, { threshold: 0.3 });
+      obs.observe(el);
+    });
+
+    // Bottom of page → Explorer
+    const footer = document.querySelector('.site-footer');
+    if (footer) {
+      const footerObs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { unlock('EXPLORER'); footerObs.disconnect(); }
+      }, { threshold: 0.5 });
+      footerObs.observe(footer);
+    }
+  }
+})();
+
+// ============================================================
+// Score HUD
+// ============================================================
+(function () {
+  const el = document.getElementById('score-hud-value');
+  if (!el) return;
+
+  let score = parseInt(localStorage.getItem('score_v1') || '0');
+  el.textContent = String(score).padStart(6, '0');
+
+  function add(pts) {
+    score = Math.min(score + pts, 999999);
+    localStorage.setItem('score_v1', score);
+    el.textContent = String(score).padStart(6, '0');
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 200);
+  }
+
+  window.addScore = add;
+
+  let scrollTick = 0;
+  window.addEventListener('scroll', () => {
+    scrollTick++;
+    if (scrollTick % 8 === 0) add(1);
+  }, { passive: true });
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('.btn, a')) add(5);
+  });
+})();
+
+// ============================================================
+// Konami Code easter egg
+// ============================================================
+(function () {
+  const CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+                'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let seq = [];
+
+  document.addEventListener('keydown', e => {
+    seq.push(e.key);
+    if (seq.length > CODE.length) seq.shift();
+    if (JSON.stringify(seq) === JSON.stringify(CODE)) {
+      seq = [];
+      const overlay = document.getElementById('konami-overlay');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      playSound('konami');
+      unlockAchievement('KONAMI');
+      addScore(30000);
+      setTimeout(() => overlay.classList.remove('active'), 2800);
+    }
+  });
+})();
+
+// ============================================================
+// Combo system — rapid link/button clicks
+// ============================================================
+(function () {
+  const popup = document.getElementById('combo-popup');
+  if (!popup) return;
+
+  let count = 0, timer = null;
+
+  function trigger() {
+    count++;
+    clearTimeout(timer);
+
+    if (count >= 3) {
+      const label = count >= 10 ? 'ULTRA COMBO!!' : count >= 6 ? 'GREAT COMBO!' : 'COMBO!';
+      popup.textContent = `${label} x${count}`;
+      popup.classList.add('show');
+      playSound('combo');
+      addScore(count * 2);
+    }
+
+    timer = setTimeout(() => {
+      count = 0;
+      popup.classList.remove('show');
+    }, 900);
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('a, button, .cat-filter-item, .cloud-tag')) trigger();
+  });
+})();
+
+// ============================================================
 // Cursor glow follower (desktop only)
 // ============================================================
 (function () {
