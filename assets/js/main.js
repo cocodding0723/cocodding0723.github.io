@@ -700,6 +700,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   }
 
   window.addScore = function(pts) { add(pts, true); };
+  window.addScoreSilent = function(pts) { add(pts, false); };
 
   let scrollTick = 0;
   window.addEventListener('scroll', () => {
@@ -919,19 +920,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     return LABELS[Math.min(n, LABELS.length - 1)] || 'COMBO';
   }
 
-  // DOTween PunchScale: burst → overshoot → elastic bounce → settle → float up fade
+  // DOTween PunchScale: fast burst → overshoot → elastic settle, stays at click center
   function punchScale(el) {
     try { if (currentAnim) currentAnim.cancel(); } catch(e) {}
     el.style.opacity = '1';
     currentAnim = el.animate([
-      { transform: 'translate(-50%,-50%) scale(0.05)', opacity: 0,   offset: 0    },
-      { transform: 'translate(-50%,-50%) scale(1.8)',  opacity: 1,   offset: 0.18 },
-      { transform: 'translate(-50%,-50%) scale(0.82)', opacity: 1,   offset: 0.36 },
-      { transform: 'translate(-50%,-50%) scale(1.22)', opacity: 1,   offset: 0.52 },
-      { transform: 'translate(-50%,-50%) scale(0.94)', opacity: 1,   offset: 0.65 },
-      { transform: 'translate(-50%,-50%) scale(1.0)',  opacity: 1,   offset: 0.78 },
-      { transform: 'translate(-50%,-50%) translateY(-28px) scale(0.85)', opacity: 0, offset: 1 },
-    ], { duration: 720, easing: 'linear', fill: 'none' });
+      { transform: 'translate(-50%,-50%) scale(0.05)', opacity: 0, offset: 0    },
+      { transform: 'translate(-50%,-50%) scale(1.2)',  opacity: 1, offset: 0.10 },
+      { transform: 'translate(-50%,-50%) scale(0.86)', opacity: 1, offset: 0.28 },
+      { transform: 'translate(-50%,-50%) scale(1.08)', opacity: 1, offset: 0.46 },
+      { transform: 'translate(-50%,-50%) scale(0.97)', opacity: 1, offset: 0.62 },
+      { transform: 'translate(-50%,-50%) scale(1.0)',  opacity: 1, offset: 0.74 },
+      { transform: 'translate(-50%,-50%) scale(1.0)',  opacity: 0, offset: 1    },
+    ], { duration: 520, easing: 'linear', fill: 'none' });
     currentAnim.onfinish = function() { el.style.opacity = '0'; };
   }
 
@@ -941,14 +942,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     if (count >= 2) {
       popup.textContent = getLabel(count) + ' x' + count;
+      // Center the popup exactly on the click point
       popup.style.left = cx + 'px';
-      popup.style.top  = (cy - 55) + 'px';
+      popup.style.top  = cy + 'px';
       punchScale(popup);
       playSound('combo');
-      addScore(count * 3);
+      addScoreSilent(count * 3);  // no green bump flash on every combo click
 
       if (window.clickExplode && count >= 5) {
         clickExplode(cx, cy, Math.min(count / 10, 1.5));
+      }
+      // Shake only at high combos (rapid clicking = intentional chaos)
+      if (window.screenShake && count >= 5) {
+        screenShake(Math.min(2 + count * 0.4, 9), 200 + count * 8);
       }
     }
 
@@ -1187,28 +1193,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
-// Click screen shake
+// Screen shake (exposed; called only by combo / konami — NOT every click)
 // ============================================================
 (function () {
   let shaking = false;
-  let comboStrength = 0;
 
-  // Read combo count from the combo popup (visible = opacity not 0)
-  function getComboCount() {
-    const popup = document.getElementById('combo-popup');
-    if (!popup || popup.style.opacity === '0' || popup.style.opacity === '') return 0;
-    const m = popup.textContent.match(/x(\d+)/);
-    return m ? parseInt(m[1]) : 0;
-  }
-
-  function shake(basePx) {
+  // intensity in px, optional duration ms
+  window.screenShake = function (intensity, duration) {
     if (shaking) return;
     shaking = true;
 
-    const combo = getComboCount();
-    // Base: 2px, escalates with combo up to 8px
-    const intensity = Math.min(basePx + combo * 0.5, 8);
-    const duration = 200 + combo * 10; // longer shake at high combo
+    intensity = Math.min(intensity || 4, 10);
+    duration = duration || 220;
     const steps = 6;
     const interval = duration / steps;
     const target = document.getElementById('page-shake') || document.body;
@@ -1226,10 +1222,5 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         shaking = false;
       }
     }, interval);
-  }
-
-  document.addEventListener('click', e => {
-    if (e.target.closest('#achievement-toast, #konami-overlay, #score-hud')) return;
-    shake(2);
-  });
+  };
 })();
