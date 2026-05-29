@@ -6,7 +6,22 @@
   padding: 0;
 }
 
-// Custom scrollbar
+// ── Custom pixel cursor ──
+$cursor-url: url('/assets/images/cursor-pointer.png');
+
+html, body {
+  cursor: $cursor-url 28 3, auto;
+}
+
+a, button, [role="button"],
+.btn, .cat-filter-item, .cloud-tag,
+.copy-btn, .hamburger, .back-to-top,
+.post-nav-item, .mobile-toc-toggle,
+label, select, summary {
+  cursor: $cursor-url 28 3, pointer;
+}
+
+// ── Custom scrollbar ──
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
