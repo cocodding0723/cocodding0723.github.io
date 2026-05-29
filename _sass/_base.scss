@@ -244,31 +244,39 @@ section {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+// Reduced motion: keep gentle OPACITY fades (vestibular-safe) but remove
+// all positional MOVEMENT (translate/scale) and looping decorative motion.
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0ms !important;
-  }
+  html { scroll-behavior: auto; }
 
+  // Kill looping / decorative motion
+  .hero::before,
+  #cursor-glow,
+  .reading-progress { animation: none !important; }
+  #cursor-glow { display: none !important; }
+
+  // Reveal elements: fade only, no slide
+  .animate-fade-up,
+  .section-title.animate-in,
+  .skill-tag,
+  .timeline-item,
+  .certification-item,
   .recent-card-wrap,
   .blog-post-grid .post-card {
-    opacity: 1 !important;
     transform: none !important;
+    transition: opacity 0.5s ease !important;
   }
 
-  html {
-    scroll-behavior: auto;
+  // Animation-based reveals → swap to opacity-only fade
+  .animate-fade-up.visible,
+  .blog-post-grid .post-card.visible {
+    animation: fadeInOnly 0.5s ease both !important;
   }
+}
 
-  .animate-fade-up,
-  .animate-in {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
+@keyframes fadeInOnly {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 // Cursor glow follower — created by JS
