@@ -696,6 +696,76 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
+// Run dust — pixel particle trail on mousemove
+// ============================================================
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const DUST_COLORS = [
+    '#ffffff', '#d0d0d0', '#a0a0a0',
+    '#5b9cf6', '#a78bfa', '#ec4899',
+  ];
+
+  let lastX = 0, lastY = 0, lastTime = 0;
+
+  function spawnDust(x, y, speed) {
+    const count = Math.min(5, 1 + Math.floor(speed / 8));
+
+    for (let i = 0; i < count; i++) {
+      const size = 3 + Math.floor(Math.random() * 4);
+      const color = DUST_COLORS[Math.floor(Math.random() * DUST_COLORS.length)];
+
+      const p = document.createElement('div');
+      p.style.cssText = [
+        'position:fixed', 'pointer-events:none', 'z-index:9997',
+        `width:${size}px`, `height:${size}px`, `background:${color}`,
+        `left:${x}px`, `top:${y}px`,
+        'transform:translate(-50%,-50%)',
+        'image-rendering:pixelated', 'border-radius:0',
+      ].join(';');
+      document.body.appendChild(p);
+
+      let vx = (Math.random() - 0.5) * 5;
+      let vy = -(Math.random() * 2 + 0.5);
+      let px = x, py = y, life = 1;
+      const gravity = 0.18;
+      const decay = 0.045 + Math.random() * 0.02;
+
+      (function tick() {
+        vx *= 0.92;
+        vy += gravity;
+        px += vx;
+        py += vy;
+        life -= decay;
+        p.style.left = px + 'px';
+        p.style.top = py + 'px';
+        p.style.opacity = life;
+        if (life > 0) {
+          requestAnimationFrame(tick);
+        } else {
+          p.remove();
+        }
+      })();
+    }
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastTime < 16) return;
+    lastTime = now;
+
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    const speed = Math.sqrt(dx * dx + dy * dy);
+
+    if (speed > 4) spawnDust(e.clientX, e.clientY, speed);
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+  }, { passive: true });
+})();
+
+// ============================================================
 // Magnetic button effect (subtle pull toward cursor)
 // ============================================================
 (function () {
