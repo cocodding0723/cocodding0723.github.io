@@ -903,16 +903,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 // ============================================================
-// Combo counter — Combo 1 → 2 → N on consecutive clicks
+// Combo counter — PunchScale at cursor, Combo x2 → x3 → ...
 // ============================================================
 (function () {
-  const popup = document.getElementById('combo-popup');
+  var popup = document.getElementById('combo-popup');
   if (!popup) return;
 
-  let count = 0, timer = null;
+  var count = 0, hideTimer = null, currentAnim = null;
 
-  const LABELS = ['','','','COMBO','COMBO','NICE!','GREAT!','AWESOME!','SUPER!','ULTRA!'];
-
+  var LABELS = ['','','COMBO','COMBO','COMBO','NICE!','GREAT!','AWESOME!','SUPER!','ULTRA!'];
   function getLabel(n) {
     if (n >= 20) return 'GODLIKE!!';
     if (n >= 15) return 'UNSTOPPABLE!';
@@ -920,29 +919,46 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     return LABELS[Math.min(n, LABELS.length - 1)] || 'COMBO';
   }
 
+  // DOTween PunchScale: burst → overshoot → elastic bounce → settle → float up fade
+  function punchScale(el) {
+    try { if (currentAnim) currentAnim.cancel(); } catch(e) {}
+    el.style.opacity = '1';
+    currentAnim = el.animate([
+      { transform: 'translate(-50%,-50%) scale(0.05)', opacity: 0,   offset: 0    },
+      { transform: 'translate(-50%,-50%) scale(1.8)',  opacity: 1,   offset: 0.18 },
+      { transform: 'translate(-50%,-50%) scale(0.82)', opacity: 1,   offset: 0.36 },
+      { transform: 'translate(-50%,-50%) scale(1.22)', opacity: 1,   offset: 0.52 },
+      { transform: 'translate(-50%,-50%) scale(0.94)', opacity: 1,   offset: 0.65 },
+      { transform: 'translate(-50%,-50%) scale(1.0)',  opacity: 1,   offset: 0.78 },
+      { transform: 'translate(-50%,-50%) translateY(-28px) scale(0.85)', opacity: 0, offset: 1 },
+    ], { duration: 720, easing: 'linear', fill: 'none' });
+    currentAnim.onfinish = function() { el.style.opacity = '0'; };
+  }
+
   function trigger(cx, cy) {
     count++;
-    clearTimeout(timer);
+    clearTimeout(hideTimer);
 
     if (count >= 2) {
-      popup.textContent = `${getLabel(count)} x${count}`;
-      popup.classList.add('show');
+      popup.textContent = getLabel(count) + ' x' + count;
+      popup.style.left = cx + 'px';
+      popup.style.top  = (cy - 55) + 'px';
+      punchScale(popup);
       playSound('combo');
       addScore(count * 3);
 
-      // Bigger explosion on higher combos
       if (window.clickExplode && count >= 5) {
         clickExplode(cx, cy, Math.min(count / 10, 1.5));
       }
     }
 
-    timer = setTimeout(() => {
+    hideTimer = setTimeout(function() {
       count = 0;
-      popup.classList.remove('show');
+      popup.style.opacity = '0';
     }, 800);
   }
 
-  document.addEventListener('click', e => {
+  document.addEventListener('click', function(e) {
     if (e.target.closest('#achievement-toast, #konami-overlay, #score-hud')) return;
     trigger(e.clientX, e.clientY);
   });
