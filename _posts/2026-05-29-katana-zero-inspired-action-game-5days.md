@@ -10,9 +10,11 @@ tags: [Unity, C#, Game]
 
 카타나 제로를 처음 플레이했을 때 가장 인상 깊었던 건 스토리가 아니라 타격감이었다. 칼이 적에게 닿는 순간 화면이 살짝 멈추고, 피가 터지고, 사운드가 꽉 차는 그 0.1초. 그 감각 하나를 직접 구현해보고 싶어서 5일 스프린트를 시작했다.
 
-결과물은 유튜브에 올렸다: [링크](https://youtu.be/hp6LrmIztKU?si=3nydBbRO-r8ebuez)
-
 기술 스택은 R3, VContainer, FEEL, VFX Graph, DOTween. 각각 왜 선택했는지, 어떻게 썼는지 정리한다.
+
+<div class="video-embed">
+  <iframe src="https://www.youtube.com/embed/hp6LrmIztKU" title="Katana Zero Style Action Game" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 ---
 
