@@ -6,30 +6,29 @@
   overflow: hidden;
   padding: 0;
 
-  // Grid dot background
+  // Grid dot background — refined with animation
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image: radial-gradient(
       circle,
-      rgba(48, 54, 61, 0.6) 1px,
+      rgba(91, 156, 246, 0.14) 1px,
       transparent 1px
     );
-    background-size: 32px 32px;
+    background-size: 28px 28px;
     pointer-events: none;
+    animation: gridDrift 24s ease-in-out infinite alternate;
   }
 
-  // Radial gradient overlay
+  // Multi-tone radial overlay
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      ellipse at 60% 50%,
-      rgba(88, 166, 255, 0.05) 0%,
-      transparent 60%
-    );
+    background:
+      radial-gradient(ellipse 60% 55% at 70% 38%, rgba(91, 156, 246, 0.09) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 60% at 18% 68%, rgba(167, 139, 250, 0.07) 0%, transparent 55%);
     pointer-events: none;
   }
 
@@ -105,13 +104,20 @@
 
   .hero-greeting {
     font-family: $font-mono;
-    font-size: $fs-base;
-    color: var(--accent);
-    margin-bottom: 16px;
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    margin-bottom: 12px;
     opacity: 0;
     transform: translateY(16px);
     animation: fadeUp 0.4s ease forwards;
     animation-delay: 0.05s;
+    letter-spacing: 0.05em;
+
+    .hero-prompt {
+      color: var(--accent);
+      margin-right: 4px;
+      font-weight: 700;
+    }
   }
 
   .hero-title {
@@ -119,8 +125,8 @@
     font-size: $fs-2xl;
     font-weight: 700;
     color: var(--text-primary);
-    line-height: 1.1;
-    margin-bottom: 16px;
+    line-height: 1.05;
+    margin-bottom: 20px;
     opacity: 0;
     transform: translateY(16px);
     animation: fadeUp 0.4s ease forwards;
@@ -129,6 +135,10 @@
     .underline-accent {
       position: relative;
       display: inline-block;
+      background: linear-gradient(135deg, #5b9cf6 0%, #a78bfa 60%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
 
       &::after {
         content: '';
@@ -137,9 +147,10 @@
         left: 0;
         width: 0;
         height: 3px;
-        background: var(--accent);
-        animation: expandWidth 0.7s ease forwards;
-        animation-delay: 0.65s;
+        background: linear-gradient(90deg, #5b9cf6, #a78bfa);
+        border-radius: 2px;
+        animation: expandWidth 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: 0.7s;
       }
     }
   }
@@ -147,19 +158,33 @@
   .hero-subtitle {
     font-family: $font-mono;
     font-size: $fs-md;
-    color: var(--accent);
+    color: var(--text-muted);
     margin-bottom: 24px;
     opacity: 0;
     transform: translateY(16px);
     animation: fadeUp 0.4s ease forwards;
     animation-delay: 0.19s;
+
+    .hero-skill {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .hero-skill-sep {
+      color: var(--border-hover);
+      margin: 0 4px;
+    }
+
+    .hero-skill-role {
+      color: var(--accent);
+    }
   }
 
   .hero-description {
     font-size: $fs-base;
     color: var(--text-muted);
-    line-height: 1.8;
-    margin-bottom: 40px;
+    line-height: 1.85;
+    margin-bottom: 44px;
     max-width: 560px;
     opacity: 0;
     transform: translateY(16px);
@@ -169,7 +194,7 @@
 
   .hero-actions {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
     opacity: 0;
     transform: translateY(16px);
@@ -181,55 +206,61 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
+    padding: 13px 26px;
     border-radius: $card-radius;
     font-family: $font-mono;
     font-size: $fs-sm;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
+
+    // shimmer sweep on hover
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transition: left 0.5s ease;
+      pointer-events: none;
+    }
+
+    &:hover::before {
+      left: 150%;
+    }
 
     &.btn-primary {
-      background: var(--accent);
-      color: #0d1117;
-      border: 1px solid var(--accent);
-      position: relative;
-      overflow: hidden;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -70%;
-        width: 45%;
-        height: 200%;
-        background: rgba(255, 255, 255, 0.18);
-        transform: skewX(-20deg);
-        transition: left 0.5s ease;
-      }
+      background: linear-gradient(135deg, #5b9cf6 0%, #a78bfa 100%);
+      color: #0a0b10;
+      border: none;
+      font-weight: 700;
 
       &:hover {
-        background: var(--text-primary);
-        border-color: var(--text-primary);
-        color: #0d1117;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
-
-        &::after { left: 130%; }
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(91, 156, 246, 0.4), 0 0 40px rgba(167, 139, 250, 0.2);
+        filter: brightness(1.1);
       }
+
+      &:active { transform: translateY(-1px); }
     }
 
     &.btn-secondary {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text-primary);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-hover);
+      backdrop-filter: blur(4px);
 
       &:hover {
-        border-color: var(--accent);
+        border-color: rgba(91, 156, 246, 0.5);
         color: var(--accent);
-        transform: translateY(-2px);
-        background: rgba(88, 166, 255, 0.06);
+        transform: translateY(-3px);
+        background: rgba(91, 156, 246, 0.08);
+        box-shadow: 0 6px 20px rgba(91, 156, 246, 0.15);
       }
     }
   }
@@ -271,7 +302,10 @@
 }
 
 @keyframes expandWidth {
-  to {
-    width: 100%;
-  }
+  to { width: 100%; }
+}
+
+@keyframes gridDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 28px 28px; }
 }

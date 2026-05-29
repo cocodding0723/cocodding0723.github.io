@@ -1,24 +1,35 @@
 // Color Palette
 :root {
-  --bg-primary:    #0d1117;
-  --bg-secondary:  #161b22;
-  --bg-tertiary:   #21262d;
-  --accent:        #58a6ff;
-  --accent-subtle: #1f6feb;
-  --text-primary:  #e6edf3;
-  --text-muted:    #8b949e;
-  --border:        #30363d;
+  --bg-primary:    #090b10;
+  --bg-secondary:  #0e1117;
+  --bg-tertiary:   #161c26;
+  --bg-card:       #111520;
+  --accent:        #5b9cf6;
+  --accent-2:      #a78bfa;
+  --accent-glow:   rgba(91, 156, 246, 0.18);
+  --accent-subtle: #1d4ed8;
+  --text-primary:  #e8edf5;
+  --text-muted:    #8892a4;
+  --text-faint:    #4a5568;
+  --border:        #1e2535;
+  --border-hover:  #2d3a52;
+  --glow-blue:     rgba(91, 156, 246, 0.25);
+  --glow-purple:   rgba(167, 139, 250, 0.2);
+  --gradient-1:    linear-gradient(135deg, #5b9cf6 0%, #a78bfa 100%);
+  --gradient-2:    linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
 }
 
 // SCSS Variables
-$bg-primary:    #0d1117;
-$bg-secondary:  #161b22;
-$bg-tertiary:   #21262d;
-$accent:        #58a6ff;
-$accent-subtle: #1f6feb;
-$text-primary:  #e6edf3;
-$text-muted:    #8b949e;
-$border:        #30363d;
+$bg-primary:    #090b10;
+$bg-secondary:  #0e1117;
+$bg-tertiary:   #161c26;
+$bg-card:       #111520;
+$accent:        #5b9cf6;
+$accent-2:      #a78bfa;
+$accent-subtle: #1d4ed8;
+$text-primary:  #e8edf5;
+$text-muted:    #8892a4;
+$border:        #1e2535;
 
 // Breakpoints
 $mobile:  480px;
@@ -36,9 +47,9 @@ $fs-base: 16px;
 $fs-md:  20px;
 $fs-lg:  24px;
 $fs-xl:  32px;
-$fs-2xl: 48px;
+$fs-2xl: 52px;
 
 // Spacing
-$section-gap: 120px;
-$card-radius: 8px;
+$section-gap: 128px;
+$card-radius: 14px;
 $max-width: 1100px;

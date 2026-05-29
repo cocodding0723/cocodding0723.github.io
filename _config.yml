@@ -1,13 +1,13 @@
-title: "강찬형 | Portfolio & Blog"
-description: "Unity · Android · Flutter 클라이언트 개발자 강찬형의 포트폴리오 & 기술 블로그"
+title: "cocodding | Portfolio & Blog"
+description: "Unity · Android · Flutter 클라이언트 개발자 cocodding의 포트폴리오 & 기술 블로그"
 url: "https://cocodding0723.github.io"
 baseurl: ""
 
 author:
-  name: "강찬형"
+  name: "cocodding"
   github: "cocodding0723"
   blog: "https://cocodding0723.github.io"
-  youtube: "https://www.youtube.com/channel/UC_MJsupsTzk_GeL-Kmmxq9A"
+  youtube: "https://www.youtube.com/@coco1895"
   baekjoon: "https://www.acmicpc.net/user/cocodding0723"
 
 # Blog
