@@ -688,25 +688,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   let score = parseInt(localStorage.getItem('score_v1') || '0');
   el.textContent = String(score).padStart(6, '0');
 
-  function add(pts) {
+  function add(pts, highlight) {
     score = Math.min(score + pts, 999999);
     localStorage.setItem('score_v1', score);
     el.textContent = String(score).padStart(6, '0');
-    el.classList.add('bump');
-    setTimeout(() => el.classList.remove('bump'), 200);
+    // Only flash for significant gains (achievements, combo, konami)
+    if (highlight) {
+      el.classList.add('bump');
+      setTimeout(() => el.classList.remove('bump'), 200);
+    }
   }
 
-  window.addScore = add;
+  window.addScore = function(pts) { add(pts, true); };
 
   let scrollTick = 0;
   window.addEventListener('scroll', () => {
     scrollTick++;
-    if (scrollTick % 8 === 0) add(1);
+    if (scrollTick % 8 === 0) add(1, false);
   }, { passive: true });
-
-  document.addEventListener('click', e => {
-    if (e.target.closest('.btn, a')) add(5);
-  });
 })();
 
 // ============================================================
@@ -778,6 +777,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }, 700);
 
     // Phase 2 — 15 rapid hits (start 1300ms)
+    var pageShakeEl = document.getElementById('page-shake') || document.body;
     var hits = 0, TOTAL = 15;
     setTimeout(function() {
       if (hitsWrap) hitsWrap.classList.add('visible');
@@ -791,8 +791,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         var x = ((Math.random() - 0.5) * 18).toFixed(1);
         var y = ((Math.random() - 0.5) * 14).toFixed(1);
-        document.body.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-        setTimeout(function() { document.body.style.transform = ''; }, 50);
+        pageShakeEl.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        setTimeout(function() { pageShakeEl.style.transform = ''; }, 50);
 
         demonAudio('hit');
 
@@ -817,7 +817,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 setTimeout(function() {
                   overlay.classList.remove('active');
                   overlay.style.pointerEvents = 'none';
-                  document.body.style.transform = '';
+                  pageShakeEl.style.transform = '';
                 }, 300);
               }, 3000);
             }, 400);
@@ -1193,10 +1193,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   let shaking = false;
   let comboStrength = 0;
 
-  // Read combo count from the existing combo popup text
+  // Read combo count from the combo popup (visible = opacity not 0)
   function getComboCount() {
     const popup = document.getElementById('combo-popup');
-    if (!popup || !popup.classList.contains('show')) return 0;
+    if (!popup || popup.style.opacity === '0' || popup.style.opacity === '') return 0;
     const m = popup.textContent.match(/x(\d+)/);
     return m ? parseInt(m[1]) : 0;
   }
@@ -1211,18 +1211,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const duration = 200 + combo * 10; // longer shake at high combo
     const steps = 6;
     const interval = duration / steps;
-    const body = document.body;
+    const target = document.getElementById('page-shake') || document.body;
     let i = 0;
 
     const tick = setInterval(() => {
       const decay = 1 - i / steps;
       const x = ((Math.random() - 0.5) * 2 * intensity * decay).toFixed(2);
       const y = ((Math.random() - 0.5) * 2 * intensity * decay).toFixed(2);
-      body.style.transform = `translate(${x}px, ${y}px)`;
+      target.style.transform = `translate(${x}px, ${y}px)`;
       i++;
       if (i >= steps) {
         clearInterval(tick);
-        body.style.transform = '';
+        target.style.transform = '';
         shaking = false;
       }
     }, interval);
