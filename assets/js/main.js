@@ -1065,3 +1065,51 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
   });
 })();
+
+// ============================================================
+// Click screen shake
+// ============================================================
+(function () {
+  let shaking = false;
+  let comboStrength = 0;
+
+  // Read combo count from the existing combo popup text
+  function getComboCount() {
+    const popup = document.getElementById('combo-popup');
+    if (!popup || !popup.classList.contains('show')) return 0;
+    const m = popup.textContent.match(/x(\d+)/);
+    return m ? parseInt(m[1]) : 0;
+  }
+
+  function shake(basePx) {
+    if (shaking) return;
+    shaking = true;
+
+    const combo = getComboCount();
+    // Base: 2px, escalates with combo up to 8px
+    const intensity = Math.min(basePx + combo * 0.5, 8);
+    const duration = 200 + combo * 10; // longer shake at high combo
+    const steps = 6;
+    const interval = duration / steps;
+    const body = document.body;
+    let i = 0;
+
+    const tick = setInterval(() => {
+      const decay = 1 - i / steps;
+      const x = ((Math.random() - 0.5) * 2 * intensity * decay).toFixed(2);
+      const y = ((Math.random() - 0.5) * 2 * intensity * decay).toFixed(2);
+      body.style.transform = `translate(${x}px, ${y}px)`;
+      i++;
+      if (i >= steps) {
+        clearInterval(tick);
+        body.style.transform = '';
+        shaking = false;
+      }
+    }, interval);
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('#achievement-toast, #konami-overlay, #score-hud')) return;
+    shake(2);
+  });
+})();
