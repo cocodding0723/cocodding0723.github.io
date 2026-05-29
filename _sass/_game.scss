@@ -307,23 +307,34 @@ body.booting {
 
 .rd-kanji {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -55%);
-  font-size: clamp(90px, 22vw, 240px);
-  color: #cc0000;
-  font-family: 'Noto Sans KR', serif;
-  font-weight: 700;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Brush calligraphy, oversized so it bleeds past the screen edges
+  font-family: $font-brush;
+  font-size: min(118vh, 118vw);
+  line-height: 0.82;
+  color: #c20012;
+  -webkit-text-stroke: 4px #ff5252;
   text-shadow:
-    0 0 40px rgba(220, 0, 0, 0.9),
-    0 0 100px rgba(180, 0, 0, 0.5),
-    4px 4px 0 rgba(0, 0, 0, 0.8);
+    0 0 28px rgba(255, 60, 60, 0.95),
+    0 0 70px rgba(220, 0, 0, 0.7),
+    0 0 140px rgba(160, 0, 0, 0.5);
   opacity: 0;
   transition: opacity 0.04s steps(1);
   user-select: none;
-  line-height: 1;
 
-  &.visible { opacity: 1; }
+  &.visible {
+    opacity: 1;
+    animation: rdKanjiPunch 0.4s steps(4) 1;
+  }
+}
+
+@keyframes rdKanjiPunch {
+  0%   { transform: scale(0.6); }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 .rd-hits-wrap {
@@ -357,36 +368,76 @@ body.booting {
   line-height: 1;
 }
 
+// 瞬獄殺 — asymmetric brush layout across the whole screen
 .rd-finish {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Noto Sans KR', serif;
-  font-size: clamp(36px, 7vw, 96px);
-  font-weight: 900;
-  color: #fff;
-  text-shadow:
-    0 0 30px rgba(255, 255, 255, 0.9),
-    0 0 60px rgba(200, 0, 0, 0.6),
-    4px 4px 0 #000;
-  text-align: center;
-  line-height: 1.3;
+  inset: 0;
   opacity: 0;
-  transition: opacity 0.08s steps(2);
-  white-space: nowrap;
+  transition: opacity 0.05s steps(1);
 
-  .rd-sub {
-    display: block;
-    font-family: $font-pixel;
-    font-size: clamp(8px, 1.5vw, 14px);
-    color: $pixel-yellow;
-    letter-spacing: 0.2em;
-    margin-top: 8px;
-    text-shadow: 0 0 10px $pixel-yellow;
+  .rd-char {
+    position: absolute;
+    font-family: $font-brush;
+    color: #fff;
+    line-height: 0.9;
+    -webkit-text-stroke: 3px #cc0000;
+    text-shadow:
+      0 0 24px rgba(255, 255, 255, 0.9),
+      0 0 50px rgba(255, 40, 40, 0.8),
+      0 0 90px rgba(180, 0, 0, 0.5);
+    opacity: 0;
   }
 
-  &.visible { opacity: 1; }
+  // 瞬 (순) — top-left
+  .rd-c1 {
+    top: 1%;
+    left: 4%;
+    font-size: min(40vh, 36vw);
+    transform: rotate(-7deg);
+  }
+  // 獄 (옥) — top-right
+  .rd-c2 {
+    top: 8%;
+    right: 3%;
+    font-size: min(46vh, 41vw);
+    transform: rotate(5deg);
+  }
+  // 殺 (살) — bottom-center, biggest
+  .rd-c3 {
+    bottom: -2%;
+    left: 46%;
+    transform: translateX(-50%) rotate(-3deg);
+    font-size: min(52vh, 46vw);
+  }
+
+  .rd-sub {
+    position: absolute;
+    bottom: 6%;
+    right: 7%;
+    font-family: $font-pixel;
+    font-size: clamp(8px, 1.5vw, 15px);
+    color: $pixel-yellow;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px $pixel-yellow;
+    opacity: 0;
+  }
+
+  &.visible {
+    opacity: 1;
+
+    .rd-c1 { animation: rdCharIn 0.3s steps(4) 0s   forwards; }
+    .rd-c2 { animation: rdCharIn 0.3s steps(4) 0.14s forwards; }
+    .rd-c3 { animation: rdCharIn 0.34s steps(4) 0.30s forwards; }
+    .rd-sub { animation: rdSubIn 0.2s steps(2) 0.55s forwards; }
+  }
+}
+
+@keyframes rdCharIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes rdSubIn {
+  to { opacity: 1; }
 }
 
 // ── Combo popup — position + animation fully driven by JS ──

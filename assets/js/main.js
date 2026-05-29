@@ -881,6 +881,79 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     } catch(e) {}
   }
 
+  // ── Glass-crack sound ──
+  function crackSound() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      // Noise burst for the shatter
+      var dur = 0.4;
+      var buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      var data = buf.getChannelData(0);
+      for (var i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2);
+      }
+      var src = ctx.createBufferSource();
+      src.buffer = buf;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.35, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      var hp = ctx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 2000;
+      src.connect(hp); hp.connect(g); g.connect(ctx.destination);
+      src.start();
+    } catch(e) {}
+  }
+
+  // ── Full-screen shatter: crack flash + glass shards flying out ──
+  function shatterGlass(overlay) {
+    crackSound();
+
+    // Brief white crack flash
+    overlay.classList.add('flash');
+    setTimeout(function() { overlay.classList.remove('flash'); }, 60);
+
+    var layer = document.createElement('div');
+    layer.style.cssText = 'position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;';
+    overlay.appendChild(layer);
+
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight / 2;
+    var SHARDS = 46;
+
+    for (var i = 0; i < SHARDS; i++) {
+      var shard = document.createElement('div');
+      var size = 14 + Math.random() * 46;
+      // Random triangular glass piece via clip-path
+      var p1 = Math.round(Math.random() * 50);
+      var p2 = 50 + Math.round(Math.random() * 50);
+      shard.style.cssText = [
+        'position:absolute',
+        'width:' + size + 'px', 'height:' + size + 'px',
+        'left:' + cx + 'px', 'top:' + cy + 'px',
+        'background:linear-gradient(135deg, rgba(255,255,255,0.85), rgba(150,200,255,0.35))',
+        'box-shadow:0 0 8px rgba(180,220,255,0.6)',
+        'clip-path:polygon(' + p1 + '% 0, 100% ' + p2 + '%, ' + (Math.random()*40|0) + '% 100%)',
+        'opacity:0.95'
+      ].join(';');
+      layer.appendChild(shard);
+
+      var ang = Math.random() * Math.PI * 2;
+      var dist = 200 + Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.7;
+      var tx = Math.cos(ang) * dist;
+      var ty = Math.sin(ang) * dist;
+      var rot = (Math.random() - 0.5) * 1080;
+
+      var anim = shard.animate([
+        { transform: 'translate(-50%,-50%) rotate(0deg) scale(1)', opacity: 1 },
+        { transform: 'translate(calc(-50% + ' + tx + 'px), calc(-50% + ' + ty + 'px)) rotate(' + rot + 'deg) scale(0.3)', opacity: 0 }
+      ], { duration: 700 + Math.random() * 500, easing: 'cubic-bezier(0.12, 0.7, 0.3, 1)' });
+      anim.onfinish = (function(s){ return function(){ s.remove(); }; })(shard);
+    }
+
+    setTimeout(function() { layer.remove(); }, 1400);
+  }
+
   function triggerRagingDemon() {
     var overlay  = document.getElementById('konami-overlay');
     var kanji    = document.getElementById('rd-kanji');
@@ -935,8 +1008,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
             setTimeout(function() {
               overlay.classList.remove('flash');
+              // Screen shatter + glass shards burst from center
+              shatterGlass(overlay);
               if (finish) {
-                finish.innerHTML = '瞬獄殺<span class="rd-sub">SHUN GOKU SATSU</span>';
+                finish.innerHTML =
+                  '<span class="rd-char rd-c1">瞬</span>' +
+                  '<span class="rd-char rd-c2">獄</span>' +
+                  '<span class="rd-char rd-c3">殺</span>' +
+                  '<span class="rd-sub">SHUN GOKU SATSU</span>';
                 finish.classList.add('visible');
               }
               demonAudio('finish');
