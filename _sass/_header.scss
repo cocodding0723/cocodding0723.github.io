@@ -26,37 +26,41 @@
   }
 
   .logo {
-    font-family: $font-mono;
-    font-size: $fs-base;
-    font-weight: 700;
+    font-family: $font-pixel;
+    font-size: 12px;
+    font-weight: 400;
     color: var(--text-primary);
     text-decoration: none;
-    letter-spacing: -0.02em;
-    transition: opacity 0.2s ease;
+    letter-spacing: 0.04em;
+    image-rendering: pixelated;
 
     span {
-      background: linear-gradient(135deg, #5b9cf6, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: $pixel-green;
+      text-shadow: 0 0 8px $pixel-green;
+      animation: pixelBlink 2s step-end infinite;
     }
 
-    &:hover { opacity: 0.85; }
+    &:hover {
+      color: var(--accent);
+    }
   }
 
   nav {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 28px;
 
     a {
-      font-family: $font-mono;
-      font-size: $fs-sm;
+      font-family: $font-pixel;
+      font-size: 9px;
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color 0.05s steps(1);
       position: relative;
-      padding-bottom: 2px;
+      padding-bottom: 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      image-rendering: pixelated;
 
       &::after {
         content: '';
@@ -64,22 +68,21 @@
         bottom: -2px;
         left: 0;
         width: 0;
-        height: 1px;
-        background: var(--accent);
-        transition: width 0.3s ease;
+        height: 2px;
+        background: $pixel-green;
+        box-shadow: 0 0 4px $pixel-green;
+        transition: width 0.1s steps(6);
       }
 
       &:hover,
       &.active {
         color: var(--text-primary);
-
-        &::after {
-          width: 100%;
-        }
+        &::after { width: 100%; }
       }
 
       &.active {
-        color: var(--accent);
+        color: $pixel-green;
+        text-shadow: 0 0 6px $pixel-green;
       }
     }
   }

@@ -37,8 +37,9 @@ $tablet:  768px;
 $desktop: 1100px;
 
 // Typography
-$font-mono: 'JetBrains Mono', 'Courier New', monospace;
-$font-sans: 'Noto Sans KR', sans-serif;
+$font-mono:  'JetBrains Mono', 'Courier New', monospace;
+$font-sans:  'Noto Sans KR', sans-serif;
+$font-pixel: 'Press Start 2P', monospace;
 
 // Font sizes
 $fs-xs:  12px;
@@ -51,5 +52,13 @@ $fs-2xl: 52px;
 
 // Spacing
 $section-gap: 128px;
-$card-radius: 14px;
+$card-radius: 4px;
 $max-width: 1100px;
+
+// Pixel art game palette
+$pixel-green:  #00e676;
+$pixel-yellow: #ffeb3b;
+$pixel-red:    #ff1744;
+$pixel-cyan:   #00e5ff;
+$pixel-border: rgba(91, 156, 246, 0.55);
+$pixel-shadow: rgba(0, 0, 0, 0.7);

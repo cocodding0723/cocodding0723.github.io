@@ -544,24 +544,31 @@
 // ============================================================
 // Reading progress bar
 // ============================================================
+// HP bar style reading progress
 .reading-progress {
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 6px;
   width: 0%;
-  background: linear-gradient(90deg, #5b9cf6 0%, #a78bfa 50%, #ec4899 100%);
-  background-size: 200% 100%;
+  background: $pixel-green;
   z-index: 9999;
-  transition: width 0.08s linear;
+  transition: width 0.08s steps(40);
   pointer-events: none;
-  box-shadow: 0 0 10px rgba(91, 156, 246, 0.6), 0 0 20px rgba(167, 139, 250, 0.3);
-  animation: progressShimmer 3s linear infinite;
-}
+  box-shadow: 0 0 8px $pixel-green;
+  image-rendering: pixelated;
 
-@keyframes progressShimmer {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 200% 0%; }
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: -1;
+    border-bottom: 1px solid rgba(0, 230, 118, 0.15);
+  }
 }
 
 // ============================================================

@@ -332,11 +332,12 @@ $cat-essay:     #f78166;
 // ============================================================
 .post-card {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: $card-radius;
+  border: 2px solid $pixel-border;
+  border-radius: 0;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.05s steps(1), box-shadow 0.05s steps(1);
   position: relative;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
 
   // Category accent bar
   &.cat-border-dev       { border-top: 2px solid $cat-dev; }
@@ -357,35 +358,30 @@ $cat-essay:     #f78166;
   }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.7);
   }
 
-  // Category-specific hover glow
+  // Category-specific hover — pixel style border color
   &.cat-border-dev:hover {
-    border-color: rgba($cat-dev, 0.5);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(88,166,255,0.12);
-    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(88,166,255,0.06), transparent 60%); opacity: 1; }
+    border-color: $cat-dev;
+    box-shadow: 6px 6px 0 rgba($cat-dev, 0.25);
   }
   &.cat-border-project:hover {
-    border-color: rgba($cat-project, 0.5);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(63,185,80,0.12);
-    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(63,185,80,0.06), transparent 60%); opacity: 1; }
+    border-color: $cat-project;
+    box-shadow: 6px 6px 0 rgba($cat-project, 0.25);
   }
   &.cat-border-algorithm:hover {
-    border-color: rgba($cat-algorithm, 0.5);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(210,168,255,0.12);
-    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(210,168,255,0.06), transparent 60%); opacity: 1; }
+    border-color: $cat-algorithm;
+    box-shadow: 6px 6px 0 rgba($cat-algorithm, 0.25);
   }
   &.cat-border-daily:hover {
-    border-color: rgba($cat-daily, 0.5);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(255,166,87,0.12);
-    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(255,166,87,0.06), transparent 60%); opacity: 1; }
+    border-color: $cat-daily;
+    box-shadow: 6px 6px 0 rgba($cat-daily, 0.25);
   }
   &.cat-border-essay:hover {
-    border-color: rgba($cat-essay, 0.5);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 28px rgba(247,129,102,0.12);
-    &::after { background: radial-gradient(ellipse at 50% 0%, rgba(247,129,102,0.06), transparent 60%); opacity: 1; }
+    border-color: $cat-essay;
+    box-shadow: 6px 6px 0 rgba($cat-essay, 0.25);
   }
 
   .card-inner {
