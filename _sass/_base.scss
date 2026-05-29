@@ -51,6 +51,11 @@ label, select, summary {
   outline: none;
 }
 
+// Screen-shake wrapper (header + fixed game UI live outside this)
+#page-shake {
+  will-change: transform;
+}
+
 html {
   scroll-behavior: smooth;
 }
