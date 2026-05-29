@@ -106,34 +106,102 @@
   @media (max-width: $tablet) { display: none; }
 }
 
-// ── Konami overlay ──
+// ── Raging Demon overlay (Konami Code) ──
 .konami-overlay {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #000;
   pointer-events: none;
   opacity: 0;
+  transition: opacity 0.05s steps(1), background 0.03s steps(1);
+
+  &.active { opacity: 1; pointer-events: all; }
+  &.flash  { background: #fff; }
+}
+
+.rd-kanji {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  font-size: clamp(90px, 22vw, 240px);
+  color: #cc0000;
+  font-family: 'Noto Sans KR', serif;
+  font-weight: 700;
+  text-shadow:
+    0 0 40px rgba(220, 0, 0, 0.9),
+    0 0 100px rgba(180, 0, 0, 0.5),
+    4px 4px 0 rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.04s steps(1);
+  user-select: none;
+  line-height: 1;
+
+  &.visible { opacity: 1; }
+}
+
+.rd-hits-wrap {
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.04s steps(1);
+
+  &.visible { opacity: 1; }
+}
+
+.rd-hits-label {
+  font-family: $font-pixel;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.25em;
+}
+
+.rd-hits-count {
+  font-family: $font-pixel;
+  font-size: clamp(32px, 6vw, 72px);
+  color: $pixel-yellow;
+  text-shadow: 0 0 20px $pixel-yellow, 2px 2px 0 rgba(0,0,0,0.9);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.rd-finish {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Noto Sans KR', serif;
+  font-size: clamp(36px, 7vw, 96px);
+  font-weight: 900;
+  color: #fff;
+  text-shadow:
+    0 0 30px rgba(255, 255, 255, 0.9),
+    0 0 60px rgba(200, 0, 0, 0.6),
+    4px 4px 0 #000;
+  text-align: center;
+  line-height: 1.3;
+  opacity: 0;
   transition: opacity 0.08s steps(2);
+  white-space: nowrap;
 
-  &.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .konami-text {
+  .rd-sub {
+    display: block;
     font-family: $font-pixel;
-    font-size: clamp(14px, 3vw, 26px);
-    color: $pixel-green;
-    text-shadow: 0 0 24px $pixel-green, 0 0 48px rgba(0, 230, 118, 0.35);
-    text-align: center;
-    line-height: 2.2;
-    letter-spacing: 0.06em;
-    animation: pixelBlink 0.25s step-end 8;
+    font-size: clamp(8px, 1.5vw, 14px);
+    color: $pixel-yellow;
+    letter-spacing: 0.2em;
+    margin-top: 8px;
+    text-shadow: 0 0 10px $pixel-yellow;
   }
+
+  &.visible { opacity: 1; }
 }
 
 // ── Combo popup ──
