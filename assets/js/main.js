@@ -15,6 +15,7 @@
   document.body.classList.add('booting');
 
   var streamsBox = document.getElementById('boot-streams');
+  var bloom      = document.getElementById('boot-bloom');
   var linkStart  = document.getElementById('boot-linkstart');
   var sysCheck   = document.getElementById('boot-syscheck');
   var sysList    = document.getElementById('sys-list');
@@ -41,33 +42,49 @@
     } catch (e) {}
   }
 
-  // ── Phase 2: rainbow pixel streams rushing down ──
+  // ── Phase 2: warp-tunnel light streaks rushing out from center (dive feel) ──
   function rushStreams() {
     if (!streamsBox) return;
-    var n = Math.min(48, Math.floor(window.innerWidth / 22));
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight / 2;
+    var radius = Math.sqrt(cx * cx + cy * cy);
+    var n = Math.min(80, Math.floor(window.innerWidth / 14));
+
     for (var i = 0; i < n; i++) {
       (function (idx) {
         var bar = document.createElement('div');
         bar.className = 'boot-stream';
         var color = COLORS[idx % COLORS.length];
-        var h = 60 + Math.random() * 180;
-        bar.style.left = (Math.random() * 100) + '%';
-        bar.style.height = h + 'px';
-        bar.style.background = color;
-        bar.style.boxShadow = '0 0 12px ' + color;
+        var ang = Math.random() * Math.PI * 2;
+        var len = 40 + Math.random() * 160;
+
+        // Anchor at center, oriented outward along its angle
+        bar.style.left = cx + 'px';
+        bar.style.top = cy + 'px';
+        bar.style.height = len + 'px';
+        bar.style.width = (2 + Math.random() * 4) + 'px';
+        bar.style.background = 'linear-gradient(to top, transparent, ' + color + ')';
+        bar.style.boxShadow = '0 0 14px ' + color;
         bar.style.opacity = '0';
+        bar.style.transformOrigin = 'center top';
         streamsBox.appendChild(bar);
 
-        var delay = Math.random() * 350;
+        var deg = ang * 180 / Math.PI;
+        var startD = 20 + Math.random() * 60;   // start near center
+        var endD = radius + len;                 // shoot past the edge
+        var delay = Math.random() * 450;
+
+        // Rotate to face outward, scale streak length as it warps outward
+        var base = 'translate(-50%, 0) rotate(' + deg + 'deg) ';
         var anim = bar.animate([
-          { transform: 'translateY(-30vh)', opacity: 0 },
-          { transform: 'translateY(20vh)',  opacity: 1, offset: 0.2 },
-          { transform: 'translateY(120vh)', opacity: 0 }
-        ], { duration: 700 + Math.random() * 400, delay: delay, easing: 'steps(12)', fill: 'forwards' });
+          { transform: base + 'translateY(' + startD + 'px) scaleY(0.3)', opacity: 0 },
+          { transform: base + 'translateY(' + (startD + 60) + 'px) scaleY(0.8)', opacity: 1, offset: 0.18 },
+          { transform: base + 'translateY(' + endD + 'px) scaleY(2.6)', opacity: 0 }
+        ], { duration: 650 + Math.random() * 450, delay: delay, easing: 'cubic-bezier(0.5, 0, 1, 1)', fill: 'forwards' });
         anim.onfinish = function () { bar.remove(); };
       })(i);
     }
-    blip(180, 0.5);
+    blip(140, 0.6);
   }
 
   // ── Phase 3: system check ──
@@ -94,20 +111,40 @@
     })();
   }
 
-  // ── Finish / cleanup ──
-  function finish() {
+  // ── Finish / cleanup — dive-in warp then fade ──
+  function finish(instant) {
     if (finished) return;
     finished = true;
     timers.forEach(clearTimeout);
-    boot.classList.add('done');
-    document.body.classList.remove('booting');
-    setTimeout(function () { boot.parentNode && boot.parentNode.removeChild(boot); }, 450);
+
+    if (instant) {
+      boot.classList.add('done');
+      document.body.classList.remove('booting');
+      setTimeout(function () { boot.parentNode && boot.parentNode.removeChild(boot); }, 450);
+      return;
+    }
+
+    // Warp zoom — content gets sucked into the screen
+    boot.classList.add('warp-out');
+    blip(90, 0.45);
+    setTimeout(function () {
+      boot.classList.add('done');
+      document.body.classList.remove('booting');
+      setTimeout(function () { boot.parentNode && boot.parentNode.removeChild(boot); }, 420);
+    }, 480);
   }
 
   // ── Timeline ──
-  later(function () { linkStart.classList.add('active'); blip(440, 0.3); }, 250);
+  later(function () {
+    linkStart.classList.add('active');
+    if (bloom) bloom.classList.add('on');
+    blip(440, 0.3);
+  }, 250);
   later(rushStreams, 950);
-  later(function () { linkStart.classList.remove('active'); }, 1550);
+  later(function () {
+    linkStart.classList.remove('active');
+    if (bloom) bloom.classList.remove('on');
+  }, 1550);
   later(function () {
     runSysCheck(function () {
       sysCheck.classList.remove('active');
@@ -117,13 +154,13 @@
     });
   }, 1650);
 
-  // ── Skip on interaction ──
-  function skip() { finish(); }
-  boot.addEventListener('click', skip);
-  document.addEventListener('keydown', skip, { once: true });
+  // ── Skip via ESC only (no click-skip, per request) ──
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') finish(true);
+  });
 
   // ── Hard safety: never leave the black screen stuck ──
-  later(finish, 7000);
+  later(function () { finish(true); }, 7000);
 })();
 
 // ============================================================
@@ -961,10 +998,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     var hitsEl   = document.getElementById('rd-hits-count');
     var finish   = document.getElementById('rd-finish');
     if (!overlay) return;
+    var pageShakeEl = document.getElementById('page-shake') || document.body;
 
+    // ── Reset ──
     [kanji, hitsWrap, finish].forEach(function(el) { if (el) el.classList.remove('visible'); });
-    if (hitsEl)  hitsEl.textContent = '0';
-    if (finish)  finish.innerHTML = '';
+    if (hitsEl) hitsEl.textContent = '0';
+    if (finish) finish.innerHTML =
+      '<span class="rd-char rd-c1">瞬</span>' +
+      '<span class="rd-char rd-c2">獄</span>' +
+      '<span class="rd-char rd-c3">殺</span>' +
+      '<span class="rd-sub">SHUN GOKU SATSU</span>';
     overlay.classList.remove('flash');
 
     overlay.style.pointerEvents = 'all';
@@ -973,13 +1016,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     addScore(30000);
     demonAudio('intro');
 
-    // Phase 1 — 天 (700ms)
+    // ── Phase 1 — 瞬獄殺 appears first ──
     setTimeout(function() {
-      if (kanji) kanji.classList.add('visible');
-    }, 700);
+      if (finish) finish.classList.add('visible');
+      demonAudio('finish');
+    }, 400);
 
-    // Phase 2 — 15 rapid hits (start 1300ms)
-    var pageShakeEl = document.getElementById('page-shake') || document.body;
+    // ── Phase 2 — rapid hit flicker (연타) ──
     var hits = 0, TOTAL = 15;
     setTimeout(function() {
       if (hitsWrap) hitsWrap.classList.add('visible');
@@ -1001,38 +1044,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (hits >= TOTAL) {
           clearInterval(iv);
 
+          // ── Phase 3 — white blast → 天 finale + glass shatter ──
           setTimeout(function() {
             overlay.classList.add('flash');
-            if (kanji)    kanji.classList.remove('visible');
+            if (finish)   finish.classList.remove('visible');
             if (hitsWrap) hitsWrap.classList.remove('visible');
 
             setTimeout(function() {
               overlay.classList.remove('flash');
-              // Screen shatter + glass shards burst from center
               shatterGlass(overlay);
-              if (finish) {
-                finish.innerHTML =
-                  '<span class="rd-char rd-c1">瞬</span>' +
-                  '<span class="rd-char rd-c2">獄</span>' +
-                  '<span class="rd-char rd-c3">殺</span>' +
-                  '<span class="rd-sub">SHUN GOKU SATSU</span>';
-                finish.classList.add('visible');
-              }
+              if (kanji) kanji.classList.add('visible');
               demonAudio('finish');
 
               setTimeout(function() {
-                if (finish) finish.classList.remove('visible');
+                if (kanji) kanji.classList.remove('visible');
                 setTimeout(function() {
                   overlay.classList.remove('active');
                   overlay.style.pointerEvents = 'none';
                   pageShakeEl.style.transform = '';
                 }, 300);
-              }, 3000);
+              }, 2000);
             }, 400);
           }, 400);
         }
       }, 88);
-    }, 1300);
+    }, 1700);
   }
 
   document.addEventListener('keydown', function(e) {

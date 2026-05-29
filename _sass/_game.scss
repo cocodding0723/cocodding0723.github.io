@@ -14,10 +14,25 @@
   overflow: hidden;
   image-rendering: pixelated;
   transition: opacity 0.4s steps(3);
+  // 3D depth so streams can warp toward the viewer
+  perspective: 600px;
+  perspective-origin: 50% 50%;
 
   &.done {
     opacity: 0;
     pointer-events: none;
+  }
+
+  // Warp-out: everything gets sucked into the screen (dive-in)
+  &.warp-out {
+    .boot-content-zoom,
+    .boot-stage,
+    .boot-streams {
+      animation: warpZoom 0.5s cubic-bezier(0.7, 0, 1, 1) forwards;
+    }
+    .boot-bloom {
+      animation: bloomFlash 0.5s ease-out forwards;
+    }
   }
 
   // pixel scanline texture over everything
@@ -37,19 +52,57 @@
   }
 }
 
+// Bloom glow core behind the text
+.boot-bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60vmin;
+  height: 60vmin;
+  transform: translate(-50%, -50%) scale(0.4);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 229, 255, 0.55) 0%,
+    rgba(0, 160, 255, 0.28) 30%,
+    rgba(120, 80, 255, 0.12) 55%,
+    transparent 72%
+  );
+  filter: blur(12px);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+
+  &.on { animation: bloomPulse 2.6s ease-in-out infinite; }
+}
+
 // Rainbow voxel streams container
 .boot-streams {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  transform-style: preserve-3d;
 }
 .boot-stream {
   position: absolute;
-  top: -20%;
   width: 6px;
   image-rendering: pixelated;
-  // each segment is a hard pixel block; no rounding
+  will-change: transform, opacity;
+}
+
+@keyframes bloomPulse {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.85); }
+  50%       { opacity: 0.9;  transform: translate(-50%, -50%) scale(1.15); }
+}
+@keyframes bloomFlash {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 1;   transform: translate(-50%, -50%) scale(6); filter: blur(2px); }
+}
+@keyframes warpZoom {
+  0%   { transform: scale(1);    opacity: 1; filter: blur(0); }
+  100% { transform: scale(9);    opacity: 0; filter: blur(6px); }
 }
 
 // Generic stage — hidden until JS activates
@@ -71,11 +124,14 @@
     font-size: clamp(20px, 6vw, 56px);
     color: #fff;
     letter-spacing: 0.08em;
+    // Intense bloom
     text-shadow:
-      0 0 16px #00e5ff,
-      0 0 40px rgba(0, 229, 255, 0.6),
-      3px 3px 0 #003;
-    animation: bootBlink 0.4s step-end 6, bootPunch 0.4s steps(4) 1;
+      0 0 12px #fff,
+      0 0 28px #00e5ff,
+      0 0 60px rgba(0, 229, 255, 0.8),
+      0 0 110px rgba(0, 160, 255, 0.6),
+      0 0 160px rgba(120, 80, 255, 0.4);
+    animation: bootBlink 0.4s step-end 6, bootPunch 0.5s steps(5) 1;
   }
 }
 
@@ -296,7 +352,7 @@ body.booting {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: #000;
+  background: rgba(0, 0, 0, 0.3); // semi-transparent — site stays visible behind
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.05s steps(1), background 0.03s steps(1);
@@ -311,10 +367,10 @@ body.booting {
   display: flex;
   align-items: center;
   justify-content: center;
-  // Brush calligraphy, oversized so it bleeds past the screen edges
+  // Brush calligraphy — large but kept inside the viewport
   font-family: $font-brush;
-  font-size: min(118vh, 118vw);
-  line-height: 0.82;
+  font-size: 84vmin;
+  line-height: 1;
   color: #c20012;
   -webkit-text-stroke: 4px #ff5252;
   text-shadow:
@@ -322,19 +378,20 @@ body.booting {
     0 0 70px rgba(220, 0, 0, 0.7),
     0 0 140px rgba(160, 0, 0, 0.5);
   opacity: 0;
-  transition: opacity 0.04s steps(1);
   user-select: none;
 
+  // Slam down: big → small, fast, impactful
   &.visible {
     opacity: 1;
-    animation: rdKanjiPunch 0.4s steps(4) 1;
+    animation: rdSlam 0.26s steps(4) 1;
   }
 }
 
-@keyframes rdKanjiPunch {
-  0%   { transform: scale(0.6); }
-  60%  { transform: scale(1.08); }
-  100% { transform: scale(1); }
+// Big → small slam (scale property only, composes with any rotate/translate)
+@keyframes rdSlam {
+  0%   { scale: 2.6; opacity: 0; }
+  55%  { scale: 0.88; opacity: 1; }
+  100% { scale: 1; opacity: 1; }
 }
 
 .rd-hits-wrap {
@@ -388,26 +445,27 @@ body.booting {
     opacity: 0;
   }
 
-  // 瞬 (순) — top-left
+  // 瞬 (순) — top-left  (individual `rotate` property → composes with `scale` slam)
   .rd-c1 {
-    top: 1%;
+    top: 3%;
     left: 4%;
-    font-size: min(40vh, 36vw);
-    transform: rotate(-7deg);
+    font-size: 30vmin;
+    rotate: -7deg;
   }
   // 獄 (옥) — top-right
   .rd-c2 {
-    top: 8%;
-    right: 3%;
-    font-size: min(46vh, 41vw);
-    transform: rotate(5deg);
+    top: 9%;
+    right: 4%;
+    font-size: 32vmin;
+    rotate: 5deg;
   }
   // 殺 (살) — bottom-center, biggest
   .rd-c3 {
-    bottom: -2%;
-    left: 46%;
-    transform: translateX(-50%) rotate(-3deg);
-    font-size: min(52vh, 46vw);
+    bottom: 2%;
+    left: 50%;
+    translate: -50% 0;
+    rotate: -3deg;
+    font-size: 34vmin;
   }
 
   .rd-sub {
@@ -422,13 +480,14 @@ body.booting {
     opacity: 0;
   }
 
+  // Slam-down per char (fast, staggered, impactful) — uses `scale` only
   &.visible {
     opacity: 1;
 
-    .rd-c1 { animation: rdCharIn 0.3s steps(4) 0s   forwards; }
-    .rd-c2 { animation: rdCharIn 0.3s steps(4) 0.14s forwards; }
-    .rd-c3 { animation: rdCharIn 0.34s steps(4) 0.30s forwards; }
-    .rd-sub { animation: rdSubIn 0.2s steps(2) 0.55s forwards; }
+    .rd-c1 { animation: rdSlam 0.22s steps(4) 0s    forwards; }
+    .rd-c2 { animation: rdSlam 0.22s steps(4) 0.12s forwards; }
+    .rd-c3 { animation: rdSlam 0.24s steps(4) 0.24s forwards; }
+    .rd-sub { animation: rdSubIn 0.2s steps(2) 0.45s forwards; }
   }
 }
 
