@@ -1,4 +1,132 @@
 // ============================================================
+// SAO "LINK START" boot intro (once per session)
+// ============================================================
+(function () {
+  var boot = document.getElementById('boot-sequence');
+  if (!boot) return;
+
+  // Show once per browser session
+  if (sessionStorage.getItem('booted_v1')) {
+    boot.parentNode && boot.parentNode.removeChild(boot);
+    return;
+  }
+  sessionStorage.setItem('booted_v1', '1');
+
+  document.body.classList.add('booting');
+
+  var streamsBox = document.getElementById('boot-streams');
+  var linkStart  = document.getElementById('boot-linkstart');
+  var sysCheck   = document.getElementById('boot-syscheck');
+  var sysList    = document.getElementById('sys-list');
+  var allGreen   = document.getElementById('sys-allgreen');
+  var welcome    = document.getElementById('boot-welcome');
+
+  var COLORS = ['#ff1744','#ff9100','#ffeb3b','#00e676','#00e5ff','#2979ff','#a78bfa','#ec4899'];
+  var timers = [];
+  var finished = false;
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+  // ── tiny 8-bit blip ──
+  function blip(freq, dur) {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'square';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0.08, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur || 0.08));
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + (dur || 0.08) + 0.01);
+    } catch (e) {}
+  }
+
+  // ── Phase 2: rainbow pixel streams rushing down ──
+  function rushStreams() {
+    if (!streamsBox) return;
+    var n = Math.min(48, Math.floor(window.innerWidth / 22));
+    for (var i = 0; i < n; i++) {
+      (function (idx) {
+        var bar = document.createElement('div');
+        bar.className = 'boot-stream';
+        var color = COLORS[idx % COLORS.length];
+        var h = 60 + Math.random() * 180;
+        bar.style.left = (Math.random() * 100) + '%';
+        bar.style.height = h + 'px';
+        bar.style.background = color;
+        bar.style.boxShadow = '0 0 12px ' + color;
+        bar.style.opacity = '0';
+        streamsBox.appendChild(bar);
+
+        var delay = Math.random() * 350;
+        var anim = bar.animate([
+          { transform: 'translateY(-30vh)', opacity: 0 },
+          { transform: 'translateY(20vh)',  opacity: 1, offset: 0.2 },
+          { transform: 'translateY(120vh)', opacity: 0 }
+        ], { duration: 700 + Math.random() * 400, delay: delay, easing: 'steps(12)', fill: 'forwards' });
+        anim.onfinish = function () { bar.remove(); };
+      })(i);
+    }
+    blip(180, 0.5);
+  }
+
+  // ── Phase 3: system check ──
+  var CHECKS = ['RENDER', 'AUDIO', 'INPUT', 'NETWORK', 'PIXELS', 'COMBO SYS'];
+  function runSysCheck(done) {
+    sysCheck.classList.add('active');
+    var i = 0;
+    (function next() {
+      if (i >= CHECKS.length) {
+        later(function () {
+          allGreen.classList.add('shown');
+          blip(880, 0.25);
+          later(done, 700);
+        }, 200);
+        return;
+      }
+      var li = document.createElement('li');
+      li.innerHTML = '<span>' + CHECKS[i] + '</span><span class="ok">OK</span>';
+      sysList.appendChild(li);
+      requestAnimationFrame(function () { li.classList.add('shown'); });
+      blip(520 + i * 60, 0.06);
+      i++;
+      later(next, 230);
+    })();
+  }
+
+  // ── Finish / cleanup ──
+  function finish() {
+    if (finished) return;
+    finished = true;
+    timers.forEach(clearTimeout);
+    boot.classList.add('done');
+    document.body.classList.remove('booting');
+    setTimeout(function () { boot.parentNode && boot.parentNode.removeChild(boot); }, 450);
+  }
+
+  // ── Timeline ──
+  later(function () { linkStart.classList.add('active'); blip(440, 0.3); }, 250);
+  later(rushStreams, 950);
+  later(function () { linkStart.classList.remove('active'); }, 1550);
+  later(function () {
+    runSysCheck(function () {
+      sysCheck.classList.remove('active');
+      welcome.classList.add('active');
+      blip(660, 0.4);
+      later(finish, 1400);
+    });
+  }, 1650);
+
+  // ── Skip on interaction ──
+  function skip() { finish(); }
+  boot.addEventListener('click', skip);
+  document.addEventListener('keydown', skip, { once: true });
+
+  // ── Hard safety: never leave the black screen stuck ──
+  later(finish, 7000);
+})();
+
+// ============================================================
 // Navigation: scroll behavior + active section highlighting
 // ============================================================
 (function () {
