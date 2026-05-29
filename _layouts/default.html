@@ -76,6 +76,24 @@
   {% endif %}
 </head>
 <body>
+  <!-- SAO-style "LINK START" boot intro (once per session) -->
+  <div class="boot-sequence" id="boot-sequence" aria-hidden="true">
+    <div class="boot-streams" id="boot-streams"></div>
+    <div class="boot-stage boot-linkstart" id="boot-linkstart">
+      <span class="boot-ls-text">LINK START</span>
+    </div>
+    <div class="boot-stage boot-syscheck" id="boot-syscheck">
+      <div class="sys-title">SYSTEM CHECK</div>
+      <ul class="sys-list" id="sys-list"></ul>
+      <div class="sys-allgreen" id="sys-allgreen">ALL GREEN</div>
+    </div>
+    <div class="boot-stage boot-welcome" id="boot-welcome">
+      <span class="boot-welcome-main">WELCOME</span>
+      <span class="boot-welcome-sub">COCODDING.DEV</span>
+    </div>
+    <div class="boot-skip" id="boot-skip">CLICK / PRESS ANY KEY TO SKIP</div>
+  </div>
+
   {% include header.html %}
 
   <div id="page-shake">
