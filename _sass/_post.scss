@@ -205,10 +205,9 @@
       color: var(--text-muted);
       text-decoration: none;
       padding: 4px 0;
-      padding-left: var(--indent, 0px);
+      padding-left: calc(var(--indent, 0px) + 8px);
       line-height: 1.5;
       border-left: 2px solid transparent;
-      padding-left: calc(var(--indent, 0px) + 8px);
       transition: all 0.15s ease;
 
       &:hover {
@@ -553,7 +552,7 @@
   width: 0%;
   background: $pixel-green;
   z-index: 9999;
-  transition: width 0.08s steps(40);
+  transition: width 0.08s steps(4);
   pointer-events: none;
   box-shadow: 0 0 8px $pixel-green;
   image-rendering: pixelated;

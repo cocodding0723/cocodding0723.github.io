@@ -335,7 +335,7 @@ $cat-essay:     #f78166;
   border: 2px solid $pixel-border;
   border-radius: 0;
   overflow: hidden;
-  transition: transform 0.05s steps(1), box-shadow 0.05s steps(1);
+  transition: border-color 0.05s steps(1), box-shadow 0.05s steps(1);
   position: relative;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
 

@@ -33,9 +33,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Korean pixel font (Galmuri11) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css">
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+  <!-- Force custom cursor on all states (including :hover overrides) -->
+  <style>
+    * { cursor: url('/assets/images/cursor-pointer.png') 28 3, auto !important; }
+  </style>
 
   {% if page.layout == 'post' %}
   {% assign post_words = page.content | number_of_words %}
