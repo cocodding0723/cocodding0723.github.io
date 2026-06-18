@@ -1,14 +1,23 @@
 - category: "Languages"
-  items: ["C#", "Dart", "Kotlin", "Java", "Python", "C/C++", "Ruby"]
+  items: ["C#", "TypeScript", "Dart", "Python", "C/C++", "Kotlin", "Java", "Ruby"]
 
-- category: "Frameworks & Platforms"
-  items: ["Unity", "Flutter", "Android"]
+- category: "Frontend"
+  items: ["React", "Vite", "TanStack Query", "Zustand", "Tailwind CSS", "Playwright"]
+
+- category: "Backend"
+  items: ["NestJS", "Node.js", "Prisma", "BullMQ", "Flask", "REST API"]
+
+- category: "Mobile"
+  items: ["Flutter", "Riverpod", "Capacitor", "Android"]
+
+- category: "Game Dev"
+  items: ["Unity", "VContainer", "R3", "DOTween", "FEEL", "VFX Graph", "OpenGL / Win32"]
 
 - category: "DevOps & Infra"
-  items: ["Jenkins", "GitHub Actions", "Fastlane", "Firebase", "AWS S3", "Git"]
-
-- category: "Media & Graphics"
-  items: ["FFMPEG", "OpenCV", "Media Encoder", "AR/VR"]
+  items: ["AWS", "ECS Fargate", "RDS", "CloudFront", "Terraform", "Docker", "GitHub Actions", "Jenkins", "Fastlane", "Firebase", "Git"]
 
 - category: "Database"
-  items: ["MySQL", "MongoDB"]
+  items: ["PostgreSQL", "Redis", "Firestore", "Supabase", "MySQL", "MongoDB", "SQLite"]
+
+- category: "AI & Media"
+  items: ["Claude Code", "LLM API (Claude/GPT)", "FFMPEG", "OpenCV", "AR/VR"]
