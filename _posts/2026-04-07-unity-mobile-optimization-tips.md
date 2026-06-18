@@ -1,6 +1,6 @@
 ---
-title: "Unity 모바일 최적화 - Android와 iOS에서 30fps를 60fps로 끌어올리는 법"
-description: "Unity로 만든 모바일 게임이 저가형 안드로이드에서 끊기는 이유는 대부분 같은 자리에서 새는 비용이다. 빌드 설정, 메모리, 드로우콜, 셰이더, GC, 플랫폼별 함정까지 실전 체크리스트로 정리한다."
+title: "Unity 모바일 최적화 — Android iOS에서 30fps를 60fps로 올리는 법"
+description: "Unity 모바일 게임이 저가형 Android에서 끊기는 원인과 해결법을 정리한다. 드로우콜, 메모리 대역폭, GC 스파이크, 셰이더, 빌드 설정까지 fps를 끌어올리는 실전 최적화 체크리스트."
 date: 2026-04-07
 categories: [Dev]
 tags: [Unity, Android]

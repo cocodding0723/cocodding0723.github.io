@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 14일차: 로그라이크 런을 굴리다"
-description: "R3 ReactiveProperty 상태 머신, Fisher-Yates 시드 맵 생성, EnemyPatternSO 기반 엘리트/보스 AI, VContainer LifetimeScope 분리까지 Phase 3 구현 기록."
+title: "AI로 게임 개발하기 14일차 — 로그라이크 런과 시드 맵 생성 구현"
+description: "Unity 리듬 로그라이크 Rhythm Rogue. R3 ReactiveProperty 상태 머신, Fisher-Yates 시드 맵 생성, EnemyPatternSO 엘리트·보스 AI, VContainer 조건부 DI까지 Phase 3 구현 기록."
 date: 2026-03-25
 categories: [Project]
 tags: [Unity, AI]

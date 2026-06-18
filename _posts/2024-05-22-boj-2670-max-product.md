@@ -1,6 +1,6 @@
 ---
-title: "BOJ 2670 — 연속부분최대곱 (C++ 풀이)"
-description: "연속 부분 수열의 곱이 최대가 되는 값을 구하는 DP 문제. Kadane's Algorithm의 곱셈 버전이다."
+title: "백준 2670번 연속부분최대곱 — DP C++ 풀이"
+description: "백준 2670번 연속부분최대곱 풀이. Kadane 알고리즘의 곱셈 버전 DP로 연속 부분 수열의 곱이 최대가 되는 값을 구하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2024-05-22
 categories: [Algorithm]
 tags: [Algorithm]

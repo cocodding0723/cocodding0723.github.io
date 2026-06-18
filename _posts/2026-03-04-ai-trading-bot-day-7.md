@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 봇 개발기 - 7일차"
-description: "KIS API CMA 파라미터 오류 등 실전 운영 버그 4건 수정, Claude 에이전트 3개로 전체 코드 감사까지 완료한 7일차 기록."
+title: "AI 트레이딩 봇 개발기 7일차 — KIS API 버그 수정과 에이전트 코드 감사"
+description: "주식 자동매매 봇의 KIS API CMA 파라미터 오류 등 실전 운영 버그 4건을 수정하고, Claude 에이전트 3개로 전체 코드 감사까지 마친 AI 트레이딩 봇 개발 7일차 기록."
 date: 2026-03-04
 categories: [Project]
 tags: [AI, Trading]

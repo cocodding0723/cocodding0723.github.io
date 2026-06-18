@@ -1,6 +1,6 @@
 ---
-title: "Unity의 그래픽 엔진 톺아보기 - BRP, URP, HDRP 그리고 SRP"
-description: "Unity의 렌더 파이프라인 3형제(Built-in, URP, HDRP)와 그 기반인 SRP가 어떻게 동작하는지, 어떤 프로젝트에 어떤 파이프라인을 골라야 하는지 정리한다."
+title: "Unity 렌더 파이프라인 비교 — BRP, URP, HDRP, SRP 차이와 선택"
+description: "Unity 렌더 파이프라인 BRP, URP, HDRP와 그 기반인 SRP의 동작 원리와 차이를 비교한다. URP vs HDRP 성능, 모바일과 콘솔별 선택 기준을 2026년 신규 프로젝트 관점에서 정리한다."
 date: 2026-04-09
 categories: [Dev]
 tags: [Unity]

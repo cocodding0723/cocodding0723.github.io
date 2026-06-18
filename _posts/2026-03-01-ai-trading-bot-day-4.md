@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 봇 개발기 - 4일차"
-description: "코인 선물 백테스트 모듈 D-VAT 전략 신규 구축. 백테스트 구현 중 프로덕션 SHORT 트레일링 버그 발견. SL 쿨다운, 블랙리스트, 거래량 필터 3건 적용."
+title: "AI 트레이딩 봇 개발기 4일차 — 코인 선물 백테스트와 SHORT 트레일링 버그"
+description: "코인 선물 자동매매 백테스트 모듈로 D-VAT 전략을 재현하다 프로덕션 SHORT 트레일링 버그를 발견하고, SL 쿨다운·블랙리스트·거래량 필터 3건을 적용한 AI 트레이딩 봇 개발 4일차."
 date: 2026-03-01
 categories: [Project]
 tags: [AI, Trading]

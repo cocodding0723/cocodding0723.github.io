@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 4일차"
-description: "하루 10개 프로젝트 병렬 진행 — 뱀서라이크 GDD 완성, 크롤러 데몬화, 오디오 파이프라인 구축, 포트폴리오에 Flappy Bird 배경 게임 탑재"
+title: "AI로 게임 개발하기 4일차 — 10개 프로젝트 병렬과 뱀서라이크 GDD 완성"
+description: "AI 에이전트로 하루 10개 프로젝트 병렬 진행. 뱀서라이크 GDD(36피처) 잠금, 이미지·오디오 크롤러 데몬화, 포트폴리오에 Flappy Bird 배경 게임까지 구축한 기록."
 date: 2026-02-23
 categories: [Project]
 tags: [Unity, AI]

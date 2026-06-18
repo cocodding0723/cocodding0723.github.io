@@ -1,6 +1,6 @@
 ---
-title: "BOJ 11444 — 피보나치 수 6 (C++ 풀이)"
-description: "행렬 거듭제곱으로 피보나치 수를 O(log N)에 구하는 풀이. 2×2 행렬의 분할 정복 거듭제곱이 핵심이다."
+title: "백준 11444번 피보나치 수 6 — 행렬 거듭제곱 C++ 풀이"
+description: "백준 11444번 피보나치 수 6 풀이. 2×2 점화식 행렬의 분할 정복 거듭제곱으로 F(N)을 O(log N)에 구하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2025-05-02
 categories: [Algorithm]
 tags: [Algorithm, Math, DP]

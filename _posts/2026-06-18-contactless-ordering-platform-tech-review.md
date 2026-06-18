@@ -1,6 +1,6 @@
 ---
-title: "음식점 비대면 주문 플랫폼 기술 정밀 리뷰 — 단일 코드베이스 3앱, 3중 백엔드 어댑터, 실시간 주문"
-description: "음식점 비대면 주문 플랫폼을 만들며 쓴 기술을 레이어별로 본다. React 단일 코드베이스 3앱, Mock/Supabase/Firebase 3중 어댑터(DIP), 실시간 주문 반영, 동시성 락, Capacitor APK, 그리고 AWS와 비교한 Supabase 후기까지."
+title: "음식점 비대면 주문 플랫폼 기술 리뷰 — React 단일 코드베이스 3앱과 Supabase vs AWS"
+description: "음식점 비대면 주문 플랫폼 기술을 레이어별로 리뷰한다. React 단일 코드베이스 3앱, Supabase·Firebase 3중 백엔드 어댑터(DIP), 실시간 주문, Capacitor APK, AWS와 비교한 Supabase 후기까지."
 date: 2026-06-18
 categories: [Project]
 tags: [React, TypeScript, Supabase, AWS, Capacitor, Architecture]

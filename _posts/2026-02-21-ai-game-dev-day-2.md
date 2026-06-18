@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 2일차"
-description: "AI로 뱀서라이크(Vampire Survivors 라이크) 게임을 만들어보자"
+title: "AI로 게임 개발하기 2일차 — Unity Addressables 아트 에셋 교체 인프라"
+description: "Claude로 뱀서라이크 만들기. Addressable 듀얼 패스 스프라이트 구조로 외부 아트 에셋 교체 인프라를 구축하고, VFX·UI 테마 시스템까지 42개 파일을 작업한 기록."
 date: 2026-02-21
 categories: [Project]
 tags: [Unity, AI]

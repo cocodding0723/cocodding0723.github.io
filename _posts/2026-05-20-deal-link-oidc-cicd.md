@@ -1,6 +1,6 @@
 ---
 title: "GitHub Actions + OIDC로 AWS 비밀번호 없는 배포 파이프라인 구축하기"
-description: "deal-link 물류 플랫폼에 GitHub OIDC 기반 AWS IAM 역할 연동을 도입해 long-lived access key 없이 CD 파이프라인을 구축한 과정을 기록한다. Terraform으로 OIDC 신뢰 정책을 코드화하고, deploy-web/api/terraform-apply/Mobile OTA 네 가지 워크플로를 순서대로 올렸다."
+description: "GitHub Actions와 OIDC로 AWS access key 없는 CD 파이프라인을 구축한 기록. Terraform으로 IAM OIDC 신뢰 정책을 코드화하고 web/api/terraform-apply/Mobile OTA 네 워크플로를 순서대로 올렸다."
 date: 2026-05-20
 categories: [Project]
 tags: [AWS, CI/CD, Terraform]

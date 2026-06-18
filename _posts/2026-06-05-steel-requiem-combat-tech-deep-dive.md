@@ -1,6 +1,6 @@
 ---
 title: "카타나 제로 스타일 액션 게임 기술 해부 — 탐지·레이캐스트·스킬 판정·코드 VFX"
-description: "Unity 2D 액션 Steel Requiem의 내부를 실제 코드로 뜯어본다. VContainer 2계층 DI와 R3 이벤트 버스, Physics2D 캐스트 24곳으로 짠 적·플레이어 탐지, 베지어 곡선 히트 판정, 머티리얼 없이 코드로만 그린 슬래시 VFX까지."
+description: "Unity 2D 액션 게임의 전투 코드를 직접 뜯어본다. VContainer 2계층 DI와 R3 이벤트 버스, Physics2D 캐스트 탐지, 베지어 곡선 히트 판정, 머티리얼 없이 코드로만 그린 슬래시 VFX까지."
 date: 2026-06-05
 categories: [Project]
 tags: [Unity, C#, Game]

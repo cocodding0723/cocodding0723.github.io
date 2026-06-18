@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 봇 개발기 - 1일차"
-description: "Claude API 529 과부하 에러 대응으로 OpenAI 자동 폴백을 구현하고, 선물 포지션 설정을 최적화한 기록"
+title: "AI 트레이딩 봇 개발기 1일차 — Claude API 529 폴백과 선물 포지션 설정"
+description: "코인 선물 자동매매 봇에서 Claude API 529 Overloaded 장애에 대응해 OpenAI 자동 폴백을 구현하고, max_retries로 재시도를 강화한 AI 트레이딩 봇 개발 1일차 기록."
 date: 2026-02-26
 categories: [Project]
 tags: [AI, Trading]

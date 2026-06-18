@@ -1,6 +1,6 @@
 ---
-title: "BOJ 9935 — 문자열 폭발 (C++ 풀이)"
-description: "스택 기반으로 문자열에서 폭발 패턴을 효율적으로 제거하는 풀이. 뒤에서부터 매칭하여 O(N)에 해결한다."
+title: "백준 9935번 문자열 폭발 — 스택 C++ 풀이"
+description: "백준 9935번 문자열 폭발 풀이. 스택에 문자를 push하며 끝부분이 폭발 문자열과 일치하면 pop하는 방식으로 O(N)에 처리하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2025-02-03
 categories: [Algorithm]
 tags: [Algorithm, Stack]

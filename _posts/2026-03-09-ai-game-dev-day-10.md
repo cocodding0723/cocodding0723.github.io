@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 10일차: 새 프로젝트, Rhythm Rogue"
-description: "뱀서라이크 회고의 개선 방향 5가지를 Rhythm Rogue 첫날부터 적용. 코드 0줄, GDD 900줄, CLAUDE.md 342줄, asmdef 13개."
+title: "AI로 게임 개발하기 10일차 — 리듬 로그라이크 Rhythm Rogue 설계"
+description: "새 Unity 프로젝트 리듬 로그라이크 Rhythm Rogue 시작. 뱀서라이크 회고의 개선 5가지를 첫날부터 적용해 코드 0줄, GDD 900줄, CLAUDE.md 342줄, asmdef 13개로 기반을 세운 기록."
 date: 2026-03-09
 categories: [Project]
 tags: [Unity, AI]

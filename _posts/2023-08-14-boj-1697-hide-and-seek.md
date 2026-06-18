@@ -1,6 +1,6 @@
 ---
-title: "BOJ 1697 — 숨바꼭질 (C++ 풀이)"
-description: "1차원 좌표에서 걷기(±1)와 순간이동(×2)을 사용해 최단 시간을 구하는 BFS 문제."
+title: "백준 1697번 숨바꼭질 — BFS C++ 풀이"
+description: "백준 1697번 숨바꼭질 풀이. 1차원 좌표에서 걷기(±1)와 순간이동(×2)을 간선으로 보는 BFS로 동생까지의 최단 시간을 구하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2023-08-14
 categories: [Algorithm]
 tags: [Algorithm, BFS]
