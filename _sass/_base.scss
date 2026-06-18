@@ -202,6 +202,18 @@ section {
     color: #a78bfa;
     border: 2px solid rgba(167, 139, 250, 0.4);
   }
+
+  &.badge-web {
+    background: rgba(52, 211, 153, 0.12);
+    color: #34d399;
+    border: 2px solid rgba(52, 211, 153, 0.4);
+  }
+
+  &.badge-platform {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+    border: 2px solid rgba(251, 191, 36, 0.4);
+  }
 }
 
 // Pixel art keyframes
