@@ -1,6 +1,6 @@
 ---
-title: "BOJ 11054 — 가장 긴 바이토닉 부분 수열 (C++ 풀이)"
-description: "LIS를 양방향으로 구한 뒤 합산하여 가장 긴 바이토닉 부분 수열을 구하는 DP 풀이."
+title: "백준 11054번 가장 긴 바이토닉 부분 수열 — LIS DP C++ 풀이"
+description: "백준 11054번 가장 긴 바이토닉 부분 수열 풀이. 왼쪽 증가 LIS와 오른쪽 감소 LIS를 양방향으로 구해 합산하는 DP로 답을 구하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2024-09-28
 categories: [Algorithm]
 tags: [Algorithm, DP]

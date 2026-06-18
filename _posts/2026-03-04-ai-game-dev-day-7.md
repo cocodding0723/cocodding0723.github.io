@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 7일차"
-description: "1주일 공백 후 프로젝트 복귀. 코드 한 줄 없이 PLAN.md와 TODO.md를 점검하고, 남은 4개 피처의 우선순위를 정리한 날."
+title: "AI로 게임 개발하기 7일차 — 공백 후 복귀, 문서로 컨텍스트 복원"
+description: "1주일 공백 후 Unity 프로젝트 복귀. 코드 한 줄 없이 PLAN.md·TODO.md를 점검하고 남은 4개 피처의 우선순위를 정리한, AI 개발의 컨텍스트 복원 전략 기록."
 date: 2026-03-04
 categories: [Project]
 tags: [Unity, AI]

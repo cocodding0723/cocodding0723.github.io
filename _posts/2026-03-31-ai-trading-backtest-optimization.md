@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 파라미터 최적화 — 그리드 서치와 Walk-Forward로 과적합 없는 설정 찾기"
-description: "Donchian 채널 브레이크아웃 + 5개 리스크 필터 + 25개 기능 전수 테스트. Walk-Forward 8폴드로 과적합을 걸러내고 코인 선물 WF 33%→78%, 국내 단타 WF 50%→75%로 개선한 과정."
+title: "자동매매 파라미터 최적화 — 그리드 서치와 Walk-Forward로 과적합 잡기"
+description: "AI 트레이딩 봇 파라미터 최적화 기록. Donchian 채널과 5개 리스크 필터를 그리드 서치로 전수 테스트하고, Walk-Forward 8폴드로 과적합을 걸러 코인 선물 WF 33%→78%, 국내 단타 50%→75% 개선."
 date: 2026-03-31
 categories: [Project]
 tags: [AI, Trading]

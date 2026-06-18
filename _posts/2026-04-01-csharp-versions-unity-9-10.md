@@ -1,6 +1,6 @@
 ---
-title: "C# 버전별 진화와 Unity의 C#, 그리고 9.0과 10.0이 가져온 것들"
-description: "C# 버전이 어떻게 발전해왔는지, Unity는 어떤 C# 버전을 쓸 수 있는지, 그리고 C# 9.0과 10.0에서 추가된 핵심 기능을 코드 예제와 함께 정리한다."
+title: "C# 버전 정리와 Unity C# — 9.0, 10.0 신기능과 지원 버전"
+description: "C# 버전별 진화 과정과 Unity가 지원하는 C# 버전을 정리한다. record, init, 전역 using 등 C# 9.0과 10.0 핵심 기능을 코드 예제로 보고, record struct 미지원 같은 Unity 함정도 짚는다."
 date: 2026-04-01
 categories: [Dev]
 tags: [Unity]

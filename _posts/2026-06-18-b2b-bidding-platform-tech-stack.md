@@ -1,6 +1,6 @@
 ---
 title: "B2B 입찰 플랫폼 기술 총정리 — React·NestJS·AWS로 짜며 내린 결정들"
-description: "택배 화주↔대리점 B2B 입찰 플랫폼을 만들며 쓴 기술 총정리. 7요소 랭킹 알고리즘, NestJS 서버, React+Capacitor vs Native, Supabase·Firebase 대신 AWS를 고른 이유, Terraform과 무중단 키 로테이션까지."
+description: "B2B 입찰 플랫폼을 React·NestJS·AWS로 만들며 내린 기술 결정 총정리. 7요소 랭킹 알고리즘, React+Capacitor vs Native, Supabase·Firebase 대신 AWS를 고른 이유, Terraform까지."
 date: 2026-06-18
 categories: [Project]
 tags: [React, NestJS, AWS, Terraform, Algorithm, Architecture]

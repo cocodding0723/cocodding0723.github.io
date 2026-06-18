@@ -1,6 +1,6 @@
 ---
-title: "개발자 필독서 7권 리뷰 — GoF, Effective C#, 종만북, 클린 코드, 리팩토링"
-description: "GoF 디자인 패턴부터 Effective C#, 종만북, 클린 코드, 리팩토링까지 개발자 기본서 7권의 핵심 정리와 감상, 그리고 책들 사이의 연결 관계에 대한 개인적인 정리."
+title: "개발자 필독서 추천 7권 리뷰 — GoF, Effective C#, 종만북, 클린 코드, 리팩토링"
+description: "개발자 책 추천 7권을 리뷰한다. GoF 디자인 패턴, Effective C#, 종만북, 클린 코드, 리팩토링의 핵심 내용과 읽는 순서, 책들 사이의 연결 관계까지 실제로 완독한 후기로 정리한다."
 date: 2026-04-04
 categories: [Essay]
 tags: [Book, Algorithm, CleanCode]

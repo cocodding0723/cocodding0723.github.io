@@ -1,6 +1,6 @@
 ---
-title: "BOJ 7579 — 앱 (C++ 풀이)"
-description: "Knapsack DP의 변형 문제. 비용을 기준으로 DP 테이블을 구성하고 메모리 조건을 만족하는 최소 비용을 찾는다."
+title: "백준 7579번 앱 — 배낭 Knapsack DP C++ 풀이"
+description: "백준 7579번 앱 풀이. 비용을 인덱스로 삼는 Knapsack 변형 DP로 메모리 M바이트를 확보하는 최소 비용을 구하는 C++ 코드와 점화식, 풀이 과정을 정리한다."
 date: 2025-06-11
 categories: [Algorithm]
 tags: [Algorithm, DP]

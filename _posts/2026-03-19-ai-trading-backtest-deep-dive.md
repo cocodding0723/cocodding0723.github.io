@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 백테스트 프레임워크 — 3,300줄 코인 선물 시뮬레이터 기술 분석"
-description: "코인 선물 3,300줄 시뮬레이터, 17개 성과 지표, 8중 진입 필터 구조와 6개 개선사항 Walk-Forward 검증. BTC 바로미터로 Sharpe +92%를 달성한 백테스트 프레임워크 분석."
+title: "코인 선물 백테스트 프레임워크 — 3,300줄 자동매매 시뮬레이터 기술 분석"
+description: "AI 자동매매용 코인 선물 백테스트 프레임워크 딥다이브. 3,300줄 시뮬레이터, 17개 성과 지표, 8중 진입 필터와 Walk-Forward 검증으로 BTC 바로미터 Sharpe +92%를 달성한 퀀트 분석."
 date: 2026-03-19
 categories: [Project]
 tags: [AI, Trading]

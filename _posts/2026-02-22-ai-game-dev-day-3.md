@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 3일차"
-description: "AI 프로토타입을 위한 픽셀 아트 크롤러 제작 결정 & 프로젝트 리메이크 계획"
+title: "AI로 게임 개발하기 3일차 — 픽셀아트 크롤러와 Claude Code Hook 하니스"
+description: "Unity 아트 에셋 자동 수집용 픽셀아트 크롤러 제작을 결정하고, Claude Code Hook으로 AI 하니스(자동 매뉴얼·작업 기억·품질 검사) 시스템을 적용해 프로젝트를 리메이크한 기록."
 date: 2026-02-22
 categories: [Project]
 tags: [Unity, AI]

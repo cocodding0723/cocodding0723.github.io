@@ -1,6 +1,6 @@
 ---
-title: "C# 리플렉션이란 무엇이고 Unity는 이걸 어디서 쓰는가"
-description: "Type, MethodInfo, Activator 같은 C# 리플렉션 API가 하는 일을 정리하고, SerializeField부터 에디터 확장, JsonUtility, 테스트 프레임워크까지 Unity 내부 어디에서 리플렉션이 돌고 있는지 추적한다."
+title: "C# 리플렉션이란 — Type, MethodInfo와 Unity 활용 사례"
+description: "C# 리플렉션이란 무엇인지 Type, MethodInfo, Activator API로 정리한다. SerializeField, 에디터 확장, JsonUtility, 테스트 프레임워크까지 Unity 내부 어디서 리플렉션이 도는지 추적한다."
 date: 2026-04-09
 categories: [Dev]
 tags: [Unity]

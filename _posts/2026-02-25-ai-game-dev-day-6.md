@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 6일차"
-description: "AI가 만든 Unity 코드를 사람이 읽는 날. Arrow Rain 무기 상속 구조 분석, AI Trading 버그 수정. 스프린트 후 코드 리뷰의 가치."
+title: "AI로 게임 개발하기 6일차 — AI가 만든 Unity 코드 리뷰하는 법"
+description: "AI가 생성한 Unity C# 코드를 사람이 읽는 날. WeaponBase 무기 상속 구조 분석과 AI Trading 버그 수정으로, 스프린트 후 코드 리뷰가 왜 필요한지 정리한 기록."
 date: 2026-02-25
 categories: [Project]
 tags: [Unity, AI]

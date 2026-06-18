@@ -1,6 +1,6 @@
 ---
-title: "Unity IL2CPP 완전 정리 - Mono에서 넘어온 사람을 위한 내부 동작과 실전 주의점"
-description: "IL2CPP가 무엇이고, Mono와 어떻게 다르며, 빌드 파이프라인은 어떻게 돌아가는가. AOT 제약, 리플렉션, 제네릭, 링커, 디버깅까지 실전에서 부딪히는 지점만 모아 정리한다."
+title: "Unity IL2CPP 완전 정리 — Mono 차이, AOT, 빌드 파이프라인 내부 동작"
+description: "Unity IL2CPP가 무엇이고 Mono와 어떻게 다른지, 빌드 파이프라인이 어떻게 도는지 정리한다. AOT 제약, 리플렉션, 제네릭 코드 비대화, 링커, 디버깅까지 실전 주의점을 모았다."
 date: 2026-04-08
 categories: [Dev]
 tags: [Unity]

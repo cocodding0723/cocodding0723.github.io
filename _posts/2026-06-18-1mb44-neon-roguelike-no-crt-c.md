@@ -1,6 +1,6 @@
 ---
 title: "1.44MB 안에 로그라이크 욱여넣기 — 에셋 0개, no-CRT C, 그리고 AI 멀티에이전트 하네스"
-description: "실행파일 1.44MB 제한 게임잼을 목표로 개발 중인 네온 벡터 액션 로그라이크 제작기. 그래픽·사운드·맵을 전부 코드로 절차 생성하고, no-CRT C + Win32 + OpenGL로 짜고, Claude Code 멀티에이전트 하네스로 개발하는 과정을 테스트 스크린샷과 함께 정리한다."
+description: "실행파일 1.44MB 제한 게임잼용 로그라이크 제작기. 에셋 0개로 그래픽·사운드·맵을 전부 코드로 절차 생성하고, no-CRT C와 Win32·OpenGL로 짠 과정을 테스트 스크린샷과 함께 정리한다."
 date: 2026-06-18
 categories: [Project]
 tags: [C, OpenGL, Win32, Game, AI]

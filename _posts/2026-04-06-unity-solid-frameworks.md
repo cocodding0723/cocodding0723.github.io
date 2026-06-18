@@ -1,6 +1,6 @@
 ---
-title: "Unity에서 SOLID를 지키는 프레임워크 - VContainer, R3, MessagePipe, UniTask"
-description: "MonoBehaviour 신(神) 클래스에서 벗어나는 법. SOLID 5원칙을 Unity에 매핑하고, VContainer, R3, MessagePipe, UniTask로 실제 코드를 어떻게 분리하는지 정리한다."
+title: "Unity SOLID 원칙 적용 — VContainer, R3, MessagePipe, UniTask"
+description: "Unity에서 SOLID 5원칙을 지키는 법을 정리한다. MonoBehaviour God 클래스 문제를 VContainer DI, R3, MessagePipe, UniTask로 분리하고 의존성 주입과 결합도 낮추기를 실제 코드로 보여준다."
 date: 2026-04-06
 categories: [Dev]
 tags: [Unity]

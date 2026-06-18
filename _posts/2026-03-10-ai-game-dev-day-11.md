@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 11일차: 패링의 쾌감을 만드는 법"
-description: "dspTime 기반 리듬 엔진 위에 4등급 패링 시스템을 구축. 87개 테스트, 44개 스크립트, Phase 1 코어 전투 프로토타입 완성."
+title: "AI로 게임 개발하기 11일차 — dspTime 리듬 엔진과 패링 시스템 구현"
+description: "Unity 리듬 로그라이크 Rhythm Rogue. AudioSettings.dspTime 기반 리듬 엔진 위에 4등급 패링 시스템을 구축하고, 44개 스크립트·87개 테스트로 Phase 1 코어 전투를 완성한 기록."
 date: 2026-03-10
 categories: [Project]
 tags: [Unity, AI]

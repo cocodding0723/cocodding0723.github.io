@@ -1,6 +1,6 @@
 ---
-title: "BOJ 2667 — 단지번호 붙이기 (C++ 풀이)"
-description: "2D 격자에서 DFS로 연결 요소를 찾고, 각 단지의 크기를 오름차순으로 출력하는 문제."
+title: "백준 2667번 단지번호 붙이기 — DFS C++ 풀이"
+description: "백준 2667번 단지번호 붙이기 풀이. 2차원 격자에서 DFS로 연결 요소(단지)를 찾아 단지 수와 각 단지 크기를 오름차순 출력하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2023-11-03
 categories: [Algorithm]
 tags: [Algorithm, DFS]

@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 12일차: 리듬에 맞춰 베고, 패링 후 반격하다"
-description: "Unity 리듬 액션 게임 전투 루프 완성. 비트 판정 3단 콤보, 패링 후 4비트 반격, HitStop 타격감, 상태 머신 재진입 구현."
+title: "AI로 게임 개발하기 12일차 — 비트 콤보·패링 반격·HitStop 전투 루프"
+description: "Unity 리듬 액션 게임 Rhythm Rogue의 전투 루프 완성. 비트 판정 3단 콤보, 패링 후 4비트 반격, HitStop 타격감, 상태 머신 재진입까지 구현한 기록."
 date: 2026-03-13
 categories: [Project]
 tags: [Unity, AI]

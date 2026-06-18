@@ -1,6 +1,6 @@
 ---
-title: "BOJ 4991 — 로봇 청소기 (C++ 풀이)"
-description: "BFS로 각 지점 간 최단 거리를 구한 뒤, 순열 완전 탐색으로 최적 방문 순서를 찾는 풀이."
+title: "백준 4991번 로봇 청소기 — BFS 순열 완전 탐색 C++ 풀이"
+description: "백준 4991번 로봇 청소기 풀이. BFS로 각 지점 간 최단 거리를 구한 뒤 더러운 칸 방문 순서를 순열 완전 탐색해 최소 이동 횟수를 찾는 C++ 코드와 풀이 과정을 정리한다."
 date: 2026-01-10
 categories: [Algorithm]
 tags: [Algorithm, BFS]

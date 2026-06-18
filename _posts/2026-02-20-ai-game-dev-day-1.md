@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 1일차"
-description: "AI로 뱀서라이크(Vampire Survivors 라이크) 게임을 만들어보자"
+title: "AI로 게임 개발하기 1일차 — Unity MCP 세팅과 뱀서라이크 프로토타입"
+description: "Claude로 게임 만들기 시작. Unity MCP를 Cursor·Claude Desktop에 연결하고, AI 에이전트 팀으로 하루 만에 뱀서라이크(Vampire Survivors 라이크) 프로토타입을 만든 기록."
 date: 2026-02-20
 categories: [Project]
 tags: [Unity, AI]

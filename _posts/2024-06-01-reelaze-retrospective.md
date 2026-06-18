@@ -1,6 +1,6 @@
 ---
-title: "Reelaze 출시 회고 — 쇼트폼 앱을 혼자 플레이스토어에 올리기까지"
-description: "Flutter로 TikTok 유사 쇼트폼 영상 앱을 만들어 Google Play & App Store에 출시한 과정을 회고합니다. 혼자 개발부터 배포까지 겪었던 시행착오를 기록합니다."
+title: "Flutter 앱 출시 회고 — 쇼트폼 앱 Reelaze를 혼자 플레이스토어·앱스토어에 올리기까지"
+description: "Flutter로 TikTok 유사 쇼트폼 영상 앱을 만들어 Google Play와 App Store에 출시한 회고. 기획부터 개발, Fastlane CI/CD, 스토어 심사까지 혼자 겪은 시행착오를 정리한다."
 date: 2024-06-01
 categories: [Project]
 tags: [Flutter, Firebase, CI/CD, Fastlane]

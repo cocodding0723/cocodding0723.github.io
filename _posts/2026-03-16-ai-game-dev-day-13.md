@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 13일차: 히트 판정을 애니메이션에 묶다"
-description: "코루틴 히트 딜레이를 StateMachineBehaviour의 normalizedTime으로 교체. Animator speed 변화에도 자동 동기화되는 히트 판정 구조."
+title: "AI로 게임 개발하기 13일차 — Unity StateMachineBehaviour 히트 판정"
+description: "Unity 코루틴 히트 딜레이를 StateMachineBehaviour의 normalizedTime으로 교체. Animator speed 변화에도 자동 동기화되는 히트 판정 구조를 만든 리듬 액션 게임 개발 기록."
 date: 2026-03-16
 categories: [Project]
 tags: [Unity, AI]

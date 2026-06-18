@@ -1,6 +1,6 @@
 ---
-title: "ComfyUI로 게임 에셋 만들기 - PixelLab을 떠나 AI 이미지 생성 공부를 시작하다"
-description: "PixelLab으로 뽑은 픽셀 그래픽이 마음에 들지 않아 ComfyUI + Civitai 체크포인트 조합으로 방향을 틀었다. 첫 워크플로우를 연결하고 AnyLora 모델로 캐릭터를 생성하기까지의 공부 기록."
+title: "ComfyUI 게임 에셋 만들기 — Civitai 체크포인트로 AI 이미지 생성 입문"
+description: "ComfyUI와 Civitai 체크포인트로 게임 캐릭터 에셋을 생성한다. PixelLab을 떠난 이유, 첫 워크플로우 연결, AnyLora 모델 적용까지 Stable Diffusion 기반 AI 이미지 생성 공부 기록."
 date: 2026-04-09
 categories: [Dev]
 tags: [AI, Unity]

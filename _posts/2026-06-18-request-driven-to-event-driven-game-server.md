@@ -1,6 +1,6 @@
 ---
 title: "request-driven에서 event-driven으로 — 마작 게임 서버를 다시 짠 기록"
-description: "평문 비밀번호와 단일 스레드로 모든 걸 처리하던 마작 게임 서버를 IO·로직·DB 워커로 나눈 event-driven 코어로 다시 짠 기록. request-driven의 한계부터 Argon2 해싱·송신 큐·Docker 통합 테스트까지 실제 C++ 코드로 정리한다."
+description: "단일 스레드로 모든 걸 처리하던 마작 게임 서버를 IO·로직·DB 워커로 나눈 event-driven 코어로 다시 짠 기록. request-driven의 한계부터 Argon2 해싱, 송신 큐까지 실제 C++ 코드로 정리한다."
 date: 2026-06-18
 categories: [Project]
 tags: [C++, Server, Game, Architecture]

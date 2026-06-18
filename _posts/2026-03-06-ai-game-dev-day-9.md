@@ -1,6 +1,6 @@
 ---
-title: "AI로 게임 개발하기 - 9일차: 프로젝트 회고"
-description: "AI와 함께 뱀서라이크를 처음부터 끝까지 만든 9일간의 여정을 돌아본다. 장점, 한계, 그리고 다음 프로젝트를 위한 개선 방향."
+title: "AI로 게임 개발하기 9일차 — 뱀서라이크 완성 회고와 AI 개발 장단점"
+description: "Claude로 Unity 뱀서라이크를 9일 만에 완성한 회고. AI 게임 개발의 장점 5가지·한계 5가지, Firebase Analytics 연동, 다음 프로젝트를 위한 개선 방향을 정리한 기록."
 date: 2026-03-06
 categories: [Project]
 tags: [Unity, AI]

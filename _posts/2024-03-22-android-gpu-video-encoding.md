@@ -1,6 +1,6 @@
 ---
-title: "Android에서 GPU 기반 영상 인코딩 — MediaCodec + OpenGL ES"
-description: "FFMPEG 소프트웨어 인코딩의 한계를 넘기 위해 MediaCodec과 OpenGL ES를 조합해 GPU 가속 인코딩을 구현한 경험을 정리합니다."
+title: "Android MediaCodec GPU 영상 인코딩 — OpenGL ES로 하드웨어 가속하기"
+description: "Android MediaCodec과 OpenGL ES를 조합해 GPU 가속 영상 인코딩을 구현한다. FFMPEG 소프트웨어 인코딩의 속도 한계, Surface 입력, 셰이더 필터 적용까지 실전 코드로 정리한다."
 date: 2024-03-22
 categories: [Dev]
 tags: [Android, Kotlin, OpenCV, FFMPEG]

@@ -1,6 +1,6 @@
 ---
-title: "BOJ 10830 — 행렬 제곱 (C++ 풀이)"
-description: "분할 정복으로 행렬 거듭제곱을 O(N^3 log B)에 수행하는 풀이. 행렬 곱셈 연산자 오버로딩으로 코드를 깔끔하게 구성한다."
+title: "백준 10830번 행렬 제곱 — 분할 정복 C++ 풀이"
+description: "백준 10830번 행렬 제곱 풀이. 분할 정복 거듭제곱으로 A^B를 O(N^3 log B)에 계산하고 곱셈 연산자 오버로딩으로 구성하는 C++ 코드와 풀이 과정을 정리한다."
 date: 2025-04-07
 categories: [Algorithm]
 tags: [Algorithm, Math]

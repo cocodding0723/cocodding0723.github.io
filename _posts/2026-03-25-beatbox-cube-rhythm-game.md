@@ -1,6 +1,6 @@
 ---
-title: "BeatBox - 큐브가 비트에 맞춰 굴러가는 리듬 게임"
-description: "RotateAround 피벗 회전, dspTime 비트 판정, TileSpawner 동적 생성과 커스텀 이징, DOTween 비트 글로우까지 BeatBox 전체 구현 기록."
+title: "Unity 리듬 게임 만들기 — 큐브가 비트에 맞춰 굴러가는 BeatBox 개발기"
+description: "Unity 6로 리듬 게임을 만든 기록. dspTime 기반 비트 판정, RotateAround 피벗 회전, TileSpawner 동적 생성과 커스텀 이징, DOTween 비트 글로우까지 BeatBox 전체 구현을 정리한다."
 date: 2026-03-25
 categories: [Project]
 tags: [Unity, AI]

@@ -1,6 +1,6 @@
 ---
-title: "AI 트레이딩 봇 개발기 - 6일차"
-description: "git push 한 번으로 서버 배포를 자동화하는 4가지 방법 비교, Unity 게임 이벤트 트래킹 설계. 코드 없이 설계만 한 하루의 기록."
+title: "AI 트레이딩 봇 개발기 6일차 — 배포 자동화 4가지 비교와 이벤트 트래킹 설계"
+description: "git push 한 번으로 자동매매 봇 서버 배포를 자동화하는 GitHub Actions 등 4가지 방법을 비교하고, Unity 이벤트 트래킹을 설계한 AI 트레이딩 봇 개발 6일차 기록."
 date: 2026-03-03
 categories: [Project]
 tags: [AI, Trading, Unity]
