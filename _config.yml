@@ -10,6 +10,16 @@ author:
   youtube: "https://www.youtube.com/@coco1895"
   baekjoon: "https://www.acmicpc.net/user/cocodding0723"
 
+# SEO / 소셜 공유 (jekyll-seo-tag 가 사용)
+lang: ko_KR                       # og:locale → ko_KR
+twitter:
+  card: summary_large_image       # 큰 이미지 카드
+social:
+  name: "cocodding"
+  links:                          # JSON-LD sameAs (엔티티 신뢰도)
+    - "https://github.com/cocodding0723"
+    - "https://www.youtube.com/@coco1895"
+
 # Blog
 permalink: /blog/:year/:month/:day/:title/
 future: true   # 미래 날짜 포스트도 목록·페이지에 표시 (예: 2026년 글)
@@ -39,6 +49,10 @@ plugins:
   - jekyll-sitemap
 
 defaults:
+  - scope:
+      path: ""                    # 모든 페이지: 기본 소셜 공유 이미지
+    values:
+      image: /assets/images/og-default.png
   - scope:
       path: ""
       type: "posts"
