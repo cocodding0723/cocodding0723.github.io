@@ -1,25 +1,11 @@
-- name: "B2B 입찰·계약 플랫폼"
-  period: "2026.04 ~"
-  role: "풀스택 개발 (웹·API·인프라)"
-  description: "택배 화주와 대리점을 매칭하는 B2B 입찰·전자계약 플랫폼. 7요소 가중 랭킹, 실시간 입찰 비교, 양방 전자서명을 구현하고 AWS에 Terraform으로 배포했다."
-  tags: ["React", "NestJS", "Prisma", "PostgreSQL", "AWS", "Terraform"]
-  type: "platform"
-
 - name: "재활 운동 헬스케어 플랫폼"
   period: "2026.06 ~"
-  role: "Flutter·Firebase 개발 / PM"
+  role: "Flutter·Firebase 개발 (1인)"
   description: "요양원·양로원 공유 태블릿 기반 재활 운동 헬스케어 플랫폼. 장치·환자·관리자용 Flutter 앱과 Firebase Cloud Functions 백엔드로 구성된 멀티 앱 시스템."
   tags: ["Flutter", "Riverpod", "Firebase", "Cloud Functions", "Unity"]
   type: "platform"
 
-- name: "AI Trading System"
-  period: "2026"
-  role: "백엔드·AI 엔지니어 (1인)"
-  description: "국내·해외 주식과 코인 선물 3개 시장을 24/7 운영하는 Python 비동기 자동매매 시스템. AI 앙상블 판단, 이중 전략, 다층 리스크 방어 레이어, 백테스트 프레임워크를 갖췄다."
-  tags: ["Python", "asyncio", "SQLAlchemy", "Binance API", "AI"]
-  type: "platform"
-
-- name: "여기모이라 (ODI)"
+- name: "음식점 비대면 주문 플랫폼"
   period: "2026.06"
   role: "풀스택 개발 (웹·모바일)"
   description: "음식점 비대면 주문 시스템. 손님·가게(KDS/홀/카운터)·관리자 3개 앱을 React 단일 코드베이스로 만들고 Capacitor로 모바일 앱까지 패키징했다."
@@ -33,6 +19,29 @@
   tags: ["Unity", "C#", "VContainer", "R3", "C++"]
   type: "game"
 
+- name: "Katana Zero Style Action"
+  period: "2026.05"
+  role: "Unity 게임 개발 (1인)"
+  description: "카타나 제로 타격감 구현을 목표로 5일간 제작한 2D 액션 게임. R3 반응형 이벤트 파이프라인, VContainer DI, FEEL 히트스톱, VFX Graph 블러드 이펙트 적용."
+  tags: ["Unity", "C#", "R3", "VContainer", "FEEL", "VFX Graph", "DOTween"]
+  links:
+    video: "https://youtu.be/hp6LrmIztKU?si=3nydBbRO-r8ebuez"
+  type: "game"
+
+- name: "B2B 입찰·계약 플랫폼"
+  period: "2026.04 ~"
+  role: "풀스택 개발 (웹·API·인프라)"
+  description: "택배 화주와 대리점을 매칭하는 B2B 입찰·전자계약 플랫폼. 7요소 가중 랭킹, 실시간 입찰 비교, 양방 전자서명을 구현하고 AWS에 Terraform으로 배포했다."
+  tags: ["React", "NestJS", "Prisma", "PostgreSQL", "AWS", "Terraform"]
+  type: "platform"
+
+- name: "AI Trading System"
+  period: "2026"
+  role: "백엔드·AI 엔지니어 (1인)"
+  description: "국내·해외 주식과 코인 선물 3개 시장을 24/7 운영하는 Python 비동기 자동매매 시스템. AI 앙상블 판단, 이중 전략, 다층 리스크 방어 레이어, 백테스트 프레임워크를 갖췄다."
+  tags: ["Python", "asyncio", "SQLAlchemy", "Binance API", "AI"]
+  type: "platform"
+
 - name: "TabPlayer"
   period: "2026"
   role: "웹 프론트엔드 개발 (1인)"
@@ -45,6 +54,13 @@
   role: "게임 개발 (1인)"
   description: "1.44MB Game Contest 출품작. 실행파일 1.44MB 이하 제약 아래 에셋 없이 그래픽·사운드·맵을 전부 코드로 절차 생성하는 no-CRT C + OpenGL 네온 벡터 액션 게임."
   tags: ["C", "OpenGL", "Win32", "no-CRT"]
+  type: "game"
+
+- name: "Catan"
+  period: "2025"
+  role: "Unity 게임 개발"
+  description: "Unity 기반 보드게임 카탄 구현 프로젝트."
+  tags: ["Unity", "C#"]
   type: "game"
 
 - name: "툭"
@@ -77,19 +93,3 @@
   description: "쇼트폼 영상 기반 소셜 미디어 서비스. 코드베이스 유지보수 및 기능 개선."
   tags: ["Android", "Java", "Kotlin"]
   type: "mobile"
-
-- name: "Katana Zero Style Action"
-  period: "2026.05"
-  role: "Unity 게임 개발 (1인)"
-  description: "카타나 제로 타격감 구현을 목표로 5일간 제작한 2D 액션 게임. R3 반응형 이벤트 파이프라인, VContainer DI, FEEL 히트스톱, VFX Graph 블러드 이펙트 적용."
-  tags: ["Unity", "C#", "R3", "VContainer", "FEEL", "VFX Graph", "DOTween"]
-  links:
-    video: "https://youtu.be/hp6LrmIztKU?si=3nydBbRO-r8ebuez"
-  type: "game"
-
-- name: "Catan"
-  period: "2025"
-  role: "Unity 게임 개발"
-  description: "Unity 기반 보드게임 카탄 구현 프로젝트."
-  tags: ["Unity", "C#"]
-  type: "game"
