@@ -1283,11 +1283,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 
 // ============================================================
-// Hero: YouTube video background
+// Hero: YouTube video background (deferred + desktop-only)
+// Decorative loop — never let it compete with LCP or burden mobile.
 // ============================================================
 (function () {
   const bg = document.getElementById('hero-video-bg');
   if (!bg) return;
+
+  // Skip where the decorative video costs the most or isn't wanted:
+  // small screens (mobile CPU/data), reduced-motion users, Save-Data mode.
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (prefersReducedMotion || isSmallScreen || saveData) return;
 
   // Game video IDs — add more here as you create games
   const VIDEO_IDS = [
@@ -1297,44 +1305,61 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   let player;
   let currentIdx = 0;
 
-  // Load YouTube IFrame API
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
+  function initPlayer() {
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('hero-yt-player', {
+        videoId: VIDEO_IDS[0],
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          loop: 1,
+          controls: 0,
+          disablekb: 1,
+          modestbranding: 1,
+          playsinline: 1,
+          iv_load_policy: 3,
+          rel: 0,
+          showinfo: 0,
+          playlist: VIDEO_IDS.join(','),
+        },
+        events: {
+          onReady: (e) => {
+            e.target.playVideo();
+          },
+          onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              bg.classList.add('playing');
+            }
+            // Cycle to next video when done (if multiple)
+            if (e.data === YT.PlayerState.ENDED && VIDEO_IDS.length > 1) {
+              currentIdx = (currentIdx + 1) % VIDEO_IDS.length;
+              player.loadVideoById(VIDEO_IDS[currentIdx]);
+            }
+          },
+        },
+      });
+    };
 
-  window.onYouTubeIframeAPIReady = function () {
-    player = new YT.Player('hero-yt-player', {
-      videoId: VIDEO_IDS[0],
-      playerVars: {
-        autoplay: 1,
-        mute: 1,
-        loop: 1,
-        controls: 0,
-        disablekb: 1,
-        modestbranding: 1,
-        playsinline: 1,
-        iv_load_policy: 3,
-        rel: 0,
-        showinfo: 0,
-        playlist: VIDEO_IDS.join(','),
-      },
-      events: {
-        onReady: (e) => {
-          e.target.playVideo();
-        },
-        onStateChange: (e) => {
-          if (e.data === YT.PlayerState.PLAYING) {
-            bg.classList.add('playing');
-          }
-          // Cycle to next video when done (if multiple)
-          if (e.data === YT.PlayerState.ENDED && VIDEO_IDS.length > 1) {
-            currentIdx = (currentIdx + 1) % VIDEO_IDS.length;
-            player.loadVideoById(VIDEO_IDS[currentIdx]);
-          }
-        },
-      },
-    });
-  };
+    // Load the YouTube IFrame API only now (after the page has painted)
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+
+  // Defer until the main content has painted and the browser is idle,
+  // so this decorative video never blocks LCP.
+  function scheduleInit() {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initPlayer, { timeout: 3000 });
+    } else {
+      setTimeout(initPlayer, 1200);
+    }
+  }
+  if (document.readyState === 'complete') {
+    scheduleInit();
+  } else {
+    window.addEventListener('load', scheduleInit, { once: true });
+  }
 })();
 
 // ============================================================
