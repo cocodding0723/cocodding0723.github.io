@@ -63,6 +63,26 @@
     "articleSection": {{ page.categories[0] | jsonify }}
   }
   </script>
+  {% if page.video_id %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": {{ page.video_title | default: page.title | jsonify }},
+    "description": {{ page.video_description | default: page.description | default: page.excerpt | strip_html | jsonify }},
+    "thumbnailUrl": "https://i.ytimg.com/vi/{{ page.video_id }}/hqdefault.jpg",
+    "uploadDate": "{{ page.video_upload_date | default: page.date | date: '%Y-%m-%dT%H:%M:%S+09:00' }}",
+    "embedUrl": "https://www.youtube.com/embed/{{ page.video_id }}",
+    "contentUrl": "https://www.youtube.com/watch?v={{ page.video_id }}",
+    "url": "{{ site.url }}{{ page.url }}",
+    "publisher": {
+      "@type": "Person",
+      "name": "{{ site.author.name }}",
+      "url": "{{ site.url }}"
+    }
+  }
+  </script>
+  {% endif %}
   {% endif %}
 </head>
 <body>
