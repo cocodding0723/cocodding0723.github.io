@@ -32,7 +32,15 @@
   role: "게임 기획·Unity 클라이언트 개발"
   description: "포커와 마작을 합친 하이브리드 카드 게임. 비주얼 노벨 요소를 포함하며, Unity 클라이언트와 C++ 서버로 구성된다."
   tags: ["Unity", "C#", "VContainer", "R3", "C++"]
+  links:
+    video: "https://youtu.be/sDHES2-stno"
   type: "game"
+  orientation: "landscape"
+  media:
+    - /assets/images/projects/pokermahjong/pokermahjong-01-play.jpg
+    - /assets/images/projects/pokermahjong/pokermahjong-02-round.jpg
+    - /assets/images/projects/pokermahjong/pokermahjong-03-betting.jpg
+    - /assets/images/projects/pokermahjong/pokermahjong-04-table.jpg
 
 - name: "Katana Zero Style Action"
   period: "2026.05"
@@ -42,6 +50,9 @@
   links:
     video: "https://youtu.be/hp6LrmIztKU?si=3nydBbRO-r8ebuez"
   type: "game"
+  orientation: "landscape"
+  media:
+    - /assets/images/projects/katanazero/katanazero-01-combat.jpg
 
 - name: "B2B 입찰·계약 플랫폼"
   period: "2026.04 ~"
@@ -79,6 +90,13 @@
   description: "1.44MB Game Contest 출품작. 실행파일 1.44MB 이하 제약 아래 에셋 없이 그래픽·사운드·맵을 전부 코드로 절차 생성하는 no-CRT C + OpenGL 네온 벡터 액션 게임."
   tags: ["C", "OpenGL", "Win32", "no-CRT"]
   type: "game"
+  orientation: "landscape"
+  media:
+    - /assets/images/projects/neondescent/neondescent-01-title.jpg
+    - /assets/images/projects/neondescent/neondescent-02-play.jpg
+    - /assets/images/projects/neondescent/neondescent-03-combat.jpg
+    - /assets/images/projects/neondescent/neondescent-04-dash.jpg
+    - /assets/images/projects/neondescent/neondescent-05-pause.jpg
 
 - name: "Catan"
   period: "2025"
