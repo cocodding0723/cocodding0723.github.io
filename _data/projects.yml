@@ -1,3 +1,18 @@
+- name: "ZigZag 러너"
+  period: "2026.07 ~ 진행 중"
+  role: "Unity 1인 개발"
+  description: "ZigZag류 엔드리스 러너 하이퍼캐주얼 모바일 게임. 절차적 경로 생성과 리액티브 아키텍처(VContainer·R3) 기반, 스토어 출시 및 광고/분석 풀사이클 목표."
+  tags: ["Unity", "C#", "URP", "VContainer", "R3"]
+  type: "game"
+  media:
+    - /assets/images/projects/zigzag/zigzag-01-title.jpg
+    - /assets/images/projects/zigzag/zigzag-02-ingame.jpg
+    - /assets/images/projects/zigzag/zigzag-03-jump.jpg
+    - /assets/images/projects/zigzag/zigzag-04-revive.jpg
+    - /assets/images/projects/zigzag/zigzag-05-gameover.jpg
+    - /assets/images/projects/zigzag/zigzag-06-feature.jpg
+    - /assets/images/projects/zigzag/zigzag-07-icon.jpg
+
 - name: "재활 운동 헬스케어 플랫폼"
   period: "2026.06 ~"
   role: "Flutter·Firebase 개발 (1인)"
@@ -32,8 +47,17 @@
   period: "2026.04 ~"
   role: "풀스택 개발 (웹·API·인프라)"
   description: "택배 화주와 대리점을 매칭하는 B2B 입찰·전자계약 플랫폼. 7요소 가중 랭킹, 실시간 입찰 비교, 양방 전자서명을 구현하고 AWS에 Terraform으로 배포했다."
+  highlights:
+    - "React + NestJS + Prisma 모노레포 설계, 테스트 78개"
+    - "7요소 가중치 입찰 랭킹 알고리즘 (베이지안 평균·콜드스타트·어뷰징 방지)"
+    - "AWS 인프라(Terraform)·GitHub Actions OIDC 배포 파이프라인 설계"
   tags: ["React", "NestJS", "Prisma", "PostgreSQL", "AWS", "Terraform"]
   type: "platform"
+  orientation: "landscape"
+  media:
+    - /assets/images/projects/deallink/deallink-demo-1.mp4
+    - /assets/images/projects/deallink/deallink-demo-2.mp4
+    - /assets/images/projects/deallink/deallink-demo-3.mp4
 
 - name: "AI Trading System"
   period: "2026"
@@ -66,30 +90,72 @@
 - name: "툭"
   period: "2023.06 ~ 2024.06"
   role: "Flutter Android/iOS, AR 카메라 기능 개발"
-  description: "쇼트폼 영상 소셜 미디어 + 커뮤니티 플랫폼. Unity–Flutter 연동 AR 카메라 및 영상 촬영 기능 구현."
+  description: "쇼트폼 영상 소셜 미디어 + 커뮤니티 플랫폼. 10K+ 사용자 대상 라이브 서비스."
+  highlights:
+    - "회원가입·로그인(Kakao), 발견하기, 미션·포인트·기프트샵 등 핵심 화면 개발"
+    - "영상 에디터·오디오 녹음·YouTube 연동, Unity AR 카메라 및 Native Plugin 제작"
+    - "Jenkins·Fastlane CI/CD로 배포 시간 70% 단축"
   tags: ["Flutter", "Unity", "OpenCV", "Firebase", "CI/CD"]
   type: "mobile"
+  media:
+    - /assets/images/projects/took/took-01-intro.jpg
+    - /assets/images/projects/took/took-02-vote.jpg
+    - /assets/images/projects/took/took-03-topics.jpg
+    - /assets/images/projects/took/took-04-chat.jpg
+    - /assets/images/projects/took/took-05-feed.jpg
+    - /assets/images/projects/took/took-06-mission.jpg
+    - /assets/images/projects/took/took-07-topic-create.jpg
+    - /assets/images/projects/took/took-08-giftshop.jpg
 
 - name: "Reelaze"
   period: "2023.02 ~ 2023.06"
   role: "Flutter 앱 개발 및 배포·운영 관리"
-  description: "TikTok·YouTube Shorts 유사 쇼트폼 영상 소셜 미디어 서비스. Google Play / App Store 배포."
+  description: "TikTok·YouTube Shorts 유사 쇼트폼 영상 소셜 미디어 서비스. Google Play / App Store 배포·운영."
+  highlights:
+    - "멀티 플레이버 Flutter 공유 코드베이스 최다 기여 (1,700+ 커밋)"
+    - "Firebase 인증(OAuth)·Kakao 로그인·Deep Link, 광고 SDK(Adjust·Tapjoy·Ironsource) 연동"
+    - "영상·오디오 인코딩(MR/마이크 볼륨) 처리, 버전 릴리스 자동화"
   tags: ["Flutter", "Unity", "Firebase", "FFMPEG"]
   links:
     android: "https://play.google.com/store/apps/details?id=com.playhead.reelaze"
     ios: "https://apps.apple.com/us/app/reelaze/id6450655858"
   type: "mobile"
+  media:
+    - /assets/images/projects/reelaze/reelaze-01-login.jpg
+    - /assets/images/projects/reelaze/reelaze-02-banner.jpg
+    - /assets/images/projects/reelaze/reelaze-03-battle-live.jpg
+    - /assets/images/projects/reelaze/reelaze-04-donation.jpg
+    - /assets/images/projects/reelaze/reelaze-05-ranking.jpg
+    - /assets/images/projects/reelaze/reelaze-06-battle-topic.jpg
+    - /assets/images/projects/reelaze/reelaze-07-logo.jpg
 
 - name: "Mix"
   period: "2022.11 ~ 2023.05"
   role: "영상 편집 및 업로드 기능 개발"
-  description: "Android 기반 쇼트폼 영상 편집 서비스. GPU 인코딩 활용 고성능 필터 및 FFMPEG 영상 합성 기능 구현."
+  description: "Android 기반 쇼트폼 영상 편집 서비스."
+  highlights:
+    - "클립 편집·비디오 타임라인·스티커/필터 UI 개발, 업로드(S3) 파이프라인"
+    - "FFMPEG 소프트웨어 인코딩을 MediaCodec + OpenGL ES GPU 인코딩으로 전환 — CPU 대비 3배 이상 성능 향상"
+    - "OpenCV 실시간 영상 처리·필터 파이프라인 구축"
   tags: ["Android", "Kotlin", "FFMPEG", "OpenCV", "AWS S3"]
   type: "mobile"
 
-- name: "OpenVerse"
+- name: "Killing Part"
   period: "2021.12 ~ 2022.11"
-  role: "Android 앱 유지보수"
-  description: "쇼트폼 영상 기반 소셜 미디어 서비스. 코드베이스 유지보수 및 기능 개선."
-  tags: ["Android", "Java", "Kotlin"]
+  role: "Android 앱 개발 및 Unity 카메라 연동"
+  description: "릴레이 음악밈 쇼트폼 소셜 미디어 서비스(구 OpenVerse). 멜로디 창작·커버·댄스 챌린지 및 음원 출시(KILLINGPART RADIO) 기능."
+  highlights:
+    - "Android 앱 기능 개발·유지보수 및 Flutter 전환 참여"
+    - "Unity 카메라 모듈(단독 개발) 및 Unity–Flutter 연동"
+  tags: ["Android", "Java", "Kotlin", "Unity"]
   type: "mobile"
+  media:
+    - /assets/images/projects/killingpart/killingpart-01-logo.jpg
+    - /assets/images/projects/killingpart/killingpart-02-splash.jpg
+    - /assets/images/projects/killingpart/killingpart-03-beats.jpg
+    - /assets/images/projects/killingpart/killingpart-04-melody.jpg
+    - /assets/images/projects/killingpart/killingpart-05-sing.jpg
+    - /assets/images/projects/killingpart/killingpart-06-dance.jpg
+    - /assets/images/projects/killingpart/killingpart-07-lyrics.jpg
+    - /assets/images/projects/killingpart/killingpart-08-radio.jpg
+    - /assets/images/projects/killingpart/killingpart-09-waveform.jpg

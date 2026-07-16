@@ -1,30 +1,22 @@
 .projects-section {
   background: var(--bg-primary);
 
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  .projects-list {
+    display: flex;
+    flex-direction: column;
     gap: 24px;
-
-    @media (max-width: $desktop) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: $mobile) {
-      grid-template-columns: 1fr;
-    }
   }
 }
 
-.project-card {
+.project-row {
   background: var(--bg-card);
   border: 2px solid $pixel-border;
   border-radius: 0;
-  padding: 24px;
+  padding: 28px;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  transition: border-color 0.05s steps(1), box-shadow 0.05s steps(1);
+  align-items: flex-start;
+  gap: 36px;
+  transition: border-color 0.05s steps(1), box-shadow 0.05s steps(1), transform 0.05s steps(1);
   position: relative;
   overflow: hidden;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
@@ -53,6 +45,144 @@
 
     &::before { opacity: 1; }
   }
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    gap: 24px;
+  }
+}
+
+// ── Left: stacked media deck ──────────────────────────────
+.project-stack {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  // room for the offset of cards behind the top one
+  padding: 10px 10px 0 0;
+
+  .stack-cards {
+    position: relative;
+    width: 216px;
+    aspect-ratio: 9 / 16;
+  }
+
+  &.stack-landscape .stack-cards {
+    width: 300px;
+    aspect-ratio: 16 / 10;
+  }
+
+  .stack-card {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: var(--bg-primary);
+    border: 2px solid $pixel-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // cards behind the top one peek out to the upper-right; cap the fan at 3
+    transform: translate(calc(min(var(--i), 3) * 6px), calc(min(var(--i), 3) * -6px));
+    opacity: calc(1 - min(var(--i), 3) * 0.18);
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+
+    img,
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    &.is-top {
+      cursor: pointer;
+    }
+
+    &.has-video.is-top {
+      cursor: default;
+    }
+
+    &.stack-leave {
+      transform: translate(-70%, 4%) rotate(-8deg);
+      opacity: 0;
+    }
+  }
+
+  .stack-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .stack-counter {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: var(--text-muted);
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .stack-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $pixel-border;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.05s steps(1), border-color 0.05s steps(1), box-shadow 0.05s steps(1);
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    &:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 2px 2px 0 rgba(91, 156, 246, 0.3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    width: 100%;
+    padding: 10px 10px 0 0;
+
+    .stack-cards {
+      width: min(216px, 62vw);
+    }
+
+    &.stack-landscape .stack-cards {
+      width: min(320px, 88%);
+    }
+  }
+}
+
+// ── Right: project info ───────────────────────────────────
+.project-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
   .card-header {
     display: flex;
@@ -89,14 +219,37 @@
     font-size: $fs-sm;
     color: var(--text-muted);
     line-height: 1.75;
-    flex: 1;
+  }
+
+  .card-highlights {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+
+    li {
+      font-size: $fs-sm;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding-left: 18px;
+      position: relative;
+
+      &::before {
+        content: '▹';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+    }
   }
 
   .card-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: auto;
+    margin-top: 4px;
   }
 
   .card-links {

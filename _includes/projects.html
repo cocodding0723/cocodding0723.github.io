@@ -1,49 +1,84 @@
 <section class="projects-section" id="projects">
   <div class="container">
     <h2 class="section-title animate-in">Projects</h2>
-    <div class="projects-grid">
+    <div class="projects-list">
       {% for project in site.data.projects %}
-      <article class="project-card">
-        <div class="card-header">
-          <h3 class="card-title">{{ project.name }}</h3>
-          <span class="badge badge-{{ project.type }}">{{ project.type }}</span>
-        </div>
-        <p class="card-period">{{ project.period }}</p>
-        <p class="card-role">{{ project.role }}</p>
-        <p class="card-description">{{ project.description }}</p>
-        <div class="card-tags">
-          {% for tag in project.tags %}
-          <span class="tag">{{ tag }}</span>
-          {% endfor %}
-        </div>
-        {% if project.links %}
-        <div class="card-links">
-          {% if project.links.android %}
-          <a href="{{ project.links.android }}" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.523 15.34a.75.75 0 1 1-1.046 1.08l-2.017-1.953a5.5 5.5 0 1 1 1.058-1.022l2.005 1.895zM11.5 15a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-            </svg>
-            Google Play
-          </a>
-          {% endif %}
-          {% if project.links.ios %}
-          <a href="{{ project.links.ios }}" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.14-2.2 1.28-2.18 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.73M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
-            App Store
-          </a>
-          {% endif %}
-          {% if project.links.video %}
-          <a href="{{ project.links.video }}" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
-            </svg>
-            YouTube
-          </a>
+      <article class="project-row{% unless project.media %} no-media{% endunless %}">
+        {% if project.media %}
+        <div class="project-stack{% if project.orientation == 'landscape' %} stack-landscape{% endif %}" data-stack>
+          <div class="stack-cards">
+            {% for item in project.media %}
+            <div class="stack-card" style="--i: {{ forloop.index0 }};">
+              {% if item contains '.mp4' %}
+              <video src="{{ item | relative_url }}" muted loop playsinline preload="metadata" controls aria-label="{{ project.name }} 데모 영상 {{ forloop.index }}"></video>
+              {% else %}
+              <img src="{{ item | relative_url }}" alt="{{ project.name }} 스크린샷 {{ forloop.index }}" loading="lazy" decoding="async">
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% if project.media.size > 1 %}
+          <div class="stack-nav">
+            <button type="button" class="stack-btn stack-prev" aria-label="이전 미디어">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="stack-counter" aria-live="polite">1 / {{ project.media.size }}</span>
+            <button type="button" class="stack-btn stack-next" aria-label="다음 미디어">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
           {% endif %}
         </div>
         {% endif %}
+        <div class="project-info">
+          <div class="card-header">
+            <h3 class="card-title">{{ project.name }}</h3>
+            <span class="badge badge-{{ project.type }}">{{ project.type }}</span>
+          </div>
+          <p class="card-period">{{ project.period }}</p>
+          <p class="card-role">{{ project.role }}</p>
+          <p class="card-description">{{ project.description }}</p>
+          {% if project.highlights %}
+          <ul class="card-highlights">
+            {% for item in project.highlights %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <div class="card-tags">
+            {% for tag in project.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% if project.links %}
+          <div class="card-links">
+            {% if project.links.android %}
+            <a href="{{ project.links.android }}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.523 15.34a.75.75 0 1 1-1.046 1.08l-2.017-1.953a5.5 5.5 0 1 1 1.058-1.022l2.005 1.895zM11.5 15a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+              </svg>
+              Google Play
+            </a>
+            {% endif %}
+            {% if project.links.ios %}
+            <a href="{{ project.links.ios }}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.14-2.2 1.28-2.18 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.73M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              App Store
+            </a>
+            {% endif %}
+            {% if project.links.video %}
+            <a href="{{ project.links.video }}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+              </svg>
+              YouTube
+            </a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
       </article>
       {% endfor %}
     </div>

@@ -238,7 +238,7 @@
     fadeTargets.forEach(el => fadeObserver.observe(el));
 
     // Project cards with staggered delay
-    const cards = document.querySelectorAll('.project-card');
+    const cards = document.querySelectorAll('.project-row');
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -310,9 +310,118 @@
   } else {
     // Fallback for browsers without IntersectionObserver
     fadeTargets.forEach(el => el.classList.add('visible'));
-    document.querySelectorAll('.skill-tag, .project-card, .timeline-item, .certification-item')
+    document.querySelectorAll('.skill-tag, .project-row, .timeline-item, .certification-item')
       .forEach(el => el.classList.add('visible'));
   }
+})();
+
+// ============================================================
+// Project media stack (card deck: click/arrows cycle images)
+// ============================================================
+(function () {
+  const stacks = document.querySelectorAll('.project-stack[data-stack]');
+  if (!stacks.length) return;
+
+  const LEAVE_DURATION = 350;
+
+  stacks.forEach(stack => {
+    let order = [...stack.querySelectorAll('.stack-card')];
+    const total = order.length;
+    const prevBtn = stack.querySelector('.stack-prev');
+    const nextBtn = stack.querySelector('.stack-next');
+    const counter = stack.querySelector('.stack-counter');
+    if (total === 0) return;
+
+    // Original position of each card, for the "n / total" counter
+    const baseIndex = new Map(order.map((el, i) => [el, i]));
+    let inViewport = true;
+    let animating = false;
+
+    order.forEach(el => {
+      if (el.querySelector('video')) el.classList.add('has-video');
+    });
+
+    function reassign() {
+      order.forEach((el, i) => {
+        el.style.setProperty('--i', i);
+        el.style.zIndex = String(total - i);
+        el.classList.toggle('is-top', i === 0);
+      });
+      if (counter) counter.textContent = (baseIndex.get(order[0]) + 1) + ' / ' + total;
+      syncVideos();
+    }
+
+    function syncVideos() {
+      order.forEach((el, i) => {
+        const video = el.querySelector('video');
+        if (!video) return;
+        if (i === 0 && inViewport) {
+          video.play().catch(() => { /* autoplay blocked — user can use controls */ });
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    function withoutTransition(el, fn) {
+      el.style.transition = 'none';
+      fn();
+      void el.offsetWidth; // force reflow so the next transition starts clean
+      el.style.transition = '';
+    }
+
+    function next() {
+      if (animating || total < 2) return;
+      animating = true;
+      const top = order[0];
+      top.classList.add('stack-leave');
+      setTimeout(() => {
+        withoutTransition(top, () => {
+          top.classList.remove('stack-leave');
+          order = [...order.slice(1), top];
+          reassign();
+        });
+        animating = false;
+      }, LEAVE_DURATION);
+    }
+
+    function prev() {
+      if (animating || total < 2) return;
+      animating = true;
+      const last = order[order.length - 1];
+      withoutTransition(last, () => {
+        last.classList.add('stack-leave');
+        order = [last, ...order.slice(0, -1)];
+        reassign();
+      });
+      requestAnimationFrame(() => {
+        last.classList.remove('stack-leave');
+        setTimeout(() => { animating = false; }, LEAVE_DURATION);
+      });
+    }
+
+    if (nextBtn) nextBtn.addEventListener('click', next);
+    if (prevBtn) prevBtn.addEventListener('click', prev);
+
+    // Clicking the top image (not videos — they need their controls) advances the deck
+    stack.querySelector('.stack-cards').addEventListener('click', (e) => {
+      const card = e.target.closest('.stack-card');
+      if (card && card.classList.contains('is-top') && !card.classList.contains('has-video')) next();
+    });
+
+    // Pause videos when the stack scrolls out of view
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          inViewport = entry.isIntersecting;
+          syncVideos();
+        });
+      }, { threshold: 0.3 });
+      observer.observe(stack);
+    }
+
+    reassign();
+  });
 })();
 
 // ============================================================
