@@ -6,13 +6,13 @@ categories: [Dev]
 tags: [Android, Kotlin, OpenCV, FFMPEG]
 ---
 
-쇼트폼 영상 편집 앱 **Mix**를 개발할 때 가장 큰 기술적 도전은 **영상 필터를 빠르게 인코딩**하는 것이었습니다. 처음에는 FFMPEG의 소프트웨어 인코더를 사용했는데, 30초 영상에 필터를 입히는 데 거의 1분이 걸렸습니다. GPU를 활용하면 이를 크게 줄일 수 있다는 걸 알고 `MediaCodec` + `OpenGL ES` 조합을 도입했습니다.
+쇼트폼 영상 편집 앱 **Mix**를 개발할 때 가장 큰 기술적 도전은 **영상 필터를 빠르게 인코딩**하는 일이었다. 처음에는 FFMPEG의 소프트웨어 인코더를 사용했는데, 30초 영상에 필터를 입히는 데 거의 1분이 걸렸다. GPU를 활용하면 이를 크게 줄일 수 있다는 걸 알고 `MediaCodec` + `OpenGL ES` 조합을 도입했다.
 
 ## 문제 정의
 
 기존 파이프라인:
 
-```
+```text
 원본 영상 → FFMPEG 디코딩 → CPU 필터 처리 → FFMPEG 인코딩
 ```
 
@@ -23,9 +23,9 @@ tags: [Android, Kotlin, OpenCV, FFMPEG]
 
 ## 해결 방향: Surface 기반 인코딩
 
-`MediaCodec`을 Surface 입력 모드로 쓰면 OpenGL ES로 렌더링한 프레임을 GPU 메모리에서 직접 인코더로 넘길 수 있습니다. CPU-GPU 메모리 복사가 없어집니다.
+`MediaCodec`을 Surface 입력 모드로 쓰면 OpenGL ES로 렌더링한 프레임을 GPU 메모리에서 직접 인코더로 넘길 수 있다. CPU-GPU 메모리 복사가 사라진다.
 
-```
+```text
 MediaExtractor → MediaCodec(디코더)
                       ↓ (SurfaceTexture)
               OpenGL ES (필터 셰이더)
@@ -59,7 +59,7 @@ encoder.start()
 
 ### 2. EGL Context 설정
 
-OpenGL로 렌더링하려면 EGL 환경을 직접 구성해야 합니다.
+OpenGL로 렌더링하려면 EGL 환경을 직접 구성해야 한다.
 
 ```kotlin
 class EglCore(private val encoderSurface: Surface) {
@@ -175,6 +175,8 @@ fun encode(extractor: MediaExtractor) {
 
 **타임스탬프 처리**: `EGLExt.eglPresentationTimeANDROID`로 정확한 타임스탬프를 인코더에 전달하지 않으면 영상 재생 속도가 틀어집니다. microsecond를 nanosecond로 변환(`* 1000`)하는 것도 빠뜨리기 쉽습니다.
 
-**SurfaceTexture 스레드**: `SurfaceTexture.updateTexImage()`는 반드시 EGL Context가 bind된 스레드에서 호출해야 합니다. 멀티스레딩하면 GL 오류가 납니다.
+**SurfaceTexture 스레드**: `SurfaceTexture.updateTexImage()`는 반드시 EGL Context가 bind된 스레드에서 호출해야 한다. 다른 스레드에서 호출하면 GL 오류가 난다.
 
-**기기 호환성**: `COLOR_FormatSurface`는 API 18 이상에서 지원하지만, 일부 구형 기기의 인코더 구현이 불안정합니다. 예외 처리와 FFMPEG 폴백을 같이 두는 게 안전합니다.
+**기기 호환성**: `COLOR_FormatSurface`는 API 18 이상에서 지원하지만, 일부 구형 기기의 인코더 구현은 불안정하다. 예외 처리와 FFMPEG 폴백을 함께 두는 편이 안전하다.
+
+*CPU로 프레임을 왕복시키지 않고 디코더 Surface에서 OpenGL 필터를 거쳐 인코더 Surface로 직접 넘긴 것이 성능 개선의 핵심이었다.*

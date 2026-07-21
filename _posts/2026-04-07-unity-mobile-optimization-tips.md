@@ -93,7 +93,7 @@ Debug.Log($"Texture Memory: {total / (1024 * 1024)} MB");
 
 uGUI는 캔버스 단위로 메시를 다시 빌드한다. 자주 바뀌는 텍스트(점수, 타이머)와 정적인 UI(배경)를 같은 캔버스에 두면, 텍스트 한 글자 바뀔 때마다 캔버스 전체가 다시 그려진다.
 
-```
+```text
 Canvas (Static)
   ├── Background
   └── HUD Frame

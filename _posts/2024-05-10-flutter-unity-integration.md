@@ -6,15 +6,15 @@ categories: [Dev]
 tags: [Flutter, Unity, Android, iOS]
 ---
 
-회사에서 쇼트폼 영상 앱 **툭**을 개발하면서 AR 카메라 기능을 Unity로 구현하고 Flutter 앱 안에 임베딩해야 했습니다. `flutter_unity_widget` 패키지를 사용했는데, 문서가 친절하지 않아서 꽤 고생했습니다. 이 글은 그 경험을 정리한 것입니다.
+회사에서 쇼트폼 영상 앱 **툭**을 개발하면서 AR 카메라 기능을 Unity로 구현하고 Flutter 앱 안에 임베딩해야 했다. `flutter_unity_widget` 패키지를 사용했는데 문서만으로는 전체 빌드 구조를 파악하기 어려웠다. 이 글은 실제로 연결하며 막혔던 지점을 정리한 기록이다.
 
 ## 왜 Unity인가?
 
-Flutter에도 AR 관련 패키지(`ar_flutter_plugin` 등)가 있지만, 실시간 영상 처리와 커스텀 셰이더가 필요한 수준의 AR 효과는 Unity의 생태계가 훨씬 풍부합니다. 특히 **ARFoundation**과 **VFX Graph**를 활용하면 모바일에서도 꽤 괜찮은 AR 렌더링이 가능합니다.
+Flutter에도 AR 관련 패키지(`ar_flutter_plugin` 등)가 있지만, 실시간 영상 처리와 커스텀 셰이더가 필요한 수준의 AR 효과는 Unity 생태계가 더 풍부하다. 특히 **ARFoundation**과 **VFX Graph**를 활용하면 모바일에서도 복잡한 AR 렌더링을 구성할 수 있다.
 
 ## 전체 구조
 
-```
+```text
 Flutter App
 └── UnityWidget (flutter_unity_widget)
     └── Unity Player (AR 카메라, 렌더링)
@@ -22,13 +22,13 @@ Flutter App
 Flutter ←→ Unity 양방향 통신
 ```
 
-Flutter가 셸 역할을 하고, Unity가 카메라 뷰를 렌더링합니다. UI는 Flutter가 Unity 뷰 위에 오버레이로 그립니다.
+Flutter가 앱의 셸 역할을 하고 Unity가 카메라 뷰를 렌더링한다. UI는 Flutter가 Unity 뷰 위에 오버레이로 그린다.
 
 ## 1. Unity 프로젝트 설정
 
 ### Export Settings
 
-Unity에서 Android/iOS 각각 Export용 설정이 필요합니다.
+Unity에서 Android/iOS 각각 Export용 설정이 필요하다.
 
 **Android:**
 - `Build Settings → Export Project` 체크
@@ -41,7 +41,7 @@ Unity에서 Android/iOS 각각 Export용 설정이 필요합니다.
 
 ### flutter_unity_widget 전용 수정
 
-Unity 프로젝트에서 `flutter_unity_widget`이 요구하는 스크립트를 추가해야 합니다.
+Unity 프로젝트에서 `flutter_unity_widget`이 요구하는 스크립트를 추가해야 한다.
 
 ```csharp
 // Assets/FlutterUnityIntegration/UnityMessageManager.cs
@@ -58,7 +58,7 @@ dependencies:
   flutter_unity_widget: ^2022.2.1
 ```
 
-Android의 경우 `android/app/build.gradle`에 Unity 빌드 경로를 추가해야 합니다.
+Android에서는 `android/app/build.gradle`에 Unity 빌드 경로를 추가해야 한다.
 
 ```groovy
 // android/app/build.gradle
@@ -129,13 +129,13 @@ UnityWidget(
 )
 ```
 
-`onUnitySceneLoaded` 콜백을 사용해야 합니다. `onUnityCreated`는 Unity가 생성됐다는 것이지 씬이 로드됐다는 의미가 아닙니다.
+`onUnitySceneLoaded` 콜백을 사용해야 한다. `onUnityCreated`는 Unity가 생성됐다는 뜻이지 씬 로드까지 끝났다는 의미는 아니다.
 
 ### 문제 2: iOS 빌드 시 심볼 충돌
 
 Flutter와 Unity 둘 다 OpenGL/Metal 관련 심볼을 가지고 있어서 충돌이 납니다.
 
-`Podfile`에 아래를 추가했습니다:
+`Podfile`에는 아래 설정을 추가했다.
 
 ```ruby
 post_install do |installer|
@@ -149,7 +149,7 @@ end
 
 ### 문제 3: 메모리 사용량
 
-Unity Player 자체가 상당한 메모리를 잡아먹습니다. 카메라 화면을 쓰지 않을 때는 Unity를 pause 상태로 만드는 것이 중요합니다.
+Unity Player 자체가 상당한 메모리를 사용한다. 카메라 화면을 쓰지 않을 때는 Unity를 pause 상태로 만드는 것이 중요하다.
 
 ```dart
 // 백그라운드 진입 시
@@ -166,4 +166,6 @@ AppLifecycleState.resumed => _unityWidgetController.resume()
 | iOS 빌드 | Bitcode 비활성화 |
 | 메모리 관리 | 백그라운드 시 pause() 필수 |
 
-공식 문서보다 GitHub Issues가 더 도움이 됐습니다. 같은 문제로 헤매는 분이 있다면 [flutter_unity_widget repo의 Issues](https://github.com/juicycleff/flutter-unity-view-widget/issues)를 먼저 검색해보길 권합니다.
+실제 통합 과정에서는 공식 문서보다 [flutter_unity_widget 저장소의 Issues](https://github.com/juicycleff/flutter-unity-view-widget/issues)가 더 도움이 됐다. 같은 오류를 만났다면 패키지 버전과 플랫폼을 함께 검색하는 편이 빠르다.
+
+*Flutter는 앱과 UI를, Unity는 AR 렌더링을 맡기고 두 런타임의 생성·씬 로드·메시지 시점을 분리해서 다뤄야 한다.*

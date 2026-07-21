@@ -120,7 +120,7 @@ fi
 
 ECC common 규칙 위에 Ultra Harness 전용 규칙 파일이 얹혀 있다. 에이전트별 책임 범위, 레이어 간 커뮤니케이션 형식, 스프린트 문서의 저장 위치와 포맷을 정의한다.
 
-```
+```text
 ~/.claude/
 ├── rules/
 │   ├── common/          # ECC 공통 규칙

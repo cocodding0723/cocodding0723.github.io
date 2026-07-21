@@ -6,13 +6,15 @@ categories: [Project]
 tags: [Unity, AI]
 ---
 
-## Phase 3 진입
+## 한 번의 전투를 여러 선택이 이어지는 런으로 바꾸기
 
-[13일차](/blog/2026/03/16/ai-game-dev-day-13/)에서 Phase 2 전투 확장을 마무리했다. 8개 Sprint에 걸쳐 EnemyPatternSO + Sequencer 패턴 인프라, 이중 게이지, 궁극기, 적 4종, 연출 시스템을 전부 넣었다. 전투 한 판은 재미있는데, 한 판 싸우고 끝이다. Phase 3에서는 이 전투를 반복시키는 로그라이크 런 구조를 만들었다.
+[13일차](/blog/2026/03/16/ai-game-dev-day-13/)까지는 한 번의 전투를 만드는 데 집중했다. 문제는 전투에서 이기면 그대로 끝난다는 점이었다. 14일차에는 전투 → 보상 선택 → 다음 경로 선택 → 더 어려운 전투가 이어지는 **로그라이크 런**을 만들었다. 여기서 런은 게임을 시작해 성공하거나 실패할 때까지 이어지는 한 번의 도전을 뜻한다.
+
+이 글은 클래스 목록이 아니라 세 질문을 따라간다. 게임 진행 단계를 어떻게 제한했는가, 같은 시드에서 같은 맵을 어떻게 만들었는가, 런 모드에서만 필요한 객체를 어떻게 등록했는가다. R3는 값이 바뀌면 구독자에게 알려 주는 C# 라이브러리이고, VContainer는 객체 사이의 의존성을 연결하는 도구다.
 
 ---
 
-## RunManager: R3 ReactiveProperty 상태 머신
+## 잘못된 순서로 화면이 넘어가지 않게 하기
 
 `RunManager`는 순수 C# 클래스다. MonoBehaviour가 아닌 `IDisposable`을 구현하고, R3의 `ReactiveProperty`로 상태를 관리한다.
 
@@ -56,7 +58,7 @@ R3의 `Subject`로 `OnRunStateChanged`, `OnStageCompleted`, `OnRunEnded` 세 개
 
 ---
 
-## RunMapGenerator: Fisher-Yates 시드 맵
+## 같은 시드로 같은 선택 지도를 다시 만들기
 
 맵 생성기도 순수 C# 클래스다. `System.Random(seed)`을 받아서 결정론적 맵을 생성한다.
 
@@ -148,7 +150,7 @@ private List<int> PickRandomIndices(Random random, int total, int count)
 
 ---
 
-## FillInBerserkerAI: EnemyPatternSO 기반 패턴 전환
+## 체력이 줄면 공격 패턴이 바뀌는 적
 
 엘리트 적은 기존의 `EnemyPatternSequencer`를 재활용한다. 핵심은 두 개의 `EnemyPatternSO`를 `_sequencer.SetNextPattern()`으로 전환하는 구조다.
 
@@ -192,7 +194,7 @@ _rhythmAttack.TelegraphMultiplier = _berserkTelegraphMultiplier; // 0.8배 (20% 
 
 ---
 
-## MetronomeKnightAI: 런타임 BPM 전환
+## 전투 도중 BPM을 두 배로 바꾸는 보스
 
 보스 AI의 기술적 핵심은 `RhythmManager`에 런타임으로 BPM을 주입하는 구조다.
 
@@ -227,7 +229,7 @@ P1은 BPM 120, 패턴 `● _ _ _ ● _ _ _`(2마디, Red 빛남, 대미지 20). 
 
 ---
 
-## GameLifetimeScope: VContainer 조건부 DI 등록
+## 로그라이크 모드에서만 필요한 객체 등록하기
 
 VContainer DI의 진입점이다. `RunConfigSO` 할당 여부로 로그라이크 서비스 등록을 분기한다.
 
@@ -290,4 +292,4 @@ public class GameLifetimeScope : LifetimeScope
 
 ---
 
-*R3 ReactiveProperty 상태 머신, Fisher-Yates 시드 맵, EnemyPatternSO 패턴 전환, VContainer 조건부 DI -- Phase 3 로그라이크의 기술적 뼈대를 세운 14일차.*
+*14일차에는 전투 코드를 늘리기보다 전투 사이의 순서, 재현 가능한 지도, 모드별 객체 경계를 만들어 한 번의 도전이 끝까지 이어지게 했다.*

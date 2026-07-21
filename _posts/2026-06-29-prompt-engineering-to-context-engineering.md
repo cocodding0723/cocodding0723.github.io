@@ -8,7 +8,7 @@ tags: [AI, Blog]
 
 ## "프롬프트를 잘 쓴다"는 말의 의미가 바뀌었다
 
-한동안 "프롬프트 잘 쓰는 법" 류의 글은 대부분 *마법의 주문* 모음집이었다. "당신은 20년 차 시니어 개발자입니다"로 시작하라, "단계별로 생각해 보세요"를 붙여라, 끝에 "틀리면 100달러를 잃습니다"를 협박처럼 달아라. 이런 팁이 틀린 건 아니다. 다만 2026년 현재, 이것만으로는 절반도 못 간다.
+한동안 "프롬프트 잘 쓰는 법" 류의 글은 대부분 *마법의 주문* 모음집이었다. "당신은 20년 차 시니어 개발자다"로 시작하라, "단계별로 생각해 보라"를 붙여라, 끝에 "틀리면 100달러를 잃는다"를 협박처럼 달아라. 이런 팁이 틀린 건 아니다. 다만 2026년 현재, 이것만으로는 절반도 못 간다.
 
 내가 매일 Claude Code로 코드를 짜면서 체감한 건 명확하다. **결과 품질을 가르는 건 문장을 얼마나 그럴싸하게 쓰느냐가 아니라, 모델에게 *무엇을 보여주느냐*다.** 실전 에이전트는 모델 자체의 한계보다 *컨텍스트 층위* — 프롬프트 문장을 어떻게 쓰느냐보다 무엇을 컨텍스트에 채우느냐 — 에서 훨씬 더 자주 실패한다.
 
@@ -206,10 +206,6 @@ final  = LLM(refine, draft, review)     # 3단계: 검토 반영 수정
 
 기본기(역할·few-shot·CoT)는 깔고 가되, 진짜 차이는 그 바깥의 환경 설계에서 난다. 마법의 주문을 찾는 시대는 끝났다. 이제는 책상 위를 정리하는 사람이 이긴다.
 
-*프롬프트 잘 쓰는 법의 핵심은 멋진 문장이 아니라, 컨텍스트를 큐레이션하고·작업을 쪼개고·검증을 내장하는 환경 설계다 — 프롬프트 엔지니어링에서 컨텍스트 엔지니어링으로.*
-
----
-
 ### 참고
 
 - [Context windows — Claude Docs](https://platform.claude.com/docs/en/build-with-claude/context-windows) — context rot 원문, working memory 정의
@@ -219,3 +215,5 @@ final  = LLM(refine, draft, review)     # 3단계: 검토 반영 수정
 - [Google's Prompt Engineering Best Practices 요약 — PromptHub](https://www.prompthub.us/blog/googles-prompt-engineering-best-practices) — few-shot·CoT·역할·데이터 우선 배치
 - [Lost in the Middle: How Language Models Use Long Contexts (arXiv:2307.03172)](https://arxiv.org/abs/2307.03172)
 - [PRPs-agentic-eng (Rasmus Widing) — PRP 개념 원전](https://github.com/Wirasm/PRPs-agentic-eng)
+
+*프롬프트를 잘 쓴다는 것은 멋진 문장을 만드는 일이 아니라 필요한 맥락을 고르고, 작업을 나누고, 검증 방법을 함께 주는 일이다.*

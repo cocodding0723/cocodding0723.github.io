@@ -204,10 +204,6 @@ export function fftComplex(re: Float32Array, im: Float32Array): void {
 - **쓰이는 곳**: 튜너·음성비서·JPEG·5G·큰 수 곱셈, 그리고 AI(FNet·FNO).
 - **실제 코드**: 작으면 직접 DFT, 크면 FFT — 내 guitar-tab에 둘 다 산다.
 
-*푸리에 변환은 섞인 신호를 주파수로 펼치는 프리즘이고, FFT는 그 계산을 반씩 쪼개(분할 정복) 훨씬 빠르게 해내는 길이다 — 답은 그대로, 속도만 빨라진다.*
-
----
-
 ### 참고
 
 - [Fast Fourier transform — Wikipedia](https://en.wikipedia.org/wiki/Fast_Fourier_transform)
@@ -215,3 +211,5 @@ export function fftComplex(re: Float32Array, im: Float32Array): void {
 - [FNet: Mixing Tokens with Fourier Transforms (arXiv:2105.03824)](https://arxiv.org/abs/2105.03824)
 - [Fourier Neural Operator for Parametric PDEs (Li et al., arXiv:2010.08895)](https://arxiv.org/abs/2010.08895)
 - 내 프로젝트 코드: `guitar-tab/src/tonelab/dsp.ts`(FFT), `guitar-tab/src/transcribe/drums.ts`(직접 DFT)
+
+*푸리에 변환은 섞인 신호를 주파수로 펼치는 프리즘이고, FFT는 같은 답을 분할 정복으로 더 빠르게 구하는 방법이다.*

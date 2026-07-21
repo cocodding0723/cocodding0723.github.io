@@ -180,7 +180,7 @@ var json = JsonUtility.ToJson(new Stats { atk = 10, def = 5 });
 // {"atk":10,"def":5}
 ```
 
-모바일·콘솔처럼 IL2CPP 타깃에서는 리플렉션이 자유롭지 않다 ([IL2CPP의 AOT 제약](/2026/04/08/unity-il2cpp-deep-dive/) 참고). 그래서 Newtonsoft 같은 라이브러리를 쓸 때 `link.xml`로 모델 타입을 보존해주지 않으면 "빌드에선 비어 있는 객체가 나온다"는 사고가 난다.
+모바일·콘솔처럼 IL2CPP 타깃에서는 리플렉션이 자유롭지 않다 ([IL2CPP의 AOT 제약](/blog/2026/04/08/unity-il2cpp-deep-dive/) 참고). 그래서 Newtonsoft 같은 라이브러리를 쓸 때 `link.xml`로 모델 타입을 보존해주지 않으면 "빌드에선 비어 있는 객체가 나온다"는 사고가 난다.
 
 ### 5) DI 컨테이너와 테스트 프레임워크
 
@@ -267,7 +267,7 @@ public static class Bootstrap
 2. **Unity Linker 스트리핑**은 리플렉션으로만 접근되는 타입을 "쓰이지 않는" 것으로 판단해 지워버린다. `[Preserve]` 어트리뷰트나 `link.xml`로 살려야 한다.
 3. **제네릭 값 타입 인스턴스화**는 빌드에 포함되지 않으면 런타임에 만들 수 없다. `List<MyStruct>` 같은 조합을 리플렉션으로만 쓰면 `ExecutionEngineException`이 뜬다.
 
-자세한 대응은 [IL2CPP 완전 정리](/2026/04/08/unity-il2cpp-deep-dive/)에 따로 정리했다.
+자세한 대응은 [IL2CPP 완전 정리](/blog/2026/04/08/unity-il2cpp-deep-dive/)에 따로 정리했다.
 
 ---
 

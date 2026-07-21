@@ -18,7 +18,7 @@ Claude Code를 본격적으로 쓰면서 거슬리는 지점이 하나 있었다
 
 ECC는 두 층으로 되어 있다. **공통 규칙(common)** 과 **언어별 규칙**.
 
-```
+```text
 rules/
 ├── common/          # 언어 무관 — 항상 설치
 │   ├── coding-style.md

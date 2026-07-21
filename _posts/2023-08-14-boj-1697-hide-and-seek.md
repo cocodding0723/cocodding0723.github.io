@@ -12,6 +12,10 @@ tags: [Algorithm, BFS]
 
 수빈이의 위치 N과 동생의 위치 K가 주어진다. 매 초마다 수빈이는 X-1, X+1, 2×X 중 하나로 이동할 수 있다. 동생을 찾는 최소 시간을 구하라.
 
+좌표가 한 줄이라도 선택지가 세 개라면 단순히 가까워 보이는 방향만 고를 수 없다. 예를 들어 순간이동이 당장은 목표를 지나치더라도, 다시 한 칸 돌아오는 경로가 더 빠를 수 있다. 따라서 좌표 하나를 그래프의 정점으로 보고, 1초에 갈 수 있는 세 좌표를 간선으로 연결한다.
+
+BFS는 0초에 갈 수 있는 위치, 1초에 갈 수 있는 위치, 2초에 갈 수 있는 위치 순서로 탐색한다. 그래서 동생의 좌표를 처음 발견했을 때의 시간이 최소 시간이다.
+
 ## 핵심 포인트
 
 1. **1차원 BFS**: 좌표가 1차원이지만, 이동 방법이 3가지이므로 그래프 탐색으로 모델링한다.
@@ -21,33 +25,39 @@ tags: [Algorithm, BFS]
 ## C++ 풀이
 
 ```cpp
+#include <algorithm>
 #include <iostream>
 #include <queue>
 
 using namespace std;
 
-int N, K;
-bool visit[100001];
+const int MAX_POSITION = 100000;
+int startPosition, targetPosition;
+int distanceFromStart[MAX_POSITION + 1];
 
 void bfs() {
-    queue<pair<int, int>> q;
-    q.push(make_pair(N, 0));
+    fill(distanceFromStart, distanceFromStart + MAX_POSITION + 1, -1);
+
+    queue<int> q;
+    q.push(startPosition);
+    distanceFromStart[startPosition] = 0;
 
     while (!q.empty()) {
-        pair<int, int> v = q.front();
+        int current = q.front();
         q.pop();
 
-        if (v.first == K) {
-            cout << v.second;
+        if (current == targetPosition) {
+            cout << distanceFromStart[current];
             return;
         }
-        if (v.first < 0 || v.first > 100000) continue;
 
-        if (!visit[v.first]) {
-            visit[v.first] = true;
-            q.push(make_pair(v.first - 1, v.second + 1));
-            q.push(make_pair(v.first + 1, v.second + 1));
-            q.push(make_pair(2 * v.first, v.second + 1));
+        int nextPositions[3] = {current - 1, current + 1, current * 2};
+        for (int next : nextPositions) {
+            if (next < 0 || next > MAX_POSITION) continue;
+            if (distanceFromStart[next] != -1) continue;
+
+            distanceFromStart[next] = distanceFromStart[current] + 1;
+            q.push(next);
         }
     }
 }
@@ -56,7 +66,7 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> N >> K;
+    cin >> startPosition >> targetPosition;
     bfs();
 
     return 0;
@@ -65,14 +75,14 @@ int main() {
 
 ## 풀이 흐름
 
-1. 시작 위치 N을 큐에 넣고 BFS를 시작한다.
+1. 시작 위치를 큐에 넣고 그 위치의 거리를 0으로 기록한다.
 2. 각 위치에서 X-1, X+1, 2×X 세 방향으로 탐색한다.
-3. 범위를 벗어나는 좌표(0 미만, 100000 초과)는 건너뛴다.
-4. K에 도달하면 현재까지의 이동 횟수를 출력한다.
+3. 범위를 벗어나거나 이미 더 빠른 시간에 방문한 좌표는 건너뛴다.
+4. 목표에 처음 도달하면 거리 배열에 기록된 시간이 정답이다.
 
 ## 주의사항
 
-**범위 체크 순서**: `visit` 배열 접근 전에 범위 체크를 먼저 해야 한다. `2 * v.first`가 100000을 초과할 수 있으므로, 범위를 벗어난 좌표를 큐에 넣고 꺼낼 때 걸러내는 방식으로 처리한다.
+**범위 체크 순서**: 거리 배열에 접근하기 전에 좌표가 0~100,000 안인지 확인해야 한다. 특히 `current * 2`는 상한을 쉽게 넘는다.
 
 **N > K인 경우**: 순간이동(×2)은 앞으로만 갈 수 있다. N이 K보다 크면 뒤로 한 칸씩 걷는 것(X-1)만 가능하므로 답은 N-K다. BFS로도 올바른 답이 나오지만, 이 점을 알면 조기 종료 최적화가 가능하다.
 
